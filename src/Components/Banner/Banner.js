@@ -58,21 +58,21 @@ const Banner = () => {
 	}, [selectedCity]);
 
 	const searchProperties = () => {
-		const cityDataSearch = filterData.find((value) => value.name === selectedCity);
-		let cityCodeFilter = "";
-		if (cityDataSearch !== undefined && cityDataSearch !== null) {
-			cityCodeFilter = cityDataSearch.code.toString();
-		}
-		const districtDataSearch = cityDataSearch.districts.find((value) => value.name === selectedDistrict);
-		let districtCodeFilter = "";
-		if (districtDataSearch !== undefined && districtDataSearch !== null) {
-			districtCodeFilter = districtDataSearch.code.toString();
-		}
+		// const cityDataSearch = filterData.find((value) => value.name === selectedCity);
+		// let cityCodeFilter = "";
+		// if (cityDataSearch !== undefined && cityDataSearch !== null) {
+		// 	cityCodeFilter = cityDataSearch.code.toString();
+		// }
+		// const districtDataSearch = cityDataSearch.districts.find((value) => value.name === selectedDistrict);
+		// let districtCodeFilter = "";
+		// if (districtDataSearch !== undefined && districtDataSearch !== null) {
+		// 	districtCodeFilter = districtDataSearch.code.toString();
+		// }
 
 		const dataRequest = {
 			name: searchStringFilter,
-			cityCode: cityCodeFilter,
-			districtCode: districtCodeFilter,
+			city: selectedCity,
+			district: selectedDistrict,
 		};
 		console.log(dataRequest,'datarequest')
 

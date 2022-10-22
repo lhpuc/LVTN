@@ -1,0 +1,73 @@
+.section1 {
+  margin: 5vw;
+  background: linear-gradient(to right, #df4e5a, #583ea4, #0f0824);
+  padding: 0.2rem;
+  border-radius: 1.5rem;
+  position: relative;
+}
+
+.container1 {
+  margin: 0.5rem;
+  padding-top: 1vw;
+  padding-bottom: 4vw;
+  background-color: white;
+  border-radius: 1rem;
+}
+
+.title1 {
+  position: absolute;
+  top: -1rem;
+  left: 25%;
+  padding: 0 2rem;
+  background-color: white;
+}
+.testimonials {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1vw;
+  margin-top: 3vw;
+}
+.testimonial {
+  padding: 0 4vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1rem;
+}
+.testimonial p {
+  font-size: 1.1rem;
+  line-height: 2rem;
+  letter-spacing: 0.1rem;
+}
+.testimonial span {
+  color: #fc4958;
+}
+
+.image {
+  overflow: hidden;
+  width: max-content;
+  max-height: 10rem;
+  border-radius: 10rem;
+}
+.image img {
+  height: 10rem;
+}
+.BlogHeading {
+  font-size: 5rem;
+  color: #000;
+  margin-bottom: 5rem;
+  font-weight: 700;
+  line-height: 3rem;
+  margin-left: 5rem;
+}
+@media screen and (min-width: 260px) and (max-width: 1080px) {
+  .container .title {
+    position: initial;
+    background-color: transparent;
+  }
+  .testimonials {
+    flex-direction: column;
+  }
+}

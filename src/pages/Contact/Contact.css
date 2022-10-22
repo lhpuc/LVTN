@@ -1,0 +1,255 @@
+/*=======================================================
+			CONTACT
+========================================================*/
+#map {
+	display: inline-block;
+	width: 100%;
+	height: 450px;
+	position: relative;
+	border: none;
+}
+.contact {
+	margin-top: -5px;
+}
+.contact-info {
+	padding: 80px 0;
+	padding-bottom: 0px;
+}
+.contact-info h3 {
+	margin: 0px;
+	text-transform: uppercase;
+	margin-bottom: 30px;
+}
+.contact-info p {
+	font-size: 14px;
+	margin: 0px;
+	text-transform: uppercase;
+	line-height: 26px;
+}
+.contact-info i {
+	color: #4caf50;
+	font-size: 50px;
+	margin-bottom: 30px;
+}
+.contact-info a {
+	text-transform: uppercase;
+	font-size: 12px;
+	margin-top: 10px;
+	color: #ff5722;
+	display: inline-block;
+	width: 100%;
+}
+.contact-info p span {
+	color: #ffc107;
+	font-size: 16px;
+	font-weight: bold;
+}
+.contact-info .con-det {
+	margin-top: 30px;
+}
+.contact-info .con-det li {
+	margin-bottom: 20px;
+	padding: 40px 80px;
+	text-align: center;
+	padding-top: 0px;
+}
+.contact-info .con-det li:nth-child(2) {
+}
+.contact-info .social_icons {
+	width: 65%;
+}
+.contact-info .social_icons a {
+	background: #f5f5f5;
+	font-size: 16px;
+	margin-right: 2px;
+	margin-bottom: 2px;
+}
+.contact-info .con-det h6 {
+	text-transform: uppercase;
+	margin-top: 0px;
+	font-weight: 700;
+	line-height: 24px;
+	font-size: 16px;
+}
+.contact-info .con-det h4 {
+	color: #ffc107;
+}
+.contact-info .con-det hr {
+	width: 28px;
+	height: 3px;
+	margin: 0 auto;
+	background: #448aff;
+	border: none;
+	margin-bottom: 20px;
+}
+.contact #contact_form {
+	text-align: center;
+}
+.contact .error {
+	border: 1px solid red !important;
+}
+.contact .error:before {
+	content: "\f068";
+	font-family: FontAwesome;
+	margin-right: 0px;
+	color: #0096ff;
+	padding: 0px;
+	padding: 0px 13px;
+	float: right;
+	font-size: 12px;
+	position: absolute;
+}
+.contact .success-msg {
+	background: #fff;
+	border: 1px solid #ABD0A8;
+	color: #589051;
+	margin-bottom: 30px;
+	width: 100%;
+	display: inline-block;
+	text-align: center;
+	padding: 11px 16px;
+	border-radius: 4px;
+	display: none;
+}
+.contact .success-msg i {
+	padding: 10px;
+	border-radius: 50%;
+	border: 1px solid #ABD0A8;
+	margin-right: 10px;
+}
+#contact_form li {
+	margin-bottom: 22px;
+	text-align: left;
+}
+#contact_form li input {
+	display: inline-block;
+	width: 100%;
+	height: 40px;
+	padding: 0 10px;
+}
+#contact_form li .form-control {
+	height: 40px;
+	border: 1px solid #e9eaee;
+	box-shadow: none;
+	border-radius: 0px;
+}
+#contact_form li textarea {
+	height: 150px !important;
+}
+#contact_form li .btn {
+	height: 50px;
+	display: inline-block;
+	margin-top: 0px;
+}
+.contact-form {
+	padding: 0;
+	display: inline-block;
+	width: 100%;
+	padding: 80px 0;
+	background: #f8f8f8;
+}
+.contact-form .tittle {
+	text-align: center;
+}
+.contact-form .tittle hr {
+	width: 28px;
+	height: 5px;
+	margin: 15px auto;
+	background: #448aff;
+	border: none;
+}
+.contact-form .tittle p {
+	text-transform: none;
+	font-size: 16px;
+}
+.contact-form .tittle h2:before {
+	display: none;
+}
+.contact-form label {
+	font-weight: 400;
+	color: #333333;
+	font-size: 12px;
+	text-transform: uppercase;
+	display: inline-block;
+	width: 100%;
+	line-height: 30px;
+}
+.contact-form textarea {
+	display: inline-block;
+	width: 100%;
+	position: relative;
+	padding: 10px 20px;
+}
+
+
+/*=======================================================
+			TITTLE
+========================================================*/
+hr {
+	background: #27ae60;
+	height: 4px;
+	width: 50px;
+}
+.tittle {
+	text-align: center;
+	display: inline-block;
+	width: 100%;
+	position: relative;
+	margin-bottom: 50px;
+}
+.tittle h3 {
+	margin: 0px;
+	font-weight: 700;
+	line-height: 37px;
+	text-transform: uppercase;
+	color: #222222;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	font-family: 'Roboto', sans-serif;
+}
+.tittle p {
+	width: 75%;
+	margin: 0 auto;
+	line-height: 24px;
+	font-size: 14px;
+}
+  
+.ant-btn-primary{
+	border: none;
+    padding: 0rem 2rem;
+    font-size: 0.8rem;
+    border-radius: 4rem;
+    transition: 0.5s ease-in-out;
+    cursor: pointer;
+    background: #27ae60;
+    text-transform: uppercase;
+}
+
+.ant-btn-primary:hover{
+	background: linear-gradient(to right, #e85d04, #fc4958);
+}
+
+.ant-form{
+	background-color: #fafafa;
+}
+
+
+
+
+@media (max-width:576px){
+	.FormContainer {
+		padding-left:0px !important;
+	}
+
+}
+
+@media (min-width:768px){
+	.FormContainer {
+		padding-left:5rem !important;
+	}
+
+}
+
+.FormContainer {
+	padding-left:7rem;
+}

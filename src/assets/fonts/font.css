@@ -1,0 +1,106 @@
+
+/* ----- Font Title---------- */
+
+@font-face {
+    font-family: "SPM title light";
+    src: url("./Merriweather/Merriweather-Light.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM title light italic";
+    src: url("./Merriweather/Merriweather-LightItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM title bold";
+    src: url("./Merriweather/Merriweather-Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM title bold italic";
+    src: url("./Merriweather/Merriweather-BoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM title regular";
+    src: url("./Merriweather/Merriweather-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM title italic";
+    src: url("./Merriweather/Merriweather-Italic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM title black";
+    src: url("./Merriweather/Merriweather-Black.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM title black italic";
+    src: url("./Merriweather/Merriweather-BlackItalic.ttf") format("truetype");
+}
+
+  /* Font Content */
+
+
+  @font-face {
+    font-family: "SPM content light";
+    src: url("./OpenSans/OpenSans-Light.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM content light italic";
+    src: url("./OpenSans/OpenSans-LightItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM content bold";
+    src: url("./OpenSans/OpenSans-Bold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM content bold italic";
+    src: url("./OpenSans/OpenSans-BoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM content regular";
+    src: url("./OpenSans/OpenSans-Regular.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM content italic";
+    src: url("./OpenSans/OpenSans-Italic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM content extrabold";
+    src: url("./OpenSans/OpenSans-ExtraBold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM content extrabold italic";
+    src: url("./OpenSans/OpenSans-BoldItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM content medium";
+    src: url("./OpenSans/OpenSans-Medium.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM content medium italic";
+    src: url("./OpenSans/OpenSans-MediumItalic.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM content semibold";
+    src: url("./OpenSans/OpenSans-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "SPM content semibold italic";
+    src: url("./OpenSans/OpenSans-SemiBoldItalic.ttf") format("truetype");
+}
+

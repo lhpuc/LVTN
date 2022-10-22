@@ -1,0 +1,12 @@
+.ant-carousel .slick-list {
+  height: 100px;
+}
+
+.image_items{
+  max-width: 650px;
+}
+
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 57rem;
+}

@@ -1,0 +1,38 @@
+.search-form {
+  max-width: 500px;
+  position: relative;
+}
+
+.search-input {
+  max-width: 100%;
+  width: 100%;
+  padding: 2px 36px 2px 16px;
+  border-radius: 20px;
+  outline: none;
+  border: 1px solid rgba(128, 128, 128, 0.651);
+}
+
+.search-btn {
+  position: absolute;
+  padding-right: 6px;
+  top: 0;
+  right: 0;
+  background-color: transparent;
+  border: none;
+}
+
+.search-icon {
+  padding: 2px 3px;
+}
+
+@media screen and (max-width: 768px) {
+  .search-form {
+    max-width: 450px;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .search-form {
+    max-width: 250px;
+  }
+}

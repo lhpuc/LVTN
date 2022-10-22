@@ -1,0 +1,28 @@
+{
+    "FontSPMTitle":{
+        "Light": "SPM title light",
+        "LightItalic": "SPM title light italic",
+        "Bold": "SPM title bold",
+        "BoldItalic": "SPM title bold italic",
+        "Regular":"SPM title regular",
+        "Italic": "SPM title italic",
+        "Black": "SPM title black",
+        "BlackItalic": "SPM title black italic"
+    },
+    "FontSPMContent":{
+        "Light": "SPM content light",
+        "LightItalic": "SPM content light italic",
+        "Bold": "SPM content bold",
+        "BoldItalic": "SPM content bold italic",
+        "Regular":"SPM content regular",
+        "Italic": "SPM content italic",
+        "ExtraBold": "SPM content extrabold",
+        "ExtraboldItalic": "SPM content extrabold italic",
+        "Medium":"SPM content medium",
+        "MediumItalic": "SPM content medium italic",
+        "SemiBold": "SPM content semibold",
+        "SemiBoldItalic": "SPM content semibold italic"
+    }
+}
+
+

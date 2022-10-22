@@ -1,0 +1,16 @@
+.flex1{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.bottom-44 {
+    bottom: 17.5rem;
+}
+
+.text-light {
+    color: rgba(var(--bs-gray-700),var(--bs-text-opacity))!important;}
+
+.property-list-item{
+    margin-bottom: 40px;
+}

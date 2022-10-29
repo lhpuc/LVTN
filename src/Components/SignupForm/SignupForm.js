@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Typography, Button } from "antd";
 
-import { loginAPI } from "../../api/login/loginApi";
+import { accountApi } from "../../api/login/loginApi";
 import DialogCustome from "../DialogCustome/DialogCustome";
 const { Title } = Typography;
 
 const SignupForm = () => {
+	const accountApiService = accountApi();
 	const [formData, setFormData] = useState({
 		firstName: "",
 		lastName: "",
@@ -32,12 +33,17 @@ const SignupForm = () => {
 			lastName: formData.lastName,
 			password: formData.password,
 		};
-		loginAPI.registerUser(dataRequest).then((res) => {
-			console.log(res);
-			const value = res.data;
-			alert(value.mes);
-			setOpenPopUp(true);
-		});
+		accountApiService
+			.registerUser(dataRequest)
+			.then((res) => {
+				console.log(res);
+				const value = res.data;
+				alert(value.mes);
+				setOpenPopUp(true);
+			})
+			.catch((e) => {
+				console.log(e, "fedwsfv");
+			});
 	};
 
 	return (

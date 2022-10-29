@@ -1,9 +1,10 @@
 import { Typography, Button } from "antd";
 import React, { useState } from "react";
-import { loginAPI } from "../../api/login/loginApi";
+import { accountApi } from "../../api/login/loginApi";
 const { Title } = Typography;
 
-function LoginForm() {
+const LoginForm =()=> {
+	const accountApiService = accountApi();
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",

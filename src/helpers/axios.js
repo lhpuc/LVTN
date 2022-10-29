@@ -1,17 +1,28 @@
+import { convertLegacyProps } from "antd/lib/button/button";
 import axios from "axios";
+import queryString from "query-string";
 
-const baseURL = process.env.REACT_APP_BACKEND_URL;
+export const axiosClient = () => {
+	const axiosInstance = axios.create({
+		baseURL: process.env.REACT_APP_BACKEND_URL,
+		headers: {
+			"Content-Type": "application/json",
+		},
+		paramsSerializer: {
+			serialize: (params) => {
+				return queryString.stringify(params);
+			},
+		},
+	});
 
-console.log(baseURL,'BaseUrl');
-let headers = {
-    "Content-Type" : "application/json",
+	axiosInstance.interceptors.request.use(
+		(config) => {
+			return config;
+		},
+		(error) => {
+			return Promise.reject(error);
+		},
+	);
+
+	return axiosInstance;
 };
-if(localStorage.token){
-    headers.Authorization = ``;
-}
-const axiosClient = axios.create({
-    baseURL,
-    headers,
-});
-
-export default axiosClient;

@@ -1,10 +1,11 @@
 import "./Banner.css";
 import React, { useState, useEffect, useContext } from "react";
 import { Slider, Input, Space, Select, Button } from "antd";
-import { FilterInfoOfPost } from "../../api/home/InfoOfFilter";
+import { FilterInfoOfPostApi } from "../../api/home/InfoOfFilter";
 import { SearchFilterPostContext } from "../../context/searchFilterContext";
 
 const Banner = () => {
+	const FilterInfoOfPostService = FilterInfoOfPostApi();
 	const { Search } = Input;
 
 	const { Option } = Select;
@@ -32,7 +33,7 @@ const Banner = () => {
 	};
 
 	useEffect(() => {
-		FilterInfoOfPost.getOptionFilter().then((value) => {
+		FilterInfoOfPostService.getOptionFilter().then((value) => {
 			const cityData = [];
 			value.data.cityList.forEach((item) => {
 				cityData.push(item.name);
@@ -76,7 +77,7 @@ const Banner = () => {
 		};
 		console.log(dataRequest,'datarequest')
 
-		FilterInfoOfPost.searchPropertiesWithFilter(dataRequest)
+		FilterInfoOfPostService.searchPropertiesWithFilter(dataRequest)
 			.then((value) => {
 
 				console.log(value,value.statusText);
@@ -91,7 +92,7 @@ const Banner = () => {
 	};
 
 	useEffect(() => {
-		FilterInfoOfPost.getAllProperties()
+		FilterInfoOfPostService.getAllProperties()
 			.then((value) => {
 				if (value.statusText === "OK") {
 					setPropertiesItem(value.data.property);

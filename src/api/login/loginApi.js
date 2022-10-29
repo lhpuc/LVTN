@@ -1,11 +1,14 @@
-import axiosClient from "../../helpers/axios"
+import { axiosClient } from "../../helpers/axios";
 
-export const loginAPI = {
-    logInUser: (dataRequest) =>{
-        return axiosClient.post('/user',dataRequest);
-    },
-    registerUser: (dataRequest) =>{
-        return axiosClient.post('/user',dataRequest);
-    }
+export const accountApi = () => {
+	const axiosClientInstance = axiosClient();
+	const userKey = "/user";
+	const manageAccountApi = {
+		registerUser: (dataRequest) => {
+			console.log("vgrevbgre");
+			return axiosClientInstance.post(`${userKey}`, dataRequest);
+		},
+	};
 
-}
+	return manageAccountApi;
+};

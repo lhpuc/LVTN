@@ -5,7 +5,6 @@ export const accountApi = () => {
 	const userKey = "/user";
 	const manageAccountApi = {
 		registerUser: (dataRequest) => {
-			console.log("vgrevbgre");
 			return axiosClientInstance.post(`${userKey}`, dataRequest);
 		},
 	};

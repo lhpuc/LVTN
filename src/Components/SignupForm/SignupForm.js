@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { Typography, Button } from "antd";
+import { Typography, Button, Result } from "antd";
 
 import { accountApi } from "../../api/login/loginApi";
-import DialogCustome from "../DialogCustome/DialogCustome";
 const { Title } = Typography;
 
 const SignupForm = () => {
 	const accountApiService = accountApi();
+	const [signUpSuccess, setSignUpSuccess] = useState(false);
 	const [formData, setFormData] = useState({
 		firstName: "",
 		lastName: "",
@@ -36,18 +36,24 @@ const SignupForm = () => {
 		accountApiService
 			.registerUser(dataRequest)
 			.then((res) => {
-				console.log(res);
 				const value = res.data;
-				alert(value.mes);
-				setOpenPopUp(true);
+				if(value.success){
+					setSignUpSuccess(true)
+				}
+				else{
+					alert(value.mes);
+				}
 			})
 			.catch((e) => {
-				console.log(e, "fedwsfv");
+				alert("somethings wrong")
 			});
 	};
 
 	return (
 		<div className="section section-auth">
+			{
+					!signUpSuccess?
+			
 			<form onSubmit={onSubmit} className="form-auth">
 				<Title className="form-title" level={1}>
 					Đăng ký
@@ -114,11 +120,29 @@ const SignupForm = () => {
 						Đăng ký
 					</Button>
 				</div>
-				<a onClick={(e) => e.preventDefault()} className="form-link">
+				<a onClick={() => {window.location = '/Login'}} className="form-link">
 					Về trang đăng nhập
 				</a>
-			</form>
-			<DialogCustome openDialog={openPopUp} />
+			</form> :<>
+			<Result
+						style={{ backgroundColor: "white", borderRadius: 10 }}
+						status="success"
+						title="Đăng kí thành công"
+						subTitle="Quay lại trang đăng nhập"
+						extra={[
+							<Button
+								onClick={() => {
+									window.location = "/Login";
+								}}
+								type="primary"
+								key="console"
+							>
+								Quay lại
+							</Button>,
+						]}
+					/>
+			</>}
+			
 		</div>
 	);
 };

@@ -1,9 +1,13 @@
-import React from 'react'
-
+import React from "react";
 const Post = () => {
   return (
-    <div>Post</div>
-  )
-}
+    <>
+    <section>
 
-export default Post
+      ạhdhkasjnkajsnckajdnjcad
+    </section>
+    </>
+  );
+};
+
+export default Post;

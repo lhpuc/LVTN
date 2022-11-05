@@ -13,6 +13,9 @@ import Post from "./pages/Post/Post";
 import Navbar from "./Components/Navbar/Navbar";
 import Footer from "./Components/Footer/Footer";
 import Profile from "./Components/Profile/Profile";
+import Business from "./pages/Business/Business"
+
+
 const App = () => {
   return (
     <>
@@ -27,6 +30,7 @@ const App = () => {
         <Route path="/ourteam" element={<Ourteam />} />
         <Route path="/post" element={<Post />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/business" element={<Business />} />
       </Routes>
       <Footer />
     </>

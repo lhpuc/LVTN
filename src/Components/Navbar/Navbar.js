@@ -98,7 +98,7 @@ const Navbar = () => {
   }, [])
 
 
-  // 
+  
   useEffect(() => {
     setPropertyList([
       {
@@ -125,9 +125,9 @@ const Navbar = () => {
 
   return (
     <nav className='nav' id='nav'>
-      <div className='logo'>
+      {/* <div className='logo'>
         <HomeOutlined />
-      </div>
+      </div> */}
       {/* mobile */}
       <div className='menu-mobile'>
         <MenuOutlined className='menu-icon' style={{display: showCloseBtn ? 'none' : 'unset'}} onClick={handleOpenMenu} />

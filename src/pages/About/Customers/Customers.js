@@ -1,5 +1,5 @@
 import React from "react";
-import { customersData } from "../../../Components/data/customersSay";
+import { customersData } from "../../../Components/data/customersData";
 // import avatar1 from "../assets/avatar1.jpeg";
 import "./Customers.css";
 

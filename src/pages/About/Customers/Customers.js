@@ -2,8 +2,10 @@ import React from "react";
 import { customersData } from "../../../Components/data/customersData";
 // import avatar1 from "../assets/avatar1.jpeg";
 import "./Customers.css";
+import Pulse from 'react-reveal/Pulse';
 
-export default function Customers() {
+
+export default function Customers(props) {
   return (
     <section id="testimonials" className="section1">
       <div className="container1">
@@ -12,9 +14,12 @@ export default function Customers() {
           {customersData.map((testimonials) => {
             return (
               <div className="testimonial">
+                <Pulse>
                 <div className="image">
                   <img src={testimonials.image} alt="" />
                 </div>
+                </Pulse>
+               
                 <p>
                   {testimonials.description}
                   <span>{testimonials.title}</span>

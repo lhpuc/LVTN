@@ -7,16 +7,20 @@ import RealEstateInfomation from "./RealEstateInfomation/RealEstateInfomation";
 import "./Business.css";
 import NewForRent from "./NewForRent/NewForRent";
 import Review from "./Review/Review";
+import Bounce from "react-reveal/Bounce";
 
 const Business = () => {
   return (
     <>
       <section className="blog-out mb">
-        <Back
-          // name="Hãy liên hệ với chúng tôi"
-          // title="Cần được tư vấn?"
-          cover={img}
-        />
+        <Bounce left>
+          <Back
+            // name="Hãy liên hệ với chúng tôi"
+            // title="Cần được tư vấn?"
+            cover={img}
+          />
+        </Bounce>
+
         <div className="business">
           <div className="action">
             <div className="introduce">

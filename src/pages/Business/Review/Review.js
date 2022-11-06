@@ -20,7 +20,9 @@ const Review = () => {
           lg={{ span: 7, offset: 1 }}
         >
           <h4> Bình luận</h4>
-          <div className="totalstart">4/5</div>
+          <div className="totalstart">
+            <p>4/5</p>
+          </div>
           <Rating />
         </Col>
       </Row>

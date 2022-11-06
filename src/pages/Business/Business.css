@@ -51,3 +51,12 @@
 .logo_business {
   font-size: 50px;
 }
+
+@media screen and (max-width: 1000px) {
+  .business .action h1 {
+    font-size: 15px ;
+  }
+  .action_heart div {
+    padding: 10px 20px;
+}
+}

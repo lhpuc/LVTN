@@ -1,6 +1,8 @@
 import React from "react";
 import "./Important.css";
 import { productdata } from "../../../Components/data/importantData";
+import Flash from "react-reveal/Flash";
+
 export default function Important() {
   return (
     <section className=" Section2" id="/Product">
@@ -13,9 +15,11 @@ export default function Important() {
         {productdata.map((product) => {
           return (
             <div className="product">
-              <div className="image">
-                <img src={product.image} alt="" />
-              </div>
+              <Flash>
+                <div className="image">
+                  <img src={product.image} alt="" />
+                </div>
+              </Flash>
               <h2>{product.name}</h2>
               <h3>{product.price}</h3>
               <p>{product.decription}</p>

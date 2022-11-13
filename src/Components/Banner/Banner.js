@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { Slider, Input, Space, Select, Button } from "antd";
 import { FilterInfoOfPostApi } from "../../api/home/InfoOfFilter";
 import { SearchFilterPostContext } from "../../context/searchFilterContext";
+import RubberBand from "react-reveal/RubberBand";
 
 const Banner = () => {
 	const FilterInfoOfPostService = FilterInfoOfPostApi();

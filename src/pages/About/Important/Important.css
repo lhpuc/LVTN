@@ -2,12 +2,8 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 3rem;
-  padding-top: 3rem;
-  padding-bottom: 5rem;
-  margin:40px;
-  background: #FFFFFF;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-  border-radius: 18px;
+  margin-top: 3rem;
+  margin-bottom: 100px;
 }
 
 .products .product {

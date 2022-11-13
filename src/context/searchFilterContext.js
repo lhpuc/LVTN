@@ -15,6 +15,7 @@ export const SearchFilterPostProvider = ({ children }) => {
 		setSelectedMinPrice(0);
 		setSelectedMaxPrice(0);
 	};
+
 	return (
 		<>
 			<SearchFilterPostContext.Provider

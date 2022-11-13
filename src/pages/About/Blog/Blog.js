@@ -1,11 +1,11 @@
 import React from "react";
 import { blogData } from "../../../Components/data/blogData";
-import LightSpeed from "react-reveal/LightSpeed";
+// import LightSpeed from "react-reveal/LightSpeed";
 import "./Blog.css";
 const Blog = () => {
   return (
     <>
-      <LightSpeed left>
+      {/* <LightSpeed left> */}
 
       <div className="BlogSection" id="/Blog">
         <h4 className="BlogHeading">Blog</h4>
@@ -28,7 +28,7 @@ const Blog = () => {
           })}
         </div>
       </div>
-      </LightSpeed>
+      {/* </LightSpeed> */}
     </>
   );
 };

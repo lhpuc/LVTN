@@ -1,15 +1,17 @@
 import { Typography, Button, Result } from "antd";
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { accountApi } from "../../api/login/loginApi";
+import AuthContext from "../../context/AuthProvider";
 const { Title } = Typography;
 
 const LoginForm = () => {
+	const { auth, setAuth, setIsLogin, isLogin } = useContext(AuthContext);
+
 	const accountApiService = accountApi();
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
 	});
-	const [loginSuccess, setLoginSuccess] = useState(false);
 
 	const handleChangeInput = (e) => {
 		setFormData((prev) => ({
@@ -18,31 +20,42 @@ const LoginForm = () => {
 		}));
 	};
 
+	useEffect(() => {
+		console.log(localStorage.token, "cêc", isLogin, "islogin", auth);
+	}, [isLogin]);
+
 	const onSubmit = (e) => {
 		e.preventDefault();
-		fetch("https://lvtn2022real.herokuapp.com/user/login", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ email: formData.email, password: formData.password }),
-		})
+		const dataRequest = { email: formData.email, password: formData.password };
+		accountApiService
+			.logInUser(dataRequest)
 			.then((res) => {
-				if (res.ok) return res.json();
-			})
-			.then((result) => {
-				if (result.success) {
-					localStorage.setItem("token", result.token);
-					setLoginSuccess(true);
+				if (res.status === 200) {
+					const result = res.data;
+					if (result.success) {
+						console.log(result);
+						localStorage.setItem("token", result.token);
+						const accessToken = result.token;
+						setAuth({ accessToken: accessToken });
+					} else {
+						alert(result.mes);
+						setFormData({
+							email: "",
+							password: "",
+						});
+					}
 				} else {
-					alert(result.mes);
+					alert("lỗi khi xác thực");
 				}
+			})
+			.catch(() => {
+				alert("server bị lỗi");
 			});
 	};
 
 	return (
 		<div className="section section-auth">
-			{!loginSuccess ? (
+			{!isLogin ? (
 				<form onSubmit={onSubmit} className="form-auth">
 					<Title className="form-title" level={1}>
 						Đăng nhập

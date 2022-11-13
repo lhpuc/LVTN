@@ -1,15 +1,19 @@
-import { Divider, Input, Select, Space, Button, InputNumber } from "antd";
+import { Divider, Input, Select, Space, InputNumber, DatePicker } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
+import AuthContext from "../../context/AuthProvider";
 import { css } from "@emotion/css";
 import { styled } from "@mui/material/styles";
+import { Button } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import InputAdornment from "@mui/material/InputAdornment";
+import moment from "moment";
+
 const getBase64 = (file) =>
 	new Promise((resolve, reject) => {
 		const reader = new FileReader();
@@ -34,13 +38,27 @@ const kindOfRoad = ["sell", "lend"];
 const kindOfProject = ["sell", "lend"];
 
 const Post = () => {
+	const { auth } = useContext(AuthContext);
+	const { RangePicker } = DatePicker;
+	console.log(auth);
 	const classes = {
 		root: css({
 			padding: 30,
 			backgroundColor: "#ccc",
 		}),
 		title: css({
+			fontSize: 25,
+			fontWeight: "bold",
+			paddingBottom: 10,
+			borderBottom: "1px solid #ccc",
+		}),
+		subtitle: css({
+			fontSize: 18,
+			fontWeight: "regular",
+		}),
+		total: css({
 			fontSize: 20,
+			fontWeight: "bold",
 		}),
 		selected: css({
 			paddingBottom: 20,
@@ -105,12 +123,10 @@ const Post = () => {
 			</div>
 		</div>
 	);
+	const dateFormat = "DD/MM/YYYY hh:ss:mm";
 	return (
 		<Grid container className={classes.root} spacing={3}>
-			<Grid item xs={8}>
-				<Item>
-					<h1 className={classes.title}> Đăng tin </h1>
-				</Item>
+			<Grid item md={8} xs={12}>
 				<Item>
 					<h1 className={classes.title}> Thông tin cơ bản </h1>
 					<div className={classes.selectedBox}>
@@ -132,43 +148,54 @@ const Post = () => {
 							className={classes.selected}
 							renderInput={(params) => <TextField {...params} label="Loại Bất Động Sản" />}
 						/>
-
-						<Autocomplete
-							size="small"
-							disablePortal
-							id="city"
-							options={kindOfCity}
-							value={kindOfCityValueSelected}
-							className={classes.selected}
-							renderInput={(params) => <TextField {...params} label="Tỉnh/ Thành Phố" />}
-						/>
-						<Autocomplete
-							size="small"
-							disablePortal
-							id="kindOfDistrict"
-							options={kindOfDistrict}
-							value={kindOfDistrictValueSelected}
-							className={classes.selected}
-							renderInput={(params) => <TextField {...params} label="Quận/ Huyện" />}
-						/>
-						<Autocomplete
-							size="small"
-							disablePortal
-							id="kindOfWard"
-							options={kindOfWard}
-							value={kindOfWardValueSelected}
-							className={classes.selected}
-							renderInput={(params) => <TextField {...params} label="Phường/ Xã" />}
-						/>
-						<Autocomplete
-							size="small"
-							disablePortal
-							id="kindOfRoad"
-							options={kindOfRoad}
-							value={kindOfRoadValueSelected}
-							className={classes.selected}
-							renderInput={(params) => <TextField {...params} label="Đường/ Phố" />}
-						/>
+						<Grid item xs={12} style={{ display: "flex", justifyContent: "space-between" }}>
+							<Grid item xs={6} style={{ paddingRight: 5 }}>
+								<Autocomplete
+									size="small"
+									disablePortal
+									id="city"
+									options={kindOfCity}
+									value={kindOfCityValueSelected}
+									className={classes.selected}
+									renderInput={(params) => <TextField {...params} label="Tỉnh/ Thành Phố" />}
+								/>
+							</Grid>
+							<Grid item xs={6} style={{ paddingLeft: 5 }}>
+								<Autocomplete
+									size="small"
+									disablePortal
+									id="kindOfDistrict"
+									options={kindOfDistrict}
+									value={kindOfDistrictValueSelected}
+									className={classes.selected}
+									renderInput={(params) => <TextField {...params} label="Quận/ Huyện" />}
+								/>
+							</Grid>
+						</Grid>
+						<Grid item xs={12} style={{ display: "flex", justifyContent: "space-between" }}>
+							<Grid item xs={6} style={{ paddingRight: 5 }}>
+								<Autocomplete
+									size="small"
+									disablePortal
+									id="kindOfWard"
+									options={kindOfWard}
+									value={kindOfWardValueSelected}
+									className={classes.selected}
+									renderInput={(params) => <TextField {...params} label="Phường/ Xã" />}
+								/>
+							</Grid>
+							<Grid item xs={6} style={{ paddingLeft: 5 }}>
+								<Autocomplete
+									size="small"
+									disablePortal
+									id="kindOfRoad"
+									options={kindOfRoad}
+									value={kindOfRoadValueSelected}
+									className={classes.selected}
+									renderInput={(params) => <TextField {...params} label="Đường/ Phố" />}
+								/>
+							</Grid>
+						</Grid>
 						<Autocomplete
 							size="small"
 							disablePortal
@@ -368,6 +395,80 @@ const Post = () => {
 							src={previewImage}
 						/>
 					</Modal>
+				</Item>
+				<Item>
+					<h1 className={classes.title}> Thông tin liên hệ</h1>
+					<div className={classes.selectedBox}>
+						<TextField
+							size="small"
+							className={classes.textField}
+							style={{ width: "100%", paddingBottom: 20 }}
+							id="standard-basic"
+							label="Tên liên hệ"
+							fullWidth
+							variant="outlined"
+						/>
+						<TextField
+							type="number"
+							size="small"
+							className={classes.textField}
+							style={{ width: "100%", paddingBottom: 20 }}
+							id="standard-basic"
+							label="Số điện thoại"
+							fullWidth
+							variant="outlined"
+							required
+						/>
+						<TextField
+							size="small"
+							className={classes.textField}
+							style={{ width: "100%", paddingBottom: 20 }}
+							id="standard-basic"
+							label="Địa chỉ liên hệ"
+							fullWidth
+							variant="outlined"
+						/>
+						<TextField
+							size="small"
+							className={classes.textField}
+							style={{ width: "100%", paddingBottom: 20 }}
+							id="standard-basic"
+							label="Email"
+							fullWidth
+							variant="outlined"
+						/>
+					</div>
+				</Item>
+			</Grid>
+			<Grid item md={4} xs={12}>
+				<Item>
+					<h1 className={classes.title}> Thanh toán </h1>
+
+					<div>
+						<div style={{ padding: "10px 0" }}>
+							<Autocomplete
+								size="small"
+								disablePortal
+								id="kindOfProject"
+								options={kindOfProject}
+								value={kindOfProjectValueSelected}
+								className={classes.selected}
+								renderInput={(params) => <TextField {...params} label="Thêm vào" />}
+							/>
+						</div>
+						<h2 className={classes.subtitle}> Chọn thời hạn tin: </h2>
+						<div style={{ padding: "10px 0" }}>
+							<RangePicker showTime required style={{ width: "100%" }} format={dateFormat} />
+						</div>
+						<p className={classes.total}>
+							<span style={{ color: "#329fcf" }}>Tổng tiền:</span> <span>10000</span> <b>VND</b>
+						</p>
+					</div>
+					<div style={{ textAlign: "right" }}>
+						<Button color="secondary" variant="outlined">
+							Tiếp tục
+						</Button>
+					</div>
 				</Item>
 			</Grid>
 		</Grid>

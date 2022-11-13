@@ -27,9 +27,28 @@ const Banner = () => {
 	const [disabled] = useState(false);
 	const [filterData, setFilterData] = useState([]);
 	const [cityFilter, setCityFilter] = useState([]);
+	const [isDisplayFilter, setIsDisplayFilter] = useState(false);
 	const [districtFilter, setDistrictFilter] = useState([]);
 	const onSearch = (value) => {
 		setSearchStringFilter(value);
+		const dataRequest = {
+			name: value,
+			city: selectedCity,
+			district: selectedDistrict,
+		};
+		console.log(dataRequest, "datarequest");
+
+		FilterInfoOfPostService.searchPropertiesWithFilter(dataRequest)
+			.then((value) => {
+				console.log(value, value.statusText);
+				if (value.statusText == "OK") {
+					console.log("phuc");
+					setPropertiesItem(value.data.property);
+				}
+			})
+			.catch((e) => {
+				console.log("không lấy được data property", e);
+			});
 	};
 
 	useEffect(() => {
@@ -58,44 +77,13 @@ const Banner = () => {
 		}
 	}, [selectedCity]);
 
-	const searchProperties = () => {
-		// const cityDataSearch = filterData.find((value) => value.name === selectedCity);
-		// let cityCodeFilter = "";
-		// if (cityDataSearch !== undefined && cityDataSearch !== null) {
-		// 	cityCodeFilter = cityDataSearch.code.toString();
-		// }
-		// const districtDataSearch = cityDataSearch.districts.find((value) => value.name === selectedDistrict);
-		// let districtCodeFilter = "";
-		// if (districtDataSearch !== undefined && districtDataSearch !== null) {
-		// 	districtCodeFilter = districtDataSearch.code.toString();
-		// }
-
-		const dataRequest = {
-			name: searchStringFilter,
-			city: selectedCity,
-			district: selectedDistrict,
-		};
-		console.log(dataRequest,'datarequest')
-
-		FilterInfoOfPostService.searchPropertiesWithFilter(dataRequest)
-			.then((value) => {
-
-				console.log(value,value.statusText);
-				if (value.statusText == "OK") {
-					console.log("phuc");
-					setPropertiesItem(value.data.property);
-				}
-			})
-			.catch((e) => {
-				console.log("không lấy được data property", e);
-			});
-	};
-
 	useEffect(() => {
 		FilterInfoOfPostService.getAllProperties()
 			.then((value) => {
 				if (value.statusText === "OK") {
 					setPropertiesItem(value.data.property);
+				} else {
+					setPropertiesItem([]);
 				}
 			})
 			.catch((e) => {
@@ -123,44 +111,68 @@ const Banner = () => {
 							</Space>
 						</div>
 						<div className="box">
-							<select class="form-select">
-								<option value="volvo" hidden selected>
-									Loại nhà
-								</option>
-								<option value="volvo">huathisonsdsfsdf</option>
-								<option value="saab">Saab</option>
-								<option value="mercedes">Mercedes</option>
-							</select>
+							<Select
+								style={{ width: "100%", fontSize: 8 }}
+								size="large"
+								value={selectedCity !== "" ? selectedCity : null}
+								showSearch
+								placeholder="Loại Nhà"
+								optionFilterProp="children"
+								onChange={(value) => {
+									setSelectedCity(value);
+								}}
+								filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
+							>
+								{cityFilter && cityFilter.map((value) => <Option value={value}>{value.name}</Option>)}
+							</Select>
 						</div>
 						<div className="box">
-							<select class="form-select">
-								<option value="volvo" hidden selected>
-									Dự án
-								</option>
-								<option value="volvo">huathisonsdsfsdf</option>
-								<option value="saab">Saab</option>
-								<option value="mercedes">Mercedes</option>
-							</select>
+							<Select
+								style={{ width: "100%", fontSize: 8 }}
+								size="large"
+								value={selectedCity !== "" ? selectedCity : null}
+								showSearch
+								placeholder="Dự án"
+								optionFilterProp="children"
+								onChange={(value) => {
+									setSelectedCity(value);
+								}}
+								filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
+							>
+								{cityFilter && cityFilter.map((value) => <Option value={value}>{value.name}</Option>)}
+							</Select>
 						</div>
 						<div className="box">
-							<select class="form-select">
-								<option value="volvo" hidden selected>
-									Số phòng
-								</option>
-								<option value="volvo">huathisonsdsfsdf</option>
-								<option value="saab">Saab</option>
-								<option value="mercedes">Mercedes</option>
-							</select>
+							<Select
+								style={{ width: "100%", fontSize: 8 }}
+								size="large"
+								value={selectedCity !== "" ? selectedCity : null}
+								showSearch
+								placeholder="Số phòng"
+								optionFilterProp="children"
+								onChange={(value) => {
+									setSelectedCity(value);
+								}}
+								filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
+							>
+								{cityFilter && cityFilter.map((value) => <Option value={value}>{value.name}</Option>)}
+							</Select>
 						</div>
 						<div className="box">
-							<select class="form-select">
-								<option value="volvo" hidden selected>
-									Diện tích
-								</option>
-								<option value="volvo">huathisonsdsfsdf</option>
-								<option value="saab">Saab</option>
-								<option value="mercedes">Mercedes</option>
-							</select>
+							<Select
+								style={{ width: "100%", fontSize: 8 }}
+								size="large"
+								value={selectedCity !== "" ? selectedCity : null}
+								showSearch
+								placeholder="Diện tích"
+								optionFilterProp="children"
+								onChange={(value) => {
+									setSelectedCity(value);
+								}}
+								filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
+							>
+								{cityFilter && cityFilter.map((value) => <Option value={value}>{value.name}</Option>)}
+							</Select>
 						</div>
 						<div className="box">
 							<Select
@@ -232,9 +244,6 @@ const Banner = () => {
 						</div>
 
 						<div className="btn1">
-							<Button onClick={() => searchProperties()}>
-								<i className="fa fa-search"></i>
-							</Button>
 							<Button onClick={() => clearFilter()}>Hủy lọc</Button>
 						</div>
 					</form>

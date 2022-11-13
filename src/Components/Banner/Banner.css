@@ -31,6 +31,8 @@
 .hero p {
   color: #fff;
   opacity: 0.8;
+  display: flex;
+  color:#726a95;
 }
 form {
   background-color: #fff;

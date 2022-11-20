@@ -1,8 +1,12 @@
 .flex1{
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
     flex-wrap: wrap;
+    object-fit: contain;
+  /* position: relative; */
+  /* top: 50%; */
+  /* transform: translateY(-50%); */
 }
 .bottom-44 {
     bottom: 17.5rem;

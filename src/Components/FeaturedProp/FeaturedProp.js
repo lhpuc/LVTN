@@ -10,7 +10,6 @@ import {
 import { HeartOutlined } from "@ant-design/icons";
 import "./FeaturedProp.css";
 import { SearchFilterPostContext } from "../../context/searchFilterContext";
-import Pulse from "react-reveal/Pulse";
 
 import { Link } from "react-router-dom";
 export const FeaturedProp = () => {
@@ -26,15 +25,13 @@ export const FeaturedProp = () => {
               <div className="property-list-item">
                 <div className="relative box-content mx-3 w-80 h-fit rounded-lg border border-gray-400">
                   <Link to={`/property/${property._id}`} key={index}>
-                    <Pulse>
-                      <div className="z-0 m-0 w-fit">
-                        <img
-                          className="rounded-t-lg"
-                          src={property.img.length > 0 ? property.img[0] : ""}
-                          alt={property.name}
-                        />
-                      </div>
-                    </Pulse>
+                    <div className="z-0 m-0 w-fit">
+                      <img
+                        className="rounded-t-lg"
+                        src={property.img.length > 0 ? property.img[0] : ""}
+                        alt={property.name}
+                      />
+                    </div>
 
                     <div className="text-white bg-danger px-4 py-1 text-xs rounded absolute top-3 left-3 z-10">
                       NỔI BẬT

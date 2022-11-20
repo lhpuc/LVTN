@@ -53,11 +53,11 @@ const Navbar = () => {
 		// event.preventDefault();
 		navItems[selectedNavItem].classList.remove("active");
 		navItems[index].classList.add("active");
-		if (navItems[index]?.className.includes("sub-nav-list")) {
-			document.querySelector(".sub-menu").classList.toggle("active");
-		} else {
-			document.querySelector(".sub-menu").classList.remove("active");
-		}
+		// if (navItems[index]?.className.includes("sub-nav-list")) {
+		// 	document.querySelector(".sub-menu").classList.toggle("active");
+		// } else {
+		// 	document.querySelector(".sub-menu").classList.remove("active");
+		// }
 		if (index < 4) {
 			setShapeStyle((prev) => ({
 				...prev,
@@ -118,22 +118,22 @@ const Navbar = () => {
 	}, []);
 
 	//
-	useEffect(() => {
-		setPropertyList([
-			{
-				propertyId: 0,
-				name: "Property A",
-			},
-			{
-				propertyId: 1,
-				name: "Property B",
-			},
-			{
-				propertyId: 2,
-				name: "Property C",
-			},
-		]);
-	}, []);
+	// useEffect(() => {
+	// 	setPropertyList([
+	// 		{
+	// 			propertyId: 0,
+	// 			name: "Property A",
+	// 		},
+	// 		{
+	// 			propertyId: 1,
+	// 			name: "Property B",
+	// 		},
+	// 		{
+	// 			propertyId: 2,
+	// 			name: "Property C",
+	// 		},
+	// 	]);
+	// }, []);
 
 	// useEffect(() => {
 	//   setUser({
@@ -167,7 +167,13 @@ const Navbar = () => {
 			<div ref={navListRef} className="nav-list">
 				<div className="shape-mobile" style={shapeStyleMobile}></div>
 				<div className="nav-group">
-					<div className="nav-item sub-nav-list">
+				<div className="nav-item">
+						<NavLink onClick={(e) => handleClickNavItem(e, 0)} className="nav-link" to="/" exact>
+							<IdcardOutlined className="nav-icon" />
+							<span className="nav-text">Trang chủ</span>
+						</NavLink>
+					</div>
+					{/* <div className="nav-item sub-nav-list">
 						<NavLink onClick={(e) => handleClickNavItem(e, 0)} className="nav-link" to="/" exact>
 							<HomeOutlined className="nav-icon" />
 							<span className="nav-text">Nhà cho thuê</span>
@@ -181,7 +187,7 @@ const Navbar = () => {
 								</p>
 							))}
 						</div>
-					</div>
+					</div> */}
 					<div className="nav-item">
 						<NavLink onClick={(e) => handleClickNavItem(e, 1)} className="nav-link" to="/about" exact>
 							<IdcardOutlined className="nav-icon" />

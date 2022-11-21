@@ -213,6 +213,7 @@ const Navbar = () => {
 							<NavLink
 								onClick={(e) => {
 									setIsLogin(false);
+									console.log(localStorage.token, "before");
 									localStorage.setItem("token", "");
 									console.log("phuctes", localStorage.token, "cdew");
 

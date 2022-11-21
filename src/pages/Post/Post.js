@@ -378,7 +378,7 @@ const Post = () => {
 				<Item>
 					<h1 className={classes.title}> Hình ảnh và Video </h1>
 					<Upload
-						action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+						action="https://lvtn2022real.herokuapp.com/image"
 						listType="picture-card"
 						fileList={fileList}
 						onPreview={handlePreview}

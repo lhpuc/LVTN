@@ -11,15 +11,20 @@ const Footer = () => {
           <p>Chúng tôi đặt chất lượng và uy tín lên hàng đầu.</p>
         </div>
         <div className="contact-item">
-          <button type="button">Liên hệ ngay</button>
+          <a href="/contact" className="form-link">
+            <button type="button">Liên hệ ngay</button>
+          </a>
         </div>
       </div>
       <div className="content">
         <div className="content-item first">
           <h1 className="content-title logo">Logo</h1>
-          <h2 className="content-title">Bạn có cần trợ giúp về bất cứ điều gì không?</h2>
+          <h2 className="content-title">
+            Bạn có cần trợ giúp về bất cứ điều gì không?
+          </h2>
           <p className="content-text">
-          Nhận thông tin cập nhật, ưu đãi hấp dẫn, hướng dẫn, giảm giá được gửi trực tiếp trong hộp thư đến của bạn hàng tháng
+            Nhận thông tin cập nhật, ưu đãi hấp dẫn, hướng dẫn, giảm giá được
+            gửi trực tiếp trong hộp thư đến của bạn hàng tháng
           </p>
           <div className="content-form">
             <form onSubmit={(e) => e.preventDefault()}>

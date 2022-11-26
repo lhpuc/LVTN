@@ -2,7 +2,7 @@ import { Divider, Input, Select, Space, InputNumber, DatePicker } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 
-import React, { useState, useRef, useContext } from "react";
+import React, { useState, useRef, useContext, useEffect } from "react";
 import AuthContext from "../../context/AuthProvider";
 import { css } from "@emotion/css";
 import { styled } from "@mui/material/styles";
@@ -13,6 +13,9 @@ import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
 import InputAdornment from "@mui/material/InputAdornment";
 import moment from "moment";
+import { FilterInfoOfPostApi } from "../../api/home/InfoOfFilter";
+
+import axios from "axios";
 
 const getBase64 = (file) =>
 	new Promise((resolve, reject) => {
@@ -29,18 +32,11 @@ const Item = styled(Paper)(({ theme }) => ({
 	margin: 10,
 }));
 
-const kindOfPost = ["sell", "lend"];
-const kindOfBDS = ["sell", "lend"];
-const kindOfCity = ["sell", "lend"];
-const kindOfDistrict = ["sell", "lend"];
-const kindOfWard = ["sell", "lend"];
-const kindOfRoad = ["sell", "lend"];
-const kindOfProject = ["sell", "lend"];
-
 const Post = () => {
+	const FilterInfoOfPostService = FilterInfoOfPostApi();
+
 	const { auth } = useContext(AuthContext);
 	const { RangePicker } = DatePicker;
-	console.log(auth);
 	const classes = {
 		root: css({
 			padding: 30,
@@ -74,21 +70,80 @@ const Post = () => {
 			padding: 10,
 		}),
 	};
-	const [kindOfPostValueSelected, setKindOfPostValueSelected] = useState("lend");
+	const [kindOfPostValueSelected, setKindOfPostValueSelected] = useState("");
 	const [kindOfBDSValueSelected, setKindOfBDSValueSelected] = useState("lend");
 	const [kindOfCityValueSelected, setKindOfCityValueSelected] = useState("lend");
 	const [kindOfDistrictValueSelected, setKindOfDistrictValueSelected] = useState("lend");
 	const [kindOfWardValueSelected, setKindOfWardValueSelected] = useState("lend");
 	const [kindOfRoadValueSelected, setKindOfRoadValueSelected] = useState("lend");
 	const [kindOfProjectValueSelected, setKindOProjectValueSelected] = useState("lend");
+	const [fullAddress, setFullAddress] = useState("");
 
-	const [items, setItems] = useState(["jack", "lucy"]);
+	const [numberOfRoom, setNumberOfRoom] = useState(0);
+	const [numberOfBath, setNumberOfBath] = useState(0);
+	const [numberOfFloor, setNumberOfFloor] = useState(0);
+	const [titleOfPost, setTitleOfPost] = useState("");
+	const [desOfPost, setDesOfPost] = useState("");
+	const [priceOfBDS, setPriceOfBDS] = useState(0);
+	const [areaOfBDS, setAreaOfBDS] = useState(0);
+	const [paperOfBDS, setPaperOfBDS] = useState([]);
+
+	const [nameContact, setNameContact] = useState("");
+	const [phoneContact, setPhoneContact] = useState("");
+	const [addressContact, setAddressContact] = useState("");
+	const [emailContact, setEmailContact] = useState("");
+
+	const [kindOfInfo, setKindOfInfo] = useState("");
+	const [startDateOfPost, setStartDateOfPost] = useState(moment());
+	const [endDateOfPost, setEndDateOfPost] = useState("");
+	const [totalPrice, setTotalPrice] = useState(0);
+
+	const [items, setItems] = useState(["Sổ đỏ", "sao kê"]);
 	const [name, setName] = useState("");
 	const [previewOpen, setPreviewOpen] = useState(false);
 	const [previewImage, setPreviewImage] = useState("");
 	const [previewTitle, setPreviewTitle] = useState("");
 	const [fileList, setFileList] = useState([]);
 	const inputRef = useRef(null);
+
+	const [kindOfPost, setKindOfPost] = useState(["Bán", "Cho thuê", "Ghép"]);
+
+	const [positionData, setPositionData] = useState([]);
+	const [kindOfCity, setKindOfCity] = useState([]);
+	const [kindOfDistrict, setKindOfDistrict] = useState([]);
+	const [kindOfWard, setKindOfWard] = useState([]);
+	const [kindOfBDS, setKindOfBDS] = useState([]);
+
+	const kindOfRoad = ["sell", "lend"];
+	const kindOfProject = ["sell", "lend"];
+
+	useEffect(() => {
+		FilterInfoOfPostService.getOptionFilter().then((value) => {
+			console.log(value, "value");
+			const cityData = [];
+			value.data.cityList.forEach((item) => {
+				cityData.push(item.name);
+			});
+			setPositionData(value.data.cityList);
+			setKindOfCity(cityData);
+		});
+	}, []);
+
+	useEffect(() => {
+		setKindOfDistrictValueSelected("");
+		if (kindOfCityValueSelected !== "") {
+			const cityDataSearch = positionData.find((value) => value.name === kindOfCityValueSelected);
+			const nameOfDistricts = [];
+			if (cityDataSearch) {
+				cityDataSearch.districts.forEach((value) => {
+					nameOfDistricts.push(value.name);
+				});
+			}
+			setKindOfDistrict(nameOfDistricts);
+		} else {
+			setKindOfDistrict([]);
+		}
+	}, [kindOfCityValueSelected]);
 	const onNameChange = (event) => {
 		setName(event.target.value);
 	};
@@ -110,7 +165,33 @@ const Post = () => {
 		setPreviewOpen(true);
 		setPreviewTitle(file.name || file.url.substring(file.url.lastIndexOf("/") + 1));
 	};
-	const handleChange = ({ fileList: newFileList }) => setFileList(newFileList);
+	const handleChange = ({ fileList: newFileList }) => {
+		console.log(newFileList, "new file");
+		setFileList(newFileList);
+	};
+
+	const uploadImage = async (options) => {
+		const { onSuccess, onError, file, onProgress } = options;
+
+		const formData = new FormData();
+		const config = {
+			headers: { "Content-Type": "multipart/form-data" },
+			onUploadProgress: (event) => {
+				onProgress({ percent: (event.loaded / event.total) * 100 });
+			},
+		};
+		formData.append("img", file);
+		try {
+			const res = await axios.post("https://lvtn2022real.herokuapp.com/image", formData, config);
+
+			onSuccess("Ok");
+			console.log("server res: ", res);
+		} catch (err) {
+			console.log("Eroor: ", err);
+			const error = new Error("Some error");
+			onError({ err });
+		}
+	};
 	const uploadButton = (
 		<div>
 			<PlusOutlined />
@@ -124,6 +205,7 @@ const Post = () => {
 		</div>
 	);
 	const dateFormat = "DD/MM/YYYY hh:ss:mm";
+
 	return (
 		<Grid container className={classes.root} spacing={3}>
 			<Grid item md={8} xs={12}>
@@ -318,15 +400,30 @@ const Post = () => {
 						/>
 						<div style={{ paddingTop: 10 }}>
 							<span>Số phòng ngủ: </span>
-							<InputNumber min={0} />
+							<InputNumber
+								min={0}
+								onChange={(e) => {
+									console.log(e);
+								}}
+							/>
 						</div>
 						<div style={{ paddingTop: 10 }}>
 							<span>Số phòng tắm, vệ sinh: </span>
-							<InputNumber min={0} />
+							<InputNumber
+								min={0}
+								onChange={(e) => {
+									console.log(e);
+								}}
+							/>
 						</div>
 						<div style={{ paddingTop: 10 }}>
 							<span>Số tầng: </span>
-							<InputNumber min={0} />
+							<InputNumber
+								min={0}
+								onChange={(e) => {
+									console.log(e);
+								}}
+							/>
 						</div>
 					</div>
 					<p>Thông tin thêm</p>
@@ -378,7 +475,8 @@ const Post = () => {
 				<Item>
 					<h1 className={classes.title}> Hình ảnh và Video </h1>
 					<Upload
-						action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+						accept="image/pnp, image/jpeg, image/jpg"
+						customRequest={uploadImage}
 						listType="picture-card"
 						fileList={fileList}
 						onPreview={handlePreview}

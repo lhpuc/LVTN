@@ -2,11 +2,15 @@ import { Typography, Button, Result } from "antd";
 import React, { useState, useContext, useEffect } from "react";
 import { accountApi } from "../../api/login/loginApi";
 import AuthContext from "../../context/AuthProvider";
+import AlertDialog from "../Dialog/AleartDialog";
 const { Title } = Typography;
 
 const LoginForm = () => {
 	const { auth, setAuth, setIsLogin, isLogin } = useContext(AuthContext);
-
+	const [isOpenDialog, setIsOpenDialog] = useState(false);
+	const [isTypeDialog, setIsTypeDialog] = useState("warning");
+	const [isMesssageDialog, setIsMessageDialog] = useState("");
+	const [isClosableDialog, setIsClosableDialog] = useState(true);
 	const accountApiService = accountApi();
 	const [formData, setFormData] = useState({
 		email: "",
@@ -38,18 +42,28 @@ const LoginForm = () => {
 						const accessToken = result.token;
 						setAuth({ accessToken: accessToken });
 					} else {
-						alert(result.mes);
+						setIsOpenDialog(true);
+						setIsTypeDialog("error");
+						setIsMessageDialog(result.mes);
+						setIsClosableDialog(false);
+
 						setFormData({
 							email: "",
 							password: "",
 						});
 					}
 				} else {
-					alert("lỗi khi xác thực");
+					setIsOpenDialog(true);
+					setIsTypeDialog("error");
+					setIsMessageDialog("Có lỗi khi xác thực");
+					setIsClosableDialog(false);
 				}
 			})
 			.catch(() => {
-				alert("server bị lỗi");
+				setIsOpenDialog(true);
+				setIsTypeDialog("error");
+				setIsMessageDialog("Server bị lỗi");
+				setIsClosableDialog(false);
 			});
 	};
 
@@ -81,6 +95,15 @@ const LoginForm = () => {
 							onChange={handleChangeInput}
 						/>
 					</div>
+					<AlertDialog
+						isOpen={isOpenDialog}
+						type={isTypeDialog}
+						message={isMesssageDialog}
+						closable={isClosableDialog}
+						onClose={() => {
+							setIsOpenDialog(false);
+						}}
+					/>
 					<div className="form-group">
 						<Button
 							type="primary"

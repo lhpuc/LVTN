@@ -1,55 +1,35 @@
-import { Button, Modal, Result } from 'antd';
-import React, { useState, useEffect } from 'react';
-import { SmileOutlined } from '@ant-design/icons';
-const DialogCustome = ({openDialog}) => {
-    const [loading, setLoading] = useState(false);
-    const [open, setOpen] = useState(false);
+import React, { useState, useEffect } from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
-    useEffect(() => {
-        setOpen(openDialog);
-    },[openDialog])
-    
-    const handleOk = () => {
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            setOpen(false);
-        }, 3000);
-    };
-    const handleCancel = () => {
-        setOpen(false);
-    };
-    return (
-        <>
-            <Modal
-                open={open}
-                title="Title"
-                onOk={handleOk}
-                onCancel={handleCancel}
-                footer={[
-                    <Button key="back" onClick={handleCancel}>
-                        Return
-                    </Button>,
-                    <Button key="submit" type="primary" loading={loading} onClick={handleOk}>
-                        Submit
-                    </Button>,
-                    <Button
-                        key="link"
-                        href="/login"
-                        type="primary"
-                        loading={loading}
-                        onClick={handleOk}
-                    >
-                        Đăng Nhập
-                    </Button>,
-                ]}
-            >
-                <Result
-                    icon={<SmileOutlined />}
-                    title="Great, we have done all the operations!"
-                />
-            </Modal>
-        </>
-    );
+const DialogCustome = ({ open, handleSubmit, handleClose, title, content }) => {
+	return (
+		<div>
+			<Dialog
+				open={open}
+				onClose={handleClose}
+				aria-labelledby="alert-dialog-title"
+				aria-describedby="alert-dialog-description"
+			>
+				<DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+				<DialogContent>
+					<DialogContentText id="alert-dialog-description">{content}</DialogContentText>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={handleClose} color="secondary">
+						Hủy
+					</Button>
+					<Button onClick={handleSubmit} variant="outlined" autoFocus>
+						Xác nhận
+					</Button>
+				</DialogActions>
+			</Dialog>
+		</div>
+	);
 };
+
 export default DialogCustome;

@@ -28,6 +28,12 @@ export const FilterInfoOfPostApi = () => {
 			return axiosClientInstance.post(`/${propertyKey}`, dataRequest, config);
 		},
 
+		getPostInfoById: (id) => {
+			return axiosClientInstance.get(`/property/find?id=${id}`);
+		},
+		// headers :{Authorization:`Bearer ${token}`}
+		// data:data,
+
 		// headers :{Authorization:`Bearer ${token}`}
 		// data:data,
 	};

@@ -69,7 +69,6 @@ const Post = () => {
 		textField: css({
 			marginTop: 10,
 			marginBottom: 10,
-			padding: 10,
 		}),
 	};
 	const [kindOfPostValueSelected, setKindOfPostValueSelected] = useState("");
@@ -454,15 +453,7 @@ const Post = () => {
 								/>
 							</Grid> */}
 							</Grid>
-							<Autocomplete
-								size="small"
-								disablePortal
-								id="kindOfProject"
-								options={kindOfProject}
-								value={kindOfProjectValueSelected}
-								className={classes.selected}
-								renderInput={(params) => <TextField {...params} label="Dự án" />}
-							/>
+
 							<TextField
 								size="small"
 								className={classes.textField}

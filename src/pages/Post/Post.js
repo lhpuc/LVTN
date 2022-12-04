@@ -1,4 +1,4 @@
-import { Divider, Input, Select, Space, InputNumber, DatePicker } from "antd";
+import { Divider, Input, Select, Space, InputNumber, DatePicker, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 
@@ -125,6 +125,10 @@ const Post = () => {
 	const kindOfRoad = ["sell", "lend"];
 	const kindOfProject = ["sell", "lend"];
 
+	const [typeAlert, setTypeAlert] = useState("error");
+	const [openAlert, setOpenAlert] = useState(false);
+	const [messageAlert, setMessageAlert] = useState("");
+
 	const kindOfUnit = ["VND", "VND/thang", "Thương lượng"];
 
 	const [codeOfPosition, setCodeOfPosition] = useState({ city: "", district: "", ward: "" });
@@ -228,7 +232,6 @@ const Post = () => {
 	const onNameChange = (event) => {
 		setName(event.target.value);
 	};
-	let index = 0;
 	const addItem = (e) => {
 		e.preventDefault();
 		if (name !== "") {
@@ -283,7 +286,7 @@ const Post = () => {
 		};
 		formData.append("img", file);
 		try {
-			const res = await axios.post("https://lvtn-2022-server.onrender.com/image", formData, config);
+			const res = await axios.post("https://lvtn2022real.herokuapp.com/image", formData, config);
 
 			onSuccess({ ...res });
 		} catch (err) {
@@ -339,9 +342,25 @@ const Post = () => {
 			amount: totalPrice,
 		};
 		console.log(dataRequest, "data request");
-		FilterInfoOfPostService.addPostBDS(dataRequest, localStorage.getItem("token")).then((value) => {
-			console.log(value, "value return");
-		});
+		FilterInfoOfPostService.addPostBDS(dataRequest, localStorage.getItem("token"))
+			.then((value) => {
+				console.log(value, "value return");
+
+				const data = value.data;
+				if (data.success) {
+					console.log(data);
+					window.location = `${data.link}`;
+				} else {
+					setOpenAlert(true);
+					setMessageAlert("Có lỗi xảy ra.");
+					setTypeAlert("error");
+				}
+			})
+			.catch(() => {
+				setOpenAlert(true);
+				setMessageAlert("Có lỗi xảy ra.");
+				setTypeAlert("error");
+			});
 	};
 
 	return (
@@ -781,6 +800,17 @@ const Post = () => {
 							<p className={classes.total}>
 								<span style={{ color: "#329fcf" }}>Tổng tiền:</span> <span>{totalPrice}</span> <b>VND</b>
 							</p>
+						</div>
+						<div>
+							<AlertDialog
+								isOpen={openAlert}
+								onClose={() => {
+									setOpenAlert(false);
+								}}
+								closable="false"
+								type={typeAlert}
+								message={messageAlert}
+							/>
 						</div>
 						<div style={{ textAlign: "right" }}>
 							<Button

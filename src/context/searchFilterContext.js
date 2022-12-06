@@ -8,17 +8,27 @@ export const SearchFilterPostProvider = ({ children }) => {
 	const [searchStringFilter, setSearchStringFilter] = useState("");
 	const [selectMinPrice, setSelectedMinPrice] = useState(0);
 	const [selectMaxPrice, setSelectedMaxPrice] = useState(0);
-	const [propertiesItem,setPropertiesItem] = useState([]);
+	const [selectMinArea, setSelectedMinArea] = useState(0);
+	const [selectMaxArea, setSelectedMaxArea] = useState(0);
+	const [propertiesItem, setPropertiesItem] = useState([]);
+	const [searchUserOrProperty, setSearchUserOrProperty] = useState(false); //false: property , true: user
+	const [userListItem, setUserListItem] = useState([]);
 	const clearFilter = () => {
 		setSelectedDistrict("");
 		setSelectedCity("");
 		setSelectedMinPrice(0);
 		setSelectedMaxPrice(0);
+		setSelectedMinArea(0);
+		setSelectedMaxArea(0);
 	};
 	return (
 		<>
 			<SearchFilterPostContext.Provider
 				value={{
+					userListItem,
+					setUserListItem,
+					searchUserOrProperty,
+					setSearchUserOrProperty,
 					propertiesItem,
 					setPropertiesItem,
 					searchStringFilter,
@@ -32,6 +42,10 @@ export const SearchFilterPostProvider = ({ children }) => {
 					setSelectedMinPrice,
 					selectMaxPrice,
 					setSelectedMaxPrice,
+					selectMinArea,
+					setSelectedMinArea,
+					selectMaxArea,
+					setSelectedMaxArea,
 				}}
 			>
 				{children}

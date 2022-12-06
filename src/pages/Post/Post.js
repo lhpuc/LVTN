@@ -6,7 +6,7 @@ import React, { useState, useRef, useContext, useEffect } from "react";
 import AuthContext from "../../context/AuthProvider";
 import { css } from "@emotion/css";
 import { styled } from "@mui/material/styles";
-import { Button, useStepContext } from "@mui/material";
+import { Button, setRef, useStepContext } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
@@ -121,14 +121,14 @@ const Post = () => {
 	const [titleDialog, setTitleDialog] = useState("");
 	const [contentDialog, setContentDialog] = useState("");
 
-	const kindOfRoad = ["sell", "lend"];
-	const kindOfProject = ["sell", "lend"];
-
 	const [typeAlert, setTypeAlert] = useState("error");
 	const [openAlert, setOpenAlert] = useState(false);
 	const [messageAlert, setMessageAlert] = useState("");
 
-	const kindOfUnit = ["VND", "VND/thang", "Thương lượng"];
+	const [totalBDS, setTotalBDS] = useState(0);
+	const [remainBDS, setRemainBDS] = useState(0);
+
+	const kindOfUnit = ["VND", "Thương lượng"];
 
 	const [codeOfPosition, setCodeOfPosition] = useState({ city: "", district: "", ward: "" });
 	useEffect(() => {
@@ -309,7 +309,8 @@ const Post = () => {
 
 	const handlePostBDS = () => {
 		const dataRequest = {
-			owner: null,
+			totalRoom: totalBDS,
+			remainRoom: remainBDS,
 			bussinessType: kindOfPostValueSelected == "Bán" ? 2 : 1,
 			propertyType: kindOfBDSValueSelected,
 			city: kindOfCityValueSelected,
@@ -619,6 +620,38 @@ const Post = () => {
 									value={numberOfFloor}
 									onChange={(e) => {
 										setNumberOfFloor(e);
+									}}
+								/>
+							</div>
+							<div style={{ paddingTop: 20 }}>
+								<TextField
+									type="number"
+									size="small"
+									className={classes.textField}
+									style={{ width: "100%", paddingBottom: 20 }}
+									id="standard-basic"
+									label="Số lượng tổng"
+									fullWidth
+									variant="outlined"
+									required
+									value={totalBDS}
+									onChange={(e) => {
+										setTotalBDS(e.target.value);
+									}}
+								/>
+								<TextField
+									type="number"
+									size="small"
+									className={classes.textField}
+									style={{ width: "100%", paddingBottom: 20 }}
+									id="standard-basic"
+									label="còn lại"
+									fullWidth
+									variant="outlined"
+									required
+									value={remainBDS}
+									onChange={(e) => {
+										setRemainBDS(e.target.value);
 									}}
 								/>
 							</div>

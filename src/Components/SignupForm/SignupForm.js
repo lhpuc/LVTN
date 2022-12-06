@@ -9,7 +9,6 @@ const SignupForm = () => {
 	const accountApiService = accountApi();
 	const [signUpSuccess, setSignUpSuccess] = useState(false);
 	const [formData, setFormData] = useState({
-		firstName: "",
 		lastName: "",
 		email: "",
 		phone: "",
@@ -34,7 +33,7 @@ const SignupForm = () => {
 			const dataRequest = {
 				email: formData.email,
 				phone: formData.phone,
-				firstName: formData.firstName,
+
 				lastName: formData.lastName,
 				password: formData.password,
 			};
@@ -78,17 +77,8 @@ const SignupForm = () => {
 					<div className="form-group">
 						<input
 							type="text"
-							name="firstName"
-							placeholder="Tên"
-							value={formData.firstName}
-							onChange={handleChangeInput}
-						/>
-					</div>
-					<div className="form-group">
-						<input
-							type="text"
 							name="lastName"
-							placeholder="Họ"
+							placeholder="Họ tên"
 							value={formData.lastName}
 							onChange={handleChangeInput}
 						/>

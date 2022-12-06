@@ -74,20 +74,20 @@ const PropertyDetails = () => {
 									</div>
 								</div>
 							</div>
-							<div style={{ height: 500, marginBottom: 50, backgroundColor: "#211f50", padding: 20 }}>
+							<div style={{ maxHeight: 500, marginBottom: 50, backgroundColor: "#211f50", padding: 20 }}>
 								{property.img.length > 0 ? (
 									<div style={{ margin: "auto" }}>
 										<Carousel>
 											{property.img.map((pro) => (
-												<div>
-													<img style={{ maxHeight: 500, width: "auto" }} src={pro} alt="" />
+												<div style={{ padding: 10, textAlign: "center" }}>
+													<img style={{ maxHeight: 450, width: "auto", margin: "auto" }} src={pro} alt="" />
 												</div>
 											))}
 										</Carousel>
 									</div>
 								) : (
-									<div className="mb-8" style={{ margin: "auto" }}>
-										<img style={{ maxHeight: 500, width: "auto" }} src={noImage} alt="" />
+									<div className="mb-8" style={{ padding: 10, textAlign: "center" }}>
+										<img src={noImage} style={{ maxHeight: 450, width: "auto", margin: "auto" }} alt="" />
 									</div>
 								)}
 							</div>
@@ -118,6 +118,13 @@ const PropertyDetails = () => {
 								{!property.isNegotiate ? <>{property.price} VND</> : <>$ Thương lượng</>}
 							</div>
 
+							<h3>
+								<strong>Thông tin liên hệ:</strong>
+							</h3>
+							<p>Tên: {property.contactName}</p>
+							<p>Số điện thoại: {property.contactPhone}</p>
+							<p>Email: {property.contactEmail}</p>
+							<p>Địa chỉ liên hệ: {property.contactAddress}</p>
 							<h3>
 								<strong> Mô tả:</strong>
 							</h3>
@@ -150,10 +157,18 @@ const PropertyDetails = () => {
 							<p> {property.construction}</p>
 							<br /> */}
 							<h3>
-								{" "}
-								<strong> Địa điểm:</strong>
+								<strong>Địa điểm:</strong>
 							</h3>
 							<p> {property.address}</p>
+							{property.license.length > 0 && (
+								<>
+									<h3>
+										<strong>Giấy tờ:</strong>
+									</h3>
+									<p> {property.license.join(", ")}</p>{" "}
+								</>
+							)}
+
 							<br />
 							{/* <h3>
 								{" "}

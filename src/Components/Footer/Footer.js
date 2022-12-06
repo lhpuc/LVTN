@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { NavLink } from 'react-router-dom';
 import "./Footer.css";
 
 const Footer = () => {
@@ -11,14 +12,17 @@ const Footer = () => {
           <p>Chúng tôi đặt chất lượng và uy tín lên hàng đầu.</p>
         </div>
         <div className="contact-item">
-          <a href="/contact" className="form-link">
-            <button type="button">Liên hệ ngay</button>
-          </a>
+          {/* <a href="/contact" className="form-link"> */}
+          <NavLink to="/contact" >
+          <button type="button">Liên hệ ngay</button>
+          </NavLink>
+            
+          {/* </a> */}
         </div>
       </div>
       <div className="content">
         <div className="content-item first">
-          <h1 className="content-title logo">Logo</h1>
+          {/* <h1 className="content-title logo">Logo</h1> */}
           <h2 className="content-title">
             Bạn có cần trợ giúp về bất cứ điều gì không?
           </h2>

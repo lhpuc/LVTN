@@ -144,7 +144,7 @@ const Navbar = () => {
 
 	return (
 		<nav className="nav" id="nav">
-			<NavLink onClick={(e) => handleClickNavItem(e, 0)} className="logo" to="/" exact>
+			<NavLink  className="logo" to="/">
 				<HomeOutlined />
 			</NavLink>
 			{/* mobile */}
@@ -210,8 +210,15 @@ const Navbar = () => {
 				{user.id ? (
 					<div className="nav-group">
 						<div className="nav-item">
-							<a onClick={(e) => handleClickNavItem(e, 4)} className="nav-link">
+							<NavLink onClick={(e) => handleClickNavItem(e, 4)} className="nav-link" to="/post" exact>
+								<UploadOutlined className="nav-icon" />
+								<span className="nav-text">Đăng tin</span>
+							</NavLink>
+						</div>
+						<div className="nav-item">
+							<a onClick={(e) => handleClickNavItem(e, 5)} className="nav-link">
 								<UserAddOutlined className="nav-icon" />
+								{/* <span className="nav-text">Trang cá nhân</span> */}
 								<span className="nav-text">{user.username}</span>
 							</a>
 						</div>
@@ -223,7 +230,7 @@ const Navbar = () => {
 									localStorage.setItem("token", "");
 									console.log("phuctes", localStorage.token, "cdew");
 
-									handleClickNavItem(e, 5);
+									handleClickNavItem(e, 6);
 								}}
 								className="nav-link"
 								to="/login"
@@ -233,30 +240,13 @@ const Navbar = () => {
 								<span className="nav-text">Đăng xuất</span>
 							</NavLink>
 						</div>
-						<div className="nav-item">
-							<NavLink onClick={(e) => handleClickNavItem(e, 6)} className="nav-link" to="/post" exact>
-								<UploadOutlined className="nav-icon" />
-								<span className="nav-text">Đăng tin</span>
-							</NavLink>
-						</div>
+						
 					</div>
 				) : (
 					<div className="nav-group">
 						<div className="nav-item">
-							<NavLink onClick={(e) => handleClickNavItem(e, 4)} className="nav-link" to="/Signup" exact>
-								<UserAddOutlined className="nav-icon" />
-								<span className="nav-text">Đăng ký</span>
-							</NavLink>
-						</div>
-						<div className="nav-item">
-							<NavLink onClick={(e) => handleClickNavItem(e, 5)} className="nav-link" to="/Login" exact>
-								<LoginOutlined className="nav-icon" />
-								<span className="nav-text">Đăng nhập</span>
-							</NavLink>
-						</div>
-						<div className="nav-item">
 							<NavLink
-								onClick={(e) => handleClickNavItem(e, 6)}
+								onClick={(e) => handleClickNavItem(e, 4)}
 								className="nav-link"
 								to={isLogin ? "/post" : "/Login"}
 								exact
@@ -265,6 +255,19 @@ const Navbar = () => {
 								<span className="nav-text">Đăng tin</span>
 							</NavLink>
 						</div>
+						<div className="nav-item">
+							<NavLink onClick={(e) => handleClickNavItem(e, 5)} className="nav-link" to="/Signup" exact>
+								<UserAddOutlined className="nav-icon" />
+								<span className="nav-text">Đăng ký</span>
+							</NavLink>
+						</div>
+						<div className="nav-item">
+							<NavLink onClick={(e) => handleClickNavItem(e, 6)} className="nav-link" to="/Login" exact>
+								<LoginOutlined className="nav-icon" />
+								<span className="nav-text">Đăng nhập</span>
+							</NavLink>
+						</div>
+						
 					</div>
 				)}
 			</div>

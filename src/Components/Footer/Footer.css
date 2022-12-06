@@ -58,6 +58,7 @@
 
 .content-title {
   color: rgb(19, 17, 17);
+  font-size:22px;
 }
 
 .content-title.logo {
@@ -66,7 +67,7 @@
 
 .content-text,
 .content-link {
-  color: gray;
+  color: rgb(19, 17, 17);
   font-size: 16px;
 }
 

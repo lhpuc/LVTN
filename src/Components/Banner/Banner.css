@@ -1,5 +1,5 @@
 .hero {
-  background-image: url("../../assets/images/location/banner4.jpg");
+  background-image: url("../../assets/images/location/2.jpg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -14,14 +14,14 @@
   text-align: center;
   text-transform: capitalize;
   font-size: xxx-large;
-  color: #726a95;
+  color: #0d0d0d;
   margin: 50px 0;
   position: relative;
 }
 .titleH3 {
   text-transform: capitalize;
   font-size: x-large;
-  color: #726a95;
+  color: #0d0d0d;
   position: relative;
 }
 .hero h1 {
@@ -38,7 +38,7 @@ form {
   background-color: #fff;
   border-radius: 5px;
   margin-top: 50px;
-  padding: 0 20px;
+  /* padding: 0 20px; */
 }
 form select {
   padding: 10px;

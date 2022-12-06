@@ -53,7 +53,7 @@ export const postColumns = (deleteAction) => [
     key: 'status',
     width: 150,
     render: (_, { status }) => (
-      <Tag color={status === 'active' ? 'green' : 'red'} key={status}>
+      <Tag color={status === 'Cần bán' ? 'green' : 'blue'} key={status}>
         {status}
       </Tag>
     )

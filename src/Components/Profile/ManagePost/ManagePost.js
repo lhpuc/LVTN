@@ -10,7 +10,7 @@ const data = [
     name: 'Nhà trọ 1',
     img: 'https://foodi.com.vn/wp-content/uploads/2019/12/website-cho-thue-phong-tro-1.png',
     address: 'New York No. 1 Lake Park',
-    status: 'active',
+    status: 'Cần bán',
     price: 1000000000
   },
   {
@@ -18,7 +18,7 @@ const data = [
     name: 'Nhà trọ 2',
     img: 'https://foodi.com.vn/wp-content/uploads/2019/12/website-cho-thue-phong-tro-1.png',
     address: 'New York No. 1 Lake Park',
-    status: 'disabled',
+    status: 'Cho thuê',
     price: 2000000000
   },
   {
@@ -26,7 +26,7 @@ const data = [
     name: 'Nhà trọ 3',
     img: 'https://foodi.com.vn/wp-content/uploads/2019/12/website-cho-thue-phong-tro-1.png',
     address: 'New York No. 1 Lake Park',
-    status: 'active',
+    status: 'Cần bán',
     price: 10000
   },
   {
@@ -34,7 +34,7 @@ const data = [
     name: 'Nhà trọ 1',
     img: 'https://foodi.com.vn/wp-content/uploads/2019/12/website-cho-thue-phong-tro-1.png',
     address: 'New York No. 1 Lake Park',
-    status: 'active',
+    status: 'Cần bán',
     price: 1000000000
   },
   {
@@ -42,7 +42,7 @@ const data = [
     name: 'Nhà trọ 2',
     img: 'https://foodi.com.vn/wp-content/uploads/2019/12/website-cho-thue-phong-tro-1.png',
     address: 'New York No. 1 Lake Park',
-    status: 'disabled',
+    status: 'Cho thuê',
     price: 2000000000
   },
   {
@@ -50,7 +50,7 @@ const data = [
     name: 'Nhà trọ 3',
     img: 'https://foodi.com.vn/wp-content/uploads/2019/12/website-cho-thue-phong-tro-1.png',
     address: 'New York No. 1 Lake Park',
-    status: 'active',
+    status: 'Cần bán',
     price: 10000
   },
 ];

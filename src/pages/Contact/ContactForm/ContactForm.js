@@ -13,7 +13,7 @@ const layout = {
 /* eslint-disable no-template-curly-in-string */
 
 const validateMessages = {
-  required: "${label} là trường bắt buộc!",
+  required: "${label} không được bỏ trống! ",
   types: {
     email: "${label} không phải là một email hợp lệ!",
   },
@@ -82,7 +82,7 @@ const ContactForm = () => {
                   <li class="col-sm-6">
                     <Form.Item
                       class="font-montserrat"
-                      name={["tài khoản", "tên"]}
+                      name={["Tên"]}
                       rules={[
                         {
                           required: true,
@@ -103,10 +103,11 @@ const ContactForm = () => {
                   </li>
                   <li class="col-sm-6">
                     <Form.Item
-                      name={["tài khoản", "email"]}
+                      name={[ "Email"]}
                       rules={[
                         {
                           type: "email",
+                          required: true,
                         },
                       ]}
                     >
@@ -125,7 +126,7 @@ const ContactForm = () => {
 
                   <li class="col-sm-6">
                     <Form.Item
-                      name={["tài khoản", "số điện thoại"]}
+                      name={[ "Số điện thoại"]}
                       rules={[
                         {
                           required: true,
@@ -146,7 +147,7 @@ const ContactForm = () => {
                   </li>
                   <li class="col-sm-6">
                     <Form.Item
-                      name={["tài khoản", "chủ đề"]}
+                      name={[ "Chủ đề"]}
                       rules={[
                         {
                           required: true,
@@ -154,7 +155,7 @@ const ContactForm = () => {
                       ]}
                     >
                       <label class="font-montserrat">
-                        Chủ đề
+                        Chủ đề *
                         <Input
                           type="text"
                           class="form-control"
@@ -167,7 +168,7 @@ const ContactForm = () => {
                   </li>
 
                   <li class="col-sm-12">
-                    <Form.Item name={["tài khoản", "thông tin"]}>
+                    <Form.Item name={["Thông tin"]}>
                       <label class="font-montserrat">
                         Thông tin
                         <textarea

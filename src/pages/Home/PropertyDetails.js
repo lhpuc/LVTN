@@ -67,7 +67,7 @@ const PropertyDetails = () => {
 								</div>
 								<div className="mb-4 lg:mb-0 flex gap-x-2 text-sm">
 									<div className="bg-green-500 rounded-full text-white px-3 inline-block">
-										{property.bussinessType === 1 ? "Bán" : "Cho thuê"}
+										{property.bussinessType === 2 ? "Bán" : "Cho thuê"}
 									</div>
 									<div className="bg-violet-500 rounded-full text-white px-3 inline-block">
 										{property.city}

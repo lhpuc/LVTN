@@ -108,7 +108,7 @@ const Post = () => {
 	const [fileList, setFileList] = useState([]);
 	const inputRef = useRef(null);
 
-	const [kindOfPost, setKindOfPost] = useState(["Bán", "Cho thuê", "Ghép"]);
+	const [kindOfPost, setKindOfPost] = useState(["Bán", "Cho thuê"]);
 	const [kindOfUnitSelected, setKindOfUnitSelected] = useState("VND");
 
 	const [positionData, setPositionData] = useState([]);

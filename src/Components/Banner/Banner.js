@@ -12,6 +12,8 @@ const Banner = () => {
 
 	const { Option } = Select;
 	const {
+		searchUserOrProperty,
+		setSearchUserOrProperty,
 		propertiesItem,
 		setPropertiesItem,
 		searchStringFilter,
@@ -29,14 +31,36 @@ const Banner = () => {
 		setSelectedMinArea,
 		selectMaxArea,
 		setSelectedMaxArea,
+		selectedWard,
+		setSelectedWard,
+		selectedKindOfBDS,
+		setSelectedKindOfBDS,
+		selectedNumOfRoom,
+		setSelectedNumOfRoom,
+		selectedDistrictCode,
+		setSelectedDistrictCode,
+		selectedCityCode,
+		setSelectedCityCode,
+		selectedWardCode,
+		setSelectedWardCode,
+		currentPage,
+		setCurrentPage,
+		totalPage,
+		setTotalPage,
 	} = useContext(SearchFilterPostContext);
-	const [disabled] = useState(false);
+
+	const [isApplyFilter, setIsApplyFilter] = useState(false);
 	const [filterData, setFilterData] = useState([]);
 	const [cityFilter, setCityFilter] = useState([]);
-	const [isDisplayFilter, setIsDisplayFilter] = useState(false);
 	const [districtFilter, setDistrictFilter] = useState([]);
+	const [wardFilter, setWardFilter] = useState([]);
 	const [selectRangePriceDefault, setSelectRangePriceDefault] = useState([0, 10000000]);
 	const [selectRangeAreaDefault, setSelectRangeAreaDefault] = useState([0, 200]);
+
+	const [searchTypeList, setSearchTypeList] = useState(["Cá nhân", "Tin đăng"]);
+	const [numberOfRoomList, setNumberOfRoomList] = useState([1, 2, 3, 4, 5]);
+
+	const [kindOfBDS, setKindOfBDS] = useState([]);
 
 	useEffect(() => {
 		if (selectMinPrice < selectRangePriceDefault[0]) {
@@ -55,27 +79,111 @@ const Banner = () => {
 			setSelectRangeAreaDefault([selectRangeAreaDefault[1], selectMaxArea]);
 		}
 	}, [selectMinArea, selectMaxArea]);
-	const onSearch = (value) => {
-		setSearchStringFilter(value);
+
+	const handleFilterProperty = (keyword, page, isFilter) => {
+		setCurrentPage(page);
+		setTotalPage(0);
 		const dataRequest = {
-			name: value,
-			city: selectedCity,
-			district: selectedDistrict,
+			name: keyword,
+			page: page,
+			limit: 30,
 		};
+		if (isFilter) {
+			console.log("vdsv");
+			if (selectedKindOfBDS !== null && selectedKindOfBDS !== undefined && selectedKindOfBDS !== "") {
+				dataRequest.propertyType = selectedKindOfBDS;
+			}
+			if (
+				selectedNumOfRoom !== null &&
+				selectedNumOfRoom !== undefined &&
+				selectedNumOfRoom !== "" &&
+				selectedNumOfRoom !== 0
+			) {
+				dataRequest.nOfBedroom = selectedNumOfRoom;
+			}
+			if (selectedCityCode !== null && selectedCityCode !== undefined && selectedCityCode !== "") {
+				dataRequest.cityCode = selectedCityCode;
+			}
+			if (
+				selectedDistrictCode !== null &&
+				selectedDistrictCode !== undefined &&
+				selectedDistrictCode !== ""
+			) {
+				dataRequest.districtCode = selectedDistrictCode;
+			}
+			if (selectedWardCode !== null && selectedWardCode !== undefined && selectedWardCode !== "") {
+				dataRequest.wardCode = selectedWardCode;
+			}
+
+			if (
+				selectMinPrice !== null &&
+				selectMinPrice !== undefined &&
+				selectMinPrice !== "" &&
+				selectMaxPrice !== 0
+			) {
+				dataRequest.lowPrice = selectMinPrice;
+			}
+
+			if (
+				selectMaxPrice !== null &&
+				selectMaxPrice !== undefined &&
+				selectMaxPrice !== "" &&
+				selectMaxPrice !== 0
+			) {
+				dataRequest.highPrice = selectMaxPrice;
+			}
+
+			if (
+				selectMinArea !== null &&
+				selectMinArea !== undefined &&
+				selectMinArea !== "" &&
+				selectMaxArea !== 0
+			) {
+				dataRequest.areaLow = selectMinArea;
+			}
+
+			if (
+				selectMaxArea !== null &&
+				selectMaxArea !== undefined &&
+				selectMaxArea !== "" &&
+				selectMaxArea !== 0
+			) {
+				dataRequest.areaHigh = selectMaxArea;
+			}
+		}
 		console.log(dataRequest, "datarequest");
 
 		FilterInfoOfPostService.searchPropertiesWithFilter(dataRequest)
 			.then((value) => {
-				console.log(value, value.statusText);
-				if (value.statusText == "OK") {
-					console.log("phuc");
-					setPropertiesItem(value.data.property);
+				const data = value.data;
+				if (data.success) {
+					const propertyList = data.propertyList[0];
+					if (propertyList.count.length > 0) {
+						setTotalPage(Math.ceil(propertyList.count[0].count / 30));
+
+						setPropertiesItem(propertyList.pList);
+					} else {
+						setPropertiesItem([]);
+					}
+				} else {
+					setPropertiesItem([]);
 				}
 			})
 			.catch((e) => {
+				setPropertiesItem([]);
 				console.log("không lấy được data property", e);
 			});
 	};
+	const onSearch = (value) => {
+		clearFilter();
+		setSearchStringFilter(value);
+		setIsApplyFilter(false);
+		handleFilterProperty(searchStringFilter, 1, false);
+	};
+
+	useEffect(() => {
+		handleFilterProperty(searchStringFilter, currentPage, isApplyFilter);
+	}, [currentPage]);
 
 	useEffect(() => {
 		FilterInfoOfPostService.getOptionFilter().then((value) => {
@@ -86,12 +194,27 @@ const Banner = () => {
 			setFilterData(value.data.cityList);
 			setCityFilter(cityData);
 		});
+
+		FilterInfoOfPostService.getAllPropertiesType()
+			.then((value) => {
+				console.log(value, "loại");
+				if (value.data.success) {
+					setKindOfBDS(value.data.list);
+				} else {
+					setKindOfBDS([]);
+				}
+			})
+			.catch(() => {
+				setKindOfBDS([]);
+			});
 	}, []);
 
 	useEffect(() => {
 		setSelectedDistrict("");
+		setSelectedDistrictCode(null);
 		if (selectedCity !== "") {
 			const cityDataSearch = filterData.find((value) => value.name === selectedCity);
+			setSelectedCityCode(cityDataSearch.code);
 			console.log(cityDataSearch);
 			const nameOfDistricts = [];
 			cityDataSearch.districts.forEach((value) => {
@@ -104,18 +227,52 @@ const Banner = () => {
 	}, [selectedCity]);
 
 	useEffect(() => {
-		FilterInfoOfPostService.getAllProperties()
-			.then((value) => {
-				if (value.statusText === "OK") {
-					setPropertiesItem(value.data.property);
-				} else {
-					setPropertiesItem([]);
+		let wardsData = [];
+		setSelectedWard("");
+		setSelectedWardCode(null);
+		if (selectedCity !== "" && selectedCity !== null) {
+			const cityData = filterData.find((value) => value.name === selectedCity);
+			if (
+				selectedDistrict !== "" &&
+				selectedDistrict !== null &&
+				cityData !== null &&
+				cityData !== undefined
+			) {
+				setSelectedCityCode(cityData.code);
+				const districtsData = cityData.districts.find((value) => value.name === selectedDistrict);
+				if (districtsData !== null && districtsData !== undefined) {
+					setSelectedDistrictCode(districtsData.code);
+					console.log(districtsData);
+					districtsData.wards.forEach((value) => {
+						wardsData.push(value.name);
+					});
 				}
-			})
-			.catch((e) => {
-				console.log("unsuccessful");
-			});
-	}, []);
+			}
+		}
+		setWardFilter(wardsData);
+	}, [selectedDistrict]);
+
+	useEffect(() => {
+		if (selectedCity !== "" && selectedCity !== null) {
+			const cityData = filterData.find((value) => value.name === selectedCity);
+			if (
+				selectedDistrict !== "" &&
+				selectedDistrict !== null &&
+				cityData !== null &&
+				cityData !== undefined
+			) {
+				setSelectedCityCode(cityData.code);
+				const districtsData = cityData.districts.find((value) => value.name === selectedDistrict);
+				if (districtsData !== null && districtsData !== undefined) {
+					setSelectedDistrictCode(districtsData.code);
+					const wardData = districtsData.wards.find((value) => value.name === selectedWard);
+					if (wardData) {
+						setSelectedWardCode(wardData.code);
+					}
+				}
+			}
+		}
+	}, [selectedWard]);
 
 	return (
 		<>
@@ -123,219 +280,267 @@ const Banner = () => {
 				<div className="container">
 					<span className="titleName"> Cho sự lựa chọn của bạn</span>
 					<h3 className="titleH3"> Chọn những ưu đãi phù hợp nhất</h3>
-					<form style={{ padding: "20px 0" }}>
-						<div className="search-container">
-							<Space className="search_space">
-								<Select
-									style={{ width: "100%", fontSize: 8 }}
-									size="large"
-									value={selectedCity !== "" ? selectedCity : null}
-									showSearch
-									placeholder="Tìm kiếm theo"
-									optionFilterProp="children"
-									onChange={(value) => {
-										setSelectedCity(value);
-									}}
-									filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
-								>
-									{cityFilter && cityFilter.map((value) => <Option value={value}>{value.name}</Option>)}
-								</Select>
-								<Search
-									className="search"
-									placeholder="Nhập từ khóa"
-									allowClear
-									enterButton="Tìm kiếm"
-									size="large"
-									onSearch={onSearch}
-								/>
+					<form style={{ padding: "20px 0", width: "100%" }}>
+						<div
+							style={{
+								display: "flex",
+								justifyContent: "center",
+								alignItems: "center",
+								margin: "auto",
+								width: "100%",
+							}}
+						>
+							<Space className="search_space" style={{ width: "100%" }}>
+								<div style={{ width: "20%" }}>
+									<Select
+										fullWidth
+										style={{ fontSize: 8 }}
+										size="large"
+										value={searchUserOrProperty}
+										placeholder="Tìm kiếm theo"
+										onChange={(value) => {
+											setSearchUserOrProperty(value);
+										}}
+									>
+										{searchTypeList && searchTypeList.map((value) => <Option value={value}>{value}</Option>)}
+									</Select>
+								</div>
+								<div style={{ width: "100%" }}>
+									<Search
+										placeholder="Nhập từ khóa"
+										allowClear
+										enterButton="Tìm kiếm"
+										size="large"
+										fullWidth
+										onSearch={onSearch}
+									/>
+								</div>
 							</Space>
 						</div>
-						<div style={{ backgroundColor: "#f5f5ff" }}>
-							<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-								<div className="box">
-									<Select
-										style={{ width: "100%", fontSize: 8 }}
-										size="large"
-										value={selectedCity !== "" ? selectedCity : null}
-										showSearch
-										placeholder="Loại Nhà"
-										optionFilterProp="children"
-										onChange={(value) => {
-											setSelectedCity(value);
-										}}
-										filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
-									>
-										{cityFilter && cityFilter.map((value) => <Option value={value}>{value.name}</Option>)}
-									</Select>
+						{searchUserOrProperty == "Tin đăng" && (
+							<div style={{ backgroundColor: "#f5f5ff", margin: "auto", width: "100%" }}>
+								<div
+									style={{
+										display: "flex",
+										justifyContent: "center",
+										alignItems: "center",
+										margin: "auto",
+										width: "100%",
+									}}
+								>
+									<div className="box">
+										<Select
+											style={{ width: "100%", fontSize: 8 }}
+											size="large"
+											value={selectedKindOfBDS !== "" ? selectedKindOfBDS : null}
+											showSearch
+											placeholder="Loại Nhà"
+											optionFilterProp="children"
+											onChange={(value) => {
+												setSelectedKindOfBDS(value);
+											}}
+											filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
+										>
+											{kindOfBDS && kindOfBDS.map((value) => <Option value={value}>{value}</Option>)}
+										</Select>
+									</div>
+
+									<div className="box">
+										<Select
+											style={{ width: "100%", fontSize: 8 }}
+											size="large"
+											value={selectedNumOfRoom !== "" ? selectedNumOfRoom : null}
+											placeholder="Số phòng"
+											onChange={(value) => {
+												setSelectedNumOfRoom(value);
+											}}
+										>
+											{numberOfRoomList &&
+												numberOfRoomList.map((value) => (
+													<Option value={value}>{value === 5 ? ">4" : value}</Option>
+												))}
+										</Select>
+									</div>
 								</div>
 
-								<div className="box">
-									<Select
-										style={{ width: "100%", fontSize: 8 }}
-										size="large"
-										value={selectedCity !== "" ? selectedCity : null}
-										showSearch
-										placeholder="Số phòng"
-										optionFilterProp="children"
-										onChange={(value) => {
-											setSelectedCity(value);
-										}}
-										filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
-									>
-										{cityFilter && cityFilter.map((value) => <Option value={value}>{value.name}</Option>)}
-									</Select>
+								<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+									<div className="box">
+										<Select
+											style={{ width: "100%", fontSize: 8 }}
+											size="large"
+											value={selectedCity !== "" ? selectedCity : null}
+											showSearch
+											placeholder="Thành phố/ Tỉnh"
+											optionFilterProp="children"
+											onChange={(value) => {
+												setSelectedCity(value);
+											}}
+											filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
+										>
+											{cityFilter && cityFilter.map((value) => <Option value={value}>{value}</Option>)}
+										</Select>
+									</div>
+									<div className="box">
+										<Select
+											style={{ width: "100%" }}
+											size="large"
+											showSearch
+											value={selectedDistrict !== "" ? selectedDistrict : null}
+											placeholder="Quận Huyện"
+											optionFilterProp="children"
+											onChange={(value) => {
+												setSelectedDistrict(value);
+											}}
+											filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
+										>
+											{districtFilter && districtFilter.map((value) => <Option value={value}>{value}</Option>)}
+										</Select>
+									</div>
+									<div className="box">
+										<Select
+											size="large"
+											style={{ width: "100%" }}
+											showSearch
+											placeholder="Phường/Xã"
+											optionFilterProp="children"
+											value={selectedWard !== "" ? selectedWard : null}
+											onChange={(value) => {
+												setSelectedWard(value);
+											}}
+											filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
+										>
+											{wardFilter && wardFilter.map((value) => <Option value={value}>{value}</Option>)}
+										</Select>
+									</div>
 								</div>
-							</div>
+								<div
+									className="range-container"
+									style={{
+										display: "flex",
+										alignItems: "center",
+										justifyContent: "space-between",
+										padding: 10,
+										margin: "auto",
+									}}
+								>
+									<p style={{ padding: 0, margin: 0 }}>Mức giá:</p>
+									<div>
+										<span style={{ color: "#ccc" }}>Min -</span>
+										<InputNumber
+											value={selectMinPrice}
+											onChange={(e) => {
+												setSelectedMinPrice(Number(e));
+												setSelectRangePriceDefault([selectMinPrice, selectRangePriceDefault[0]]);
+											}}
+										/>
+									</div>
+									<div style={{ width: "60%" }}>
+										<Slider
+											range
+											min={selectRangePriceDefault[0]}
+											max={selectRangePriceDefault[1]}
+											value={[selectMinPrice, selectMaxPrice]}
+											onChange={(e) => {
+												console.log(e, "price");
+												setSelectedMinPrice(e[0]);
+												setSelectedMaxPrice(e[1]);
+											}}
+										/>
+									</div>
+									<div>
+										<InputNumber
+											value={selectMaxPrice}
+											onChange={(e) => {
+												setSelectedMaxPrice(Number(e));
+												setSelectRangePriceDefault([selectRangePriceDefault[0], selectMaxPrice]);
+											}}
+										/>
+										<span style={{ color: "#ccc" }}>- Max</span>
+									</div>
+								</div>
 
-							<div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-								<div className="box">
-									<Select
-										style={{ width: "100%", fontSize: 8 }}
-										size="large"
-										value={selectedCity !== "" ? selectedCity : null}
-										showSearch
-										placeholder="Thành phố/ Tỉnh"
-										optionFilterProp="children"
-										onChange={(value) => {
-											setSelectedCity(value);
-										}}
-										filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
-									>
-										{cityFilter && cityFilter.map((value) => <Option value={value}>{value.name}</Option>)}
-									</Select>
+								<div
+									className="range-container"
+									style={{
+										display: "flex",
+										alignItems: "center",
+										justifyContent: "space-between",
+										padding: 10,
+										margin: "auto",
+									}}
+								>
+									<p style={{ padding: 0, margin: 0 }}>Diện tích:</p>
+									<div>
+										<span style={{ color: "#ccc" }}>Min -</span>
+										<InputNumber
+											value={selectMinArea}
+											onChange={(e) => {
+												setSelectedMinArea(Number(e));
+												setSelectRangeAreaDefault([selectMinArea, selectRangeAreaDefault[0]]);
+											}}
+										/>
+									</div>
+									<div style={{ width: "60%" }}>
+										<Slider
+											range
+											min={selectRangeAreaDefault[0]}
+											max={selectRangeAreaDefault[1]}
+											value={[selectMinArea, selectMaxArea]}
+											onChange={(e) => {
+												console.log(e, "Area");
+												setSelectedMinArea(e[0]);
+												setSelectedMaxArea(e[1]);
+											}}
+										/>
+									</div>
+									<div>
+										<InputNumber
+											value={selectMaxArea}
+											onChange={(e) => {
+												setSelectedMaxArea(Number(e));
+												setSelectRangeAreaDefault([selectRangeAreaDefault[0], selectMaxArea]);
+											}}
+										/>
+										<span style={{ color: "#ccc" }}>- Max</span>
+									</div>
 								</div>
-								<div className="box">
-									<Select
-										style={{ width: "100%" }}
-										size="large"
-										showSearch
-										value={selectedDistrict !== "" ? selectedDistrict : null}
-										placeholder="Quận Huyện"
-										optionFilterProp="children"
-										onChange={(value) => {
-											setSelectedDistrict(value);
-										}}
-										filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
-									>
-										{districtFilter &&
-											districtFilter.map((value) => <Option value={value}>{value.name}</Option>)}
-									</Select>
-								</div>
-								<div className="box">
-									<Select
-										size="large"
-										style={{ width: "100%" }}
-										showSearch
-										placeholder="Phường/Xã"
-										optionFilterProp="children"
-										onChange={(value) => {
-											console.log(value);
-										}}
-										filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
-									>
-										{cityFilter && cityFilter.map((value) => <Option value={value}>{value.name}</Option>)}
-									</Select>
+								<div
+									style={{
+										width: "100%",
+										textAlign: "center",
+										display: "flex",
+										justifyContent: "center",
+										alignItems: "center",
+									}}
+								>
+									<div style={{ padding: 30 }}>
+										<Button
+											color="secondary"
+											variant="contained"
+											onClick={() => {
+												setIsApplyFilter(true);
+												handleFilterProperty(searchStringFilter, 1, true);
+											}}
+										>
+											Áp dụng
+										</Button>
+									</div>
+									<div style={{ padding: 30 }}>
+										<Button
+											color="primary"
+											variant="contained"
+											onClick={() => {
+												clearFilter();
+												handleFilterProperty(searchStringFilter, 1, false);
+												setIsApplyFilter(false);
+											}}
+										>
+											Hủy lọc
+										</Button>
+									</div>
 								</div>
 							</div>
-							<div
-								className="range-container"
-								style={{
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "space-between",
-									padding: 10,
-									margin: "auto",
-								}}
-							>
-								<p style={{ padding: 0, margin: 0 }}>Mức giá:</p>
-								<InputNumber
-									value={selectMinPrice}
-									onChange={(e) => {
-										setSelectedMinPrice(Number(e));
-										setSelectRangePriceDefault([selectMinPrice, selectRangePriceDefault[0]]);
-									}}
-								/>
-								<div style={{ width: "60%" }}>
-									<Slider
-										range
-										min={selectRangePriceDefault[0]}
-										max={selectRangePriceDefault[1]}
-										value={[selectMinPrice, selectMaxPrice]}
-										onChange={(e) => {
-											console.log(e, "price");
-											setSelectedMinPrice(e[0]);
-											setSelectedMaxPrice(e[1]);
-										}}
-									/>
-								</div>
-								<InputNumber
-									value={selectMaxPrice}
-									onChange={(e) => {
-										setSelectedMaxPrice(Number(e));
-										setSelectRangePriceDefault([selectRangePriceDefault[0], selectMaxPrice]);
-									}}
-								/>
-							</div>
-							<div
-								className="range-container"
-								style={{
-									display: "flex",
-									alignItems: "center",
-									justifyContent: "space-between",
-									padding: 10,
-									margin: "auto",
-								}}
-							>
-								<p style={{ padding: 0, margin: 0 }}>Mức giá:</p>
-								<InputNumber
-									value={selectMinArea}
-									onChange={(e) => {
-										setSelectedMinArea(Number(e));
-										setSelectRangeAreaDefault([selectMinArea, selectRangeAreaDefault[0]]);
-									}}
-								/>
-								<div style={{ width: "60%" }}>
-									<Slider
-										range
-										min={selectRangeAreaDefault[0]}
-										max={selectRangeAreaDefault[1]}
-										value={[selectMinArea, selectMaxArea]}
-										onChange={(e) => {
-											console.log(e, "Area");
-											setSelectedMinArea(e[0]);
-											setSelectedMaxArea(e[1]);
-										}}
-									/>
-								</div>
-								<InputNumber
-									value={selectMaxArea}
-									onChange={(e) => {
-										setSelectedMaxArea(Number(e));
-										setSelectRangeAreaDefault([selectRangeAreaDefault[0], selectMaxArea]);
-									}}
-								/>
-							</div>
-							<div
-								style={{
-									width: "100%",
-									textAlign: "center",
-									display: "flex",
-									justifyContent: "center",
-									alignItems: "center",
-								}}
-							>
-								<div style={{ padding: 30 }}>
-									<Button color="secondary" variant="contained" onClick={() => clearFilter()}>
-										Áp dụng
-									</Button>
-								</div>
-								<div style={{ padding: 30 }}>
-									<Button color="primary" variant="contained" onClick={() => clearFilter()}>
-										Hủy lọc
-									</Button>
-								</div>
-							</div>
-						</div>
+						)}
 					</form>
 				</div>
 			</section>

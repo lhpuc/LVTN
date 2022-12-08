@@ -5,14 +5,24 @@ export const SearchFilterPostContext = createContext();
 export const SearchFilterPostProvider = ({ children }) => {
 	const [selectedDistrict, setSelectedDistrict] = useState("");
 	const [selectedCity, setSelectedCity] = useState("");
+	const [selectedWard, setSelectedWard] = useState("");
+
+	const [selectedDistrictCode, setSelectedDistrictCode] = useState(null);
+	const [selectedCityCode, setSelectedCityCode] = useState(null);
+	const [selectedWardCode, setSelectedWardCode] = useState(null);
+
 	const [searchStringFilter, setSearchStringFilter] = useState("");
 	const [selectMinPrice, setSelectedMinPrice] = useState(0);
 	const [selectMaxPrice, setSelectedMaxPrice] = useState(0);
 	const [selectMinArea, setSelectedMinArea] = useState(0);
 	const [selectMaxArea, setSelectedMaxArea] = useState(0);
 	const [propertiesItem, setPropertiesItem] = useState([]);
-	const [searchUserOrProperty, setSearchUserOrProperty] = useState(false); //false: property , true: user
+	const [searchUserOrProperty, setSearchUserOrProperty] = useState("Tin đăng"); //false: property , true: user
 	const [userListItem, setUserListItem] = useState([]);
+	const [selectedKindOfBDS, setSelectedKindOfBDS] = useState("");
+	const [selectedNumOfRoom, setSelectedNumOfRoom] = useState(null);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [totalPage, setTotalPage] = useState(0);
 	const clearFilter = () => {
 		setSelectedDistrict("");
 		setSelectedCity("");
@@ -20,11 +30,23 @@ export const SearchFilterPostProvider = ({ children }) => {
 		setSelectedMaxPrice(0);
 		setSelectedMinArea(0);
 		setSelectedMaxArea(0);
+		setSelectedKindOfBDS("");
+		setSelectedNumOfRoom(null);
+		setSelectedWard("");
+		setSelectedCityCode(null);
+		setSelectedDistrictCode(null);
+		setSelectedWardCode(null);
 	};
 	return (
 		<>
 			<SearchFilterPostContext.Provider
 				value={{
+					selectedWard,
+					setSelectedWard,
+					selectedKindOfBDS,
+					setSelectedKindOfBDS,
+					selectedNumOfRoom,
+					setSelectedNumOfRoom,
 					userListItem,
 					setUserListItem,
 					searchUserOrProperty,
@@ -46,6 +68,16 @@ export const SearchFilterPostProvider = ({ children }) => {
 					setSelectedMinArea,
 					selectMaxArea,
 					setSelectedMaxArea,
+					selectedDistrictCode,
+					setSelectedDistrictCode,
+					selectedCityCode,
+					setSelectedCityCode,
+					selectedWardCode,
+					setSelectedWardCode,
+					currentPage,
+					setCurrentPage,
+					totalPage,
+					setTotalPage,
 				}}
 			>
 				{children}

@@ -1,21 +1,34 @@
 import React, { useContext } from "react";
-import { Pagination } from "antd";
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBath, faBed, faSignal, faWarehouse } from "@fortawesome/free-solid-svg-icons";
 import { HeartOutlined } from "@ant-design/icons";
 import "./FeaturedProp.css";
 import { SearchFilterPostContext } from "../../context/searchFilterContext";
+import Pagination from "@mui/material/Pagination";
 import { noImage } from "../../models/images";
 import { Link } from "react-router-dom";
 export const FeaturedProp = () => {
-	const { propertiesItem } = useContext(SearchFilterPostContext);
-	console.log(propertiesItem);
+	const {
+		propertiesItem,
+		currentPage,
+		setCurrentPage,
+		totalPage,
+		setTotalPage,
+		userListItem,
+		setUserListItem,
+		searchUserOrProperty,
+	} = useContext(SearchFilterPostContext);
 	return (
 		<>
 			<div className="property-list justify-evenly flex1 flex-row">
-				{propertiesItem &&
+				{searchUserOrProperty == "Cá nhân" &&
+					userListItem &&
+					userListItem.map((item, index) => <>vv</>)}
+
+				{searchUserOrProperty == "Tin đăng" &&
+					propertiesItem &&
 					propertiesItem.map((property, index) => {
-						console.log(propertiesItem, "fewfe");
 						return (
 							<div className="property-list-item">
 								<div className="relative box-content mx-3 w-80 h-fit rounded-lg border border-gray-400">
@@ -87,7 +100,18 @@ export const FeaturedProp = () => {
 						);
 					})}
 			</div>
-			<Pagination defaultCurrent={6} total={500} />
+			{totalPage > 0 && (
+				<Pagination
+					count={totalPage}
+					page={currentPage}
+					variant="outlined"
+					color="primary"
+					onChange={(e, page) => {
+						console.log(page);
+						setCurrentPage(page);
+					}}
+				/>
+			)}
 		</>
 	);
 };

@@ -13,17 +13,16 @@ import {
 import { useEffect, useRef, useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import AuthContext from "../../context/AuthProvider";
+import { PostInfoApi } from "../../api/navbar/NavBarOption";
 
 const Navbar = () => {
+	const PostInfoService = PostInfoApi();
 	const navListRef = useRef();
 	const { isLogin, setIsLogin } = useContext(AuthContext);
 	const [navItems, setNavItems] = useState([]);
 	const [selectedNavItem, setSelectedNavItem] = useState(0);
 	const [showCloseBtn, setShowCloseBtn] = useState(false);
-	const [user, setUser] = useState({
-		id: "",
-		username: "",
-	});
+	const [user, setUser] = useState(null);
 	const [shapeStyle, setShapeStyle] = useState({
 		width: 0,
 		left: 0,
@@ -33,13 +32,23 @@ const Navbar = () => {
 	const [shapeStyleMobile, setShapeStyleMobile] = useState({
 		top: 16,
 	});
-	const [propertyList, setPropertyList] = useState([]);
 
 	useEffect(() => {
 		if (isLogin) {
-			setUser({ ...user, ["id"]: localStorage.getItem("token") });
+			PostInfoService.getPersonalInfo(localStorage.getItem("token"))
+				.then((value) => {
+					const data = value.data;
+					if (data.success) {
+						setUser(data.user);
+					} else {
+						console.log("có lỗi xảy ra khi lấy thông tin người dùng");
+					}
+				})
+				.catch(() => {
+					console.log("có lỗi xảy ra khi lấy thông tin người dùng");
+				});
 		} else {
-			setUser({ ...user, ["id"]: "" });
+			setUser(null);
 		}
 	}, [isLogin]);
 
@@ -144,7 +153,7 @@ const Navbar = () => {
 
 	return (
 		<nav className="nav" id="nav">
-			<NavLink  className="logo" to="/">
+			<NavLink className="logo" to="/">
 				<HomeOutlined />
 			</NavLink>
 			{/* mobile */}
@@ -167,7 +176,7 @@ const Navbar = () => {
 			<div ref={navListRef} className="nav-list">
 				<div className="shape-mobile" style={shapeStyleMobile}></div>
 				<div className="nav-group">
-				<div className="nav-item">
+					<div className="nav-item">
 						<NavLink onClick={(e) => handleClickNavItem(e, 0)} className="nav-link" to="/" exact>
 							<IdcardOutlined className="nav-icon" />
 							<span className="nav-text">Trang chủ</span>
@@ -207,7 +216,7 @@ const Navbar = () => {
 						</NavLink>
 					</div>
 				</div>
-				{user.id ? (
+				{user ? (
 					<div className="nav-group">
 						<div className="nav-item">
 							<NavLink onClick={(e) => handleClickNavItem(e, 4)} className="nav-link" to="/post" exact>
@@ -216,19 +225,18 @@ const Navbar = () => {
 							</NavLink>
 						</div>
 						<div className="nav-item">
-							<a onClick={(e) => handleClickNavItem(e, 5)} className="nav-link">
+							<NavLink onClick={(e) => handleClickNavItem(e, 5)} className="nav-link" to="/profile">
 								<UserAddOutlined className="nav-icon" />
 								{/* <span className="nav-text">Trang cá nhân</span> */}
-								<span className="nav-text">{user.username}</span>
-							</a>
+								<span className="nav-text">{user.lastName}</span>
+							</NavLink>
 						</div>
 						<div className="nav-item">
 							<NavLink
 								onClick={(e) => {
 									setIsLogin(false);
-									console.log(localStorage.token, "before");
+
 									localStorage.setItem("token", "");
-									console.log("phuctes", localStorage.token, "cdew");
 
 									handleClickNavItem(e, 6);
 								}}
@@ -240,7 +248,6 @@ const Navbar = () => {
 								<span className="nav-text">Đăng xuất</span>
 							</NavLink>
 						</div>
-						
 					</div>
 				) : (
 					<div className="nav-group">
@@ -267,7 +274,6 @@ const Navbar = () => {
 								<span className="nav-text">Đăng nhập</span>
 							</NavLink>
 						</div>
-						
 					</div>
 				)}
 			</div>

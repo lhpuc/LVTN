@@ -12,6 +12,13 @@ export const PostInfoApi = () => {
 			};
 			return axiosClientInstance.get(`/user/getuser`, config);
 		},
+
+		updateUserInfo: (dataRequest, token) => {
+			const config = {
+				headers: { Authorization: `Bearer ${token}` },
+			};
+			return axiosClientInstance.put(`/user`, dataRequest, config);
+		},
 		// headers :{Authorization:`Bearer ${token}`}
 		// data:data,
 	};

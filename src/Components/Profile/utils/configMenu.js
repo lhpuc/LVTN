@@ -129,7 +129,7 @@ export const roomColumns = (editAction, deleteAction) => [
 		width: 50,
 		render: (id, record) => (
 			<Space size="middle">
-				<a onClick={() => editAction(record)} className="table-col-cell-icon success">
+				<a onClick={() => editAction(id)} className="table-col-cell-icon success">
 					<EditOutlined />
 				</a>
 			</Space>
@@ -137,7 +137,7 @@ export const roomColumns = (editAction, deleteAction) => [
 	},
 	{
 		title: "Xóa",
-		dataIndex: "id",
+		dataIndex: "_id",
 		key: "delete",
 		width: 50,
 		render: (id, record) => (

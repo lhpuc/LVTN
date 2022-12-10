@@ -16,6 +16,7 @@ import Profile from "./Components/Profile/Profile";
 import Business from "./pages/Business/Business";
 import CheckOutResult from "./pages/CheckOutResult/CheckOutResult";
 import EditPost from "./pages/EditPost/EditPost";
+import CompareProperty from "./pages/CompareProperty/CompareProperty";
 
 const App = () => {
 	return (
@@ -35,6 +36,7 @@ const App = () => {
 				<Route path="/business" element={<Business />} />
 				<Route path="/checkout-result" element={<CheckOutResult />} />
 				<Route path="/edit-post" element={<EditPost />} />
+				<Route path="/compare" element={<CompareProperty />} />
 			</Routes>
 			<Footer />
 		</>

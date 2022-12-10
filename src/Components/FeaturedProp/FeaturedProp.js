@@ -19,6 +19,13 @@ export const FeaturedProp = () => {
 		setUserListItem,
 		searchUserOrProperty,
 	} = useContext(SearchFilterPostContext);
+	const moneyFormat = (money) => {
+		// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+		return Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" })
+			.format(money)
+			.slice(0, -1);
+	};
 	return (
 		<>
 			<div className="property-list justify-evenly flex1 flex-row">
@@ -84,7 +91,7 @@ export const FeaturedProp = () => {
 									</Link>
 									<div className="flex1 flex-row justify-between px-3 py-3 items-center">
 										<div className="font-bold text-sm text-dark">
-											{property.price ? <>{property.price} VND</> : <>Thỏa thuận</>}
+											{property.price ? <>{moneyFormat(property.price)} VND</> : <>Thỏa thuận</>}
 										</div>
 
 										<div className="text-light">

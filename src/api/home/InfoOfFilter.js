@@ -21,6 +21,10 @@ export const FilterInfoOfPostApi = () => {
 			return axiosClientInstance.get(`/detail/${propertyTypeKey}`);
 		},
 
+		geArrayOfProperties: (propertiesId) => {
+			return axiosClientInstance.post(`/property/findmany`, propertiesId);
+		},
+
 		addPostBDS: (dataRequest, token) => {
 			const config = {
 				headers: { Authorization: `Bearer ${token}` },
@@ -36,6 +40,12 @@ export const FilterInfoOfPostApi = () => {
 
 		// headers :{Authorization:`Bearer ${token}`}
 		// data:data,
+		deletePostInfoById: (id, token) => {
+			const config = {
+				headers: { Authorization: `Bearer ${token}` },
+			};
+			return axiosClientInstance.delete(`/property?id=${id}`, config);
+		},
 	};
 	return FilterInfoOfPost;
 };

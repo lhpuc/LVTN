@@ -50,6 +50,14 @@ const PropertyDetails = () => {
 			});
 	}, []);
 
+	const moneyFormat = (money) => {
+		// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+		return Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" })
+			.format(money)
+			.slice(0, -1);
+	};
+
 	return (
 		<>
 			{property && (
@@ -115,7 +123,7 @@ const PropertyDetails = () => {
 							</div>
 
 							<div style={{ paddingBottom: 10 }} className="text-3xl font-semibold text-violet-600">
-								{!property.isNegotiate ? <>{property.price} VND</> : <>$ Thương lượng</>}
+								{!property.isNegotiate ? <>{moneyFormat(property.price)} VND</> : <>$ Thương lượng</>}
 							</div>
 
 							<h3>

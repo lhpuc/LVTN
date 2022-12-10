@@ -25,6 +25,7 @@ const HomeInfo = () => {
 	const [contentDialog, setContentDialog] = useState("");
 
 	const [isSpin, setIsSpin] = useState(false);
+	const [userInfo, setUserInfo] = useState(null);
 
 	const handleAvtChange = (f) => {
 		setAvt(f);
@@ -90,8 +91,6 @@ const HomeInfo = () => {
 		}
 	}, [cover]);
 
-	const [userInfo, setUserInfo] = useState(null);
-
 	const uploadImage = async (img) => {
 		const formData = new FormData();
 		const config = {
@@ -125,7 +124,17 @@ const HomeInfo = () => {
 			}
 			console.log(userInfo, "fisrt");
 			if (!isError) {
-				await PostInfoService.updateUserInfo(userInfo, localStorage.getItem("token"))
+				const dataRequest = {
+					avatar: userInfo["avatar"],
+					cover: userInfo["cover"],
+					lastName: userInfo["lastName"],
+					address: userInfo["address"],
+					mapAddress: userInfo["mapAddress"],
+					desc: userInfo["desc"],
+					phone: userInfo["phone"],
+					email: userInfo["email"],
+				};
+				await PostInfoService.updateUserInfo(dataRequest, localStorage.getItem("token"))
 					.then((value) => {
 						console.log(value, "update user");
 						if (value.data.success) {
@@ -189,7 +198,7 @@ const HomeInfo = () => {
 				<Title className="title-section">Quản lý cá nhân</Title>
 
 				<Grid container spacing={2} className="content-section home-info">
-					<Grid item xs={6} style={{ paddingRight: 20 }}>
+					<Grid item xs={12} md={6} style={{ paddingRight: 20 }}>
 						<Grid
 							style={{
 								display: "flex",
@@ -309,7 +318,7 @@ const HomeInfo = () => {
 						</Grid>
 					</Grid>
 
-					<Grid item xs={6} className="upload-img">
+					<Grid item xs={12} md={6} className="upload-img">
 						<div className="avatar">
 							<Title level={3}>Ảnh đại diện</Title>
 							<ReactImageUploading

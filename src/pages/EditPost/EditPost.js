@@ -1,4 +1,4 @@
-import { Divider, Input, Select, Space, InputNumber, DatePicker, message } from "antd";
+import { Divider, Input, Select, Space, InputNumber, DatePicker } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 
@@ -6,7 +6,7 @@ import React, { useState, useRef, useContext, useEffect } from "react";
 import AuthContext from "../../context/AuthProvider";
 import { css } from "@emotion/css";
 import { styled } from "@mui/material/styles";
-import { Button, setRef, useStepContext } from "@mui/material";
+import { Button } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
@@ -34,7 +34,7 @@ const Item = styled(Paper)(({ theme }) => ({
 	margin: 10,
 }));
 
-const Post = () => {
+const EditPost = () => {
 	const FilterInfoOfPostService = FilterInfoOfPostApi();
 
 	const { auth } = useContext(AuthContext);
@@ -339,8 +339,8 @@ const Post = () => {
 			contactEmail: emailContact,
 			startDate: null,
 			expireDate: null,
-			startDateWaiting: startDateOfPost,
-			expireDateWaiting: endDateOfPost,
+			startDateWaiting: new Date(startDateOfPost),
+			expireDateWaiting: new Date(endDateOfPost),
 			amount: totalPrice,
 			mapAddress: linkMapAddress,
 		};
@@ -820,9 +820,8 @@ const Post = () => {
 								<RangePicker
 									placeholder={["Bắt đầu", "Kết thúc"]}
 									onChange={(e) => {
-										console.log(e);
-										setStartDateOfPost(moment(e[0]));
-										setEndDateOfPost(moment(e[1]));
+										setStartDateOfPost(e[0].format("DD:MM:YYYY"));
+										setEndDateOfPost(e[1].format("DD:MM:YYYY"));
 
 										const AmountDate =
 											Math.abs(
@@ -885,4 +884,4 @@ const Post = () => {
 	);
 };
 
-export default Post;
+export default EditPost;

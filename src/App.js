@@ -15,6 +15,7 @@ import Footer from "./Components/Footer/Footer";
 import Profile from "./Components/Profile/Profile";
 import Business from "./pages/Business/Business";
 import CheckOutResult from "./pages/CheckOutResult/CheckOutResult";
+import EditPost from "./pages/EditPost/EditPost";
 
 const App = () => {
 	return (
@@ -33,6 +34,7 @@ const App = () => {
 				<Route path="/profile" element={<Profile />} />
 				<Route path="/business" element={<Business />} />
 				<Route path="/checkout-result" element={<CheckOutResult />} />
+				<Route path="/edit-post" element={<EditPost />} />
 			</Routes>
 			<Footer />
 		</>

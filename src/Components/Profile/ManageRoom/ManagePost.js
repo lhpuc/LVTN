@@ -36,7 +36,7 @@ const ManageRoom = () => {
 	const [isDeleteSuccess, setIsDeleteSuccess] = useState(false);
 
 	const editRoom = (data) => {
-		console.log(data);
+		window.location = `/edit-post?id=${data}`;
 	};
 	const deleteRoom = (id) => {
 		setOpenSubmit(true);

@@ -46,6 +46,12 @@ export const FilterInfoOfPostApi = () => {
 			};
 			return axiosClientInstance.delete(`/property?id=${id}`, config);
 		},
+		sendMailToUser: (dataRequest, id, token) => {
+			const config = {
+				headers: { Authorization: `Bearer ${token}` },
+			};
+			return axiosClientInstance.post(`/property/sendcontact?id=${id}`, dataRequest, config);
+		},
 	};
 	return FilterInfoOfPost;
 };

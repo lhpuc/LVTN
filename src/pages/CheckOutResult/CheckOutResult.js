@@ -31,6 +31,9 @@ const CheckOutResult = () => {
 					if (data.data.signed) {
 						setPropertyId(data.data.code);
 						setLoading(false);
+					} else {
+						setStatusHandle(false);
+						setLoading(false);
 					}
 				} else {
 					setStatusHandle(false);

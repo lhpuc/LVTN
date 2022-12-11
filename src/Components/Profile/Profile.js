@@ -18,7 +18,7 @@ import ManageRoom from "./ManageRoom/ManagePost";
 const items = [
 	getSidebarItem("Thông tin cá nhân", "user-info", <PieChartOutlined />),
 	// getSidebarItem('Các tin đã lưu', 'posts-saved', <SaveOutlined />),
-	// getSidebarItem("Quản lý tin đăng", "manage-post", <ContainerOutlined />),
+	getSidebarItem("Các tin đã lưu", "favorite", <ContainerOutlined />),
 	getSidebarItem("Quản lý tin đăng", "manage-room", <ContainerOutlined />),
 	getSidebarItem("Đổi mật khẩu", "change-password", <SecurityScanOutlined />),
 ];
@@ -81,8 +81,9 @@ const Profile = () => {
 			<div className="profile-container">
 				{selectedSection === "user-info" && <HomeInfo />}
 				{/* {selectedSection === 'posts-saved' && <UserInfo/>} */}
-				{/* {selectedSection === "manage-post" && <ManagePost />} */}
+				{selectedSection === "favorite" && <ManagePost />}
 				{selectedSection === "manage-room" && <ManageRoom />}
+
 				{selectedSection === "change-password" && <ChangePassword />}
 				{selectedSection === undefined && <HomeInfo />}
 			</div>

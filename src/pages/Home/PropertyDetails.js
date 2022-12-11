@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Slider from "react-slick";
 import { Button, Form, Input } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBath, faBed, faSignal, faWarehouse } from "@fortawesome/free-solid-svg-icons";
@@ -9,6 +10,9 @@ import { Link } from "react-router-dom";
 import { FilterInfoOfPostApi } from "../../api/home/InfoOfFilter";
 import { noImage } from "../../models/images";
 import { Grid } from "@mui/material";
+import CarouselProperties from "../../Components/CarouselProperties/CarouselProperties";
+import DialogCustome from "../../Components/DialogCustome/DialogCustome";
+import AlertDialog from "../../Components/Dialog/AleartDialog";
 
 const layout = {
 	labelCol: {
@@ -33,6 +37,18 @@ const PropertyDetails = () => {
 	};
 	const { id } = useParams();
 	const [property, setProperty] = useState(null);
+	const [propertyRelate, setPropertyRelate] = useState(null);
+	const [contactUser, setContactUser] = useState(null);
+	const [mesContact, setMesContact] = useState("");
+
+	const [openSubmit, setOpenSubmit] = useState(false);
+	const [titleDialog, setTitleDialog] = useState("");
+	const [contentDialog, setContentDialog] = useState("");
+
+	const [isOpenDialog, setIsOpenDialog] = useState(false);
+	const [isTypeDialog, setIsTypeDialog] = useState("warning");
+	const [isMesssageDialog, setIsMessageDialog] = useState("");
+	const [isClosableDialog, setIsClosableDialog] = useState(true);
 
 	useEffect(() => {
 		FilterInfoOfPostService.getPostInfoById(id)
@@ -41,6 +57,7 @@ const PropertyDetails = () => {
 				const data = value.data;
 				if (data.success) {
 					setProperty(data.property);
+					setPropertyRelate(data.nearByProperties);
 				} else {
 					setProperty(null);
 				}
@@ -49,6 +66,63 @@ const PropertyDetails = () => {
 				setProperty(null);
 			});
 	}, []);
+
+	useEffect(() => {
+		if (property) {
+			setContactUser(property.owner);
+		}
+	}, [property]);
+
+	const moneyFormat = (money) => {
+		// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+		return Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" })
+			.format(money)
+			.slice(0, -1);
+	};
+
+	const settingSlider = {
+		dots: true,
+		autoplay: true,
+		autoplaySpeed: 5000,
+		infinite: true,
+		speed: 500,
+		slidesToShow: 1,
+		slidesToScroll: 1,
+	};
+
+	const handleSendMailToUser = () => {
+		if (mesContact !== "") {
+			const dataRequest = {
+				message: mesContact,
+			};
+			FilterInfoOfPostService.sendMailToUser(
+				dataRequest,
+				contactUser._id,
+				localStorage.getItem("token"),
+			)
+				.then((value) => {
+					const data = value.data;
+					if (data.success) {
+						setIsClosableDialog(true);
+						setIsMessageDialog(data.mes);
+						setIsTypeDialog("success");
+						setIsOpenDialog(true);
+					} else {
+						setIsClosableDialog(true);
+						setIsMessageDialog(data.mes);
+						setIsTypeDialog("error");
+						setIsOpenDialog(true);
+					}
+				})
+				.catch(() => {
+					setIsClosableDialog(true);
+					setIsMessageDialog("Có lỗi xảy ra.");
+					setIsTypeDialog("error");
+					setIsOpenDialog(true);
+				});
+		}
+	};
 
 	return (
 		<>
@@ -77,13 +151,13 @@ const PropertyDetails = () => {
 							<div style={{ maxHeight: 500, marginBottom: 50, backgroundColor: "#211f50", padding: 20 }}>
 								{property.img.length > 0 ? (
 									<div style={{ margin: "auto" }}>
-										<Carousel>
+										<Slider {...settingSlider}>
 											{property.img.map((pro) => (
 												<div style={{ padding: 10, textAlign: "center" }}>
 													<img style={{ maxHeight: 450, width: "auto", margin: "auto" }} src={pro} alt="" />
 												</div>
 											))}
-										</Carousel>
+										</Slider>
 									</div>
 								) : (
 									<div className="mb-8" style={{ padding: 10, textAlign: "center" }}>
@@ -115,7 +189,7 @@ const PropertyDetails = () => {
 							</div>
 
 							<div style={{ paddingBottom: 10 }} className="text-3xl font-semibold text-violet-600">
-								{!property.isNegotiate ? <>{property.price} VND</> : <>$ Thương lượng</>}
+								{!property.isNegotiate ? <>{moneyFormat(property.price)} VND</> : <>$ Thương lượng</>}
 							</div>
 
 							<h3>
@@ -177,6 +251,7 @@ const PropertyDetails = () => {
 							<p> {property.idea}</p>
 							<br /> */}
 						</Grid>
+
 						<Grid
 							className="bg-white border border-gray-300 rounded-lg"
 							item
@@ -185,15 +260,18 @@ const PropertyDetails = () => {
 							style={{ padding: 30 }}
 						>
 							<div className="flex items-center gap-x-4 mb-8">
-								<div className="w-20 h-20 p-1 border border-gray-300 rounded-full">
-									<img src={noImage} alt="" />
-								</div>
-								<div>
-									<div className="font-bold text-lg">property.agent.name</div>
-									<Link to="/" className="text-violet-700 text-sm">
-										View listings
-									</Link>
-								</div>
+								<Link
+									to="/"
+									className="text-violet-700 text-sm"
+									style={{ display: "flex", alignItems: "center" }}
+								>
+									<div className="w-20 h-20 p-1 border border-gray-300 rounded-full">
+										<img src={contactUser?.avatar !== "" ? contactUser?.avatar : noImage} alt="" />
+									</div>
+									<div style={{ padding: "0 15px" }}>
+										<div className="font-bold text-lg">{contactUser?.lastName}</div>
+									</div>
+								</Link>
 							</div>
 							<div className=" ">
 								<Form
@@ -208,97 +286,10 @@ const PropertyDetails = () => {
 									validateMessages={validateMessages}
 								>
 									<ul class="row">
-										<li class="col-sm-6">
-											<Form.Item
-												class="font-montserrat"
-												name={["tài khoản", "tên"]}
-												rules={[
-													{
-														required: true,
-													},
-												]}
-											>
-												<label class="font-montserrat">
-													Tên *
-													<Input
-														className="border border-gray-300 focus:border-violet-700 rounded w-full px-4 h-14 text-sm outline-none"
-														type="text"
-														name="name"
-														id="name"
-														placeholder=""
-													/>
-												</label>
-											</Form.Item>
-										</li>
-										<li class="col-sm-6">
-											<Form.Item
-												name={["tài khoản", "email"]}
-												rules={[
-													{
-														type: "email",
-													},
-												]}
-											>
-												<label class="font-montserrat">
-													E-mail *
-													<Input
-														className="border border-gray-300 focus:border-violet-700 rounded w-full px-4 h-14 text-sm outline-none"
-														type="text"
-														name="email"
-														id="email"
-														placeholder=""
-													/>
-												</label>
-											</Form.Item>
-										</li>
-
-										<li class="col-sm-6">
-											<Form.Item
-												name={["tài khoản", "số điện thoại"]}
-												rules={[
-													{
-														required: true,
-													},
-												]}
-											>
-												<label class="font-montserrat">
-													Số điện thoại *
-													<Input
-														className="border border-gray-300 focus:border-violet-700 rounded w-full px-4 h-14 text-sm outline-none"
-														type="text"
-														name="company"
-														id="company"
-														placeholder=""
-													/>
-												</label>
-											</Form.Item>
-										</li>
-										<li class="col-sm-6">
-											<Form.Item
-												name={["tài khoản", "chủ đề"]}
-												rules={[
-													{
-														required: true,
-													},
-												]}
-											>
-												<label class="font-montserrat">
-													Chủ đề
-													<Input
-														className="border border-gray-300 focus:border-violet-700 rounded w-full px-4 h-14 text-sm outline-none"
-														type="text"
-														name="website"
-														id="website"
-														placeholder=""
-													/>
-												</label>
-											</Form.Item>
-										</li>
-
 										<li class="col-sm-12">
-											<Form.Item name={["tài khoản", "thông tin"]}>
+											<Form.Item>
 												<label class="font-montserrat">
-													Thông tin
+													Lời nhắn:
 													<textarea
 														className="border border-gray-300 focus:border-violet-700 rounded w-full p-4 h-36 text-sm text-gray-400 outline-none resize-none"
 														// class="form-control"
@@ -306,14 +297,35 @@ const PropertyDetails = () => {
 														id="message"
 														rows="5"
 														placeholder=""
+														onChange={(e) => {
+															setMesContact(e.target.value);
+														}}
+														required
 													></textarea>
 												</label>
 											</Form.Item>
 										</li>
 
 										<li class="col-sm-12">
+											<AlertDialog
+												isOpen={isOpenDialog}
+												type={isTypeDialog}
+												message={isMesssageDialog}
+												closable={isClosableDialog}
+												onClose={() => {
+													setIsOpenDialog(false);
+												}}
+											/>
 											<Form.Item>
-												<Button type="primary" htmlType="submit">
+												<Button
+													type="primary"
+													onClick={() => {
+														setOpenSubmit(true);
+														setTitleDialog("Xác nhận");
+														setContentDialog("Bạn xác nhận muốn gửi thông tin cho người này?");
+													}}
+													htmlType="submit"
+												>
 													Gửi ngay
 												</Button>
 											</Form.Item>
@@ -323,6 +335,39 @@ const PropertyDetails = () => {
 							</div>
 						</Grid>
 					</Grid>
+					{propertyRelate && propertyRelate.length > 0 && (
+						<>
+							<Grid container>
+								<span
+									style={{
+										borderRadius: 10,
+										padding: 10,
+										margin: "10px 0",
+										color: "#000",
+
+										fontSize: 30,
+									}}
+								>
+									CÓ THỂ BẠN QUAN TÂM
+								</span>
+							</Grid>
+							<Grid>
+								<CarouselProperties data={propertyRelate} />
+							</Grid>
+							<DialogCustome
+								open={openSubmit}
+								handleSubmit={() => {
+									setOpenSubmit(false);
+									handleSendMailToUser();
+								}}
+								handleClose={() => {
+									setOpenSubmit(false);
+								}}
+								title={titleDialog}
+								content={contentDialog}
+							/>
+						</>
+					)}
 				</div>
 			)}
 		</>

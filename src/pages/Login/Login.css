@@ -1,66 +1,67 @@
 .section {
-    width: 100%;
-    min-height: 800px;
-    background-image: url(../../assets/images/Login/background-login.jpg);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-  
-  .section-auth {
-    display: flex;
-    /* justify-content: center; */
-    align-items: center;
-    flex-direction: column;
-    padding: 60px 16px;
-  }
-  
-  .form-link {
-    display: block;
-    text-align: center;
-    margin-top: 8px;
-  }
-  
-  .form-auth {
-    max-width: 500px;
-    padding: 30px;
-    margin: 50px auto;
-    background-color: #f6fbf9;
-    border-radius: 40px;
-  }
-  
-  .form-title {
-    margin: 0 !important;
-    text-align: center;
-  }
-  
-  .form-sub-title {
-    margin: 0 !important;
-    text-align: center;
-    margin-bottom: 32px !important;
-    font-weight: 400;
-  }
-  
-  .form-group {
-    margin-bottom: 16px;
-  }
-  
-  .form-group input {
-    width: 100%;
-    font-size: 18px;
-    padding: 8px 16px;
-    border: 1px solid rgba(128, 128, 128, 0.295);
-    border-radius: 10px;
-    outline: none;
-  }
-  
-  .btn-submit {
-    display: block;
-    margin: 0 auto;
-    height: fit-content;
-    font-size: 18px;
-    font-weight: 500;
-    padding: 8px 50px;
-    border-radius: 15px;
-    background-color: #1c3988;
-  }
+	width: 100%;
+	min-height: 800px;
+	background-image: url(../../assets/images/Login/background-login.jpg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.section-auth {
+	display: flex;
+	/* justify-content: center; */
+	align-items: center;
+	flex-direction: column;
+	padding: 60px 16px;
+}
+
+.form-link {
+	display: block;
+	text-align: center;
+	margin-top: 8px;
+}
+
+.form-auth {
+	max-width: 500px;
+	padding: 30px;
+	margin: 50px auto;
+	background-color: #f6fbf9;
+	border-radius: 40px;
+}
+
+.form-title {
+	margin: 0 !important;
+	text-align: center;
+}
+
+.form-sub-title {
+	margin: 0 !important;
+	text-align: center;
+	margin-bottom: 32px !important;
+	font-weight: 400;
+}
+
+.form-group {
+	margin-bottom: 16px;
+}
+
+.form-group input {
+	width: 100%;
+	font-size: 18px;
+	padding: 8px 16px;
+	border: 1px solid rgba(128, 128, 128, 0.295);
+	border-radius: 10px;
+	outline: none;
+}
+
+.btn-submit {
+	display: block;
+	margin: 0 auto;
+	height: fit-content;
+	font-size: 18px;
+	font-weight: 500;
+	padding: 8px 50px;
+	border-radius: 15px;
+	background-color: #aec1ff;
+	color: rgb(255, 255, 255);
+}

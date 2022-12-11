@@ -19,6 +19,13 @@ export const PostInfoApi = () => {
 			};
 			return axiosClientInstance.put(`/user`, dataRequest, config);
 		},
+		updateUserPassword: (dataRequest, token) => {
+			const config = {
+				headers: { Authorization: `Bearer ${token}` },
+			};
+			return axiosClientInstance.post(`/user/changepassword`, dataRequest, config);
+		},
+
 		// headers :{Authorization:`Bearer ${token}`}
 		// data:data,
 	};

@@ -7,7 +7,13 @@ import "./FeaturedProp.css";
 import { SearchFilterPostContext } from "../../context/searchFilterContext";
 import Pagination from "@mui/material/Pagination";
 import { noImage } from "../../models/images";
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
+import Favorite from "@mui/icons-material/Favorite";
+import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
+import BookmarkAddRoundedIcon from "@mui/icons-material/BookmarkAddRounded";
+import Checkbox from "@mui/material/Checkbox";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 export const FeaturedProp = () => {
 	const {
 		propertiesItem,
@@ -19,6 +25,19 @@ export const FeaturedProp = () => {
 		setUserListItem,
 		searchUserOrProperty,
 	} = useContext(SearchFilterPostContext);
+	const moneyFormat = (money) => {
+		// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+		return Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" })
+			.format(money)
+			.slice(0, -1);
+	};
+	const handleAddCompare = (checked, id) => {
+		if (checked) {
+			localStorage.setItem("propertyId", [id]);
+		}
+	};
+
 	return (
 		<>
 			<div className="property-list justify-evenly flex1 flex-row">
@@ -31,10 +50,17 @@ export const FeaturedProp = () => {
 					propertiesItem.map((property, index) => {
 						return (
 							<div className="property-list-item">
-								<div className="relative box-content mx-3 w-80 h-fit rounded-lg border border-gray-400">
+								<div
+									className="relative box-content mx-3 w-80 h-fit "
+									style={{ backgroundColor: "#fff", borderRadius: 10, boxShadow: "3px 3px 3px #ccc" }}
+								>
 									<Link to={`/property/${property._id}`} key={index}>
-										<div className="z-0 m-0 w-fit">
+										<div
+											className="z-0 m-0 w-fit"
+											style={{ textAlign: "center", width: "100%", margin: "auto" }}
+										>
 											<img
+												style={{ height: 250, width: "auto", margin: "auto" }}
 												className="rounded-t-lg"
 												src={property.img.length > 0 ? property.img[0] : noImage}
 												alt={property.name}
@@ -57,15 +83,18 @@ export const FeaturedProp = () => {
 											/>
 										</div>
 
-										<div className="px-3 py-5">
+										<div className="px-3 py-3">
 											<h1 className="text-dark text-sm font-bold mb-3">{property.title}</h1>
 											<h2 className="text-gray-400 text-xs font-medium">
-												{property ? property.area : "?"} m<sup>2</sup> | Địa chỉ:
+												{property ? property.area : "?"} m<sup>2</sup>
+											</h2>
+											<h2 className="text-gray-400 text-xs font-medium">
+												Địa chỉ:
 												{property.address}, {property.city}
 											</h2>
 										</div>
 
-										<div className="flex1 flex-row px-3 pb-5 border-gray-400 border-b justify-between text-gray-400">
+										<div className="flex1 flex-row px-3 pb-3 border-gray-400 border-b justify-between text-gray-400">
 											<div className="flex1 flex-col items-center justify-center text-lg font-medium">
 												<FontAwesomeIcon icon={faBed} />
 												<p className="pt-1 text-xs">{property ? property.nOfBedroom : "?"} Phòng ngủ</p>
@@ -83,15 +112,24 @@ export const FeaturedProp = () => {
 										</div>
 									</Link>
 									<div className="flex1 flex-row justify-between px-3 py-3 items-center">
-										<div className="font-bold text-sm text-dark">
-											{property.price ? <>{property.price} VND</> : <>Thỏa thuận</>}
+										<div className="font-bold text-sm " style={{ color: "#00048c" }}>
+											{property.price ? <>{moneyFormat(property.price)} VND</> : <>Thỏa thuận</>}
 										</div>
 
 										<div className="text-light">
-											<HeartOutlined
-												onclick={() => {
-													console.log("tim");
+											<Checkbox
+												onChange={(e) => {
+													console.log(e, e.target.checked, "favorite");
 												}}
+												icon={<FavoriteBorder />}
+												checkedIcon={<Favorite color="secondary" />}
+											/>
+											<Checkbox
+												onChange={(e) => {
+													handleAddCompare(e.target.checked, property._id);
+												}}
+												icon={<BookmarkAddOutlinedIcon />}
+												checkedIcon={<BookmarkAddRoundedIcon />}
 											/>
 										</div>
 									</div>

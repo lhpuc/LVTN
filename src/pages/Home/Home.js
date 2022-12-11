@@ -2,6 +2,8 @@ import React from "react";
 import Banner from "../../Components/Banner/Banner";
 import { FeaturedProp } from "../../Components/FeaturedProp/FeaturedProp";
 import { SearchFilterPostProvider } from "../../context/searchFilterContext";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const Home = () => {
 	return (

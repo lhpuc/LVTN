@@ -796,6 +796,18 @@ const EditPost = () => {
 									setEmailContact(e.target.value);
 								}}
 							/>
+							<Button
+								onClick={() => {
+									console.log("Cdsvdsv");
+									setTitleDialog("Thông báo");
+									setContentDialog("Xác nhận thanh toán");
+									setOpenSubmit(true);
+								}}
+								color="secondary"
+								variant="outlined"
+							>
+								Cập nhật
+							</Button>
 						</div>
 					</Item>
 				</Grid>
@@ -862,7 +874,7 @@ const EditPost = () => {
 								color="secondary"
 								variant="outlined"
 							>
-								Thanh toán
+								Gia hạn
 							</Button>
 						</div>
 					</Item>

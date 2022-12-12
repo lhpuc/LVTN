@@ -23,6 +23,13 @@ const CompareProperty = () => {
 		slidesToScroll: 1,
 	};
 
+	const moneyFormat = (money) => {
+		// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+		return Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" })
+			.format(money)
+			.slice(0, -1);
+	};
 	const [arrCompare, setArrCompare] = useState([]);
 	const [arrProperty, setArrProperty] = useState([]);
 
@@ -30,9 +37,9 @@ const CompareProperty = () => {
 		SetIsSpin(true);
 		// const propertiesId = localStorage.getItem("propertyId");
 		const propertiesId = [
-			"639618bbba0e7f725316a084",
-			"639618bbba0e7f725316a084",
-			"639618bbba0e7f725316a084",
+			"639675fcba0e7f725316a591",
+			"639675fcba0e7f725316a591",
+			"639675fcba0e7f725316a591",
 		];
 
 		const dataRequest = {
@@ -97,7 +104,7 @@ const CompareProperty = () => {
 							</Grid>
 							{arrProperty.map((item) => (
 								<Grid item xs={3} style={{ fontWeight: "bold", color: "red" }}>
-									{item.isNegotiate ? "Thương lượng" : <>{item.price} VND</>}
+									{item.isNegotiate ? "Thương lượng" : <>{moneyFormat(item.price)} VND</>}
 								</Grid>
 							))}
 						</Grid>

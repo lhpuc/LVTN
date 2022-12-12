@@ -31,7 +31,7 @@ const CarouselProperties = ({ data }) => {
 		dots: false,
 		infinite: false,
 		speed: 500,
-		slidesToShow: 4,
+		slidesToShow: 42,
 		slidesToScroll: 1,
 	};
 	const handleAddCompare = () => {};

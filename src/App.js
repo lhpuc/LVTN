@@ -1,5 +1,5 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import "./App.css";
 import "antd/dist/antd.min.css";
 import About from "./pages/About/About";
@@ -17,28 +17,36 @@ import Business from "./pages/Business/Business";
 import CheckOutResult from "./pages/CheckOutResult/CheckOutResult";
 import EditPost from "./pages/EditPost/EditPost";
 import CompareProperty from "./pages/CompareProperty/CompareProperty";
+import { CompareItem } from "./Components/CompareItem/CompareItem";
+import { SearchFilterPostProvider } from "./context/searchFilterContext";
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 const App = () => {
 	return (
 		<>
-			<Navbar />
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/find" element={<Home />} />
-				<Route path="/property/:id" element={<PropertyDetails />} />
-				<Route path="/about" element={<About />} />
-				<Route path="/contact" element={<Contact />} />
-				<Route path="/login" element={<Login />} />
-				<Route path="/signup" element={<Signup />} />
-				<Route path="/ourteam" element={<Ourteam />} />
-				<Route path="/post" element={<Post />} />
-				<Route path="/profile" element={<Profile />} />
-				<Route path="/business" element={<Business />} />
-				<Route path="/checkout-result" element={<CheckOutResult />} />
-				<Route path="/edit-post" element={<EditPost />} />
-				<Route path="/compare" element={<CompareProperty />} />
-			</Routes>
-			<Footer />
+			<SearchFilterPostProvider>
+				<Navbar />
+				<CompareItem />
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/find" element={<Home />} />
+					<Route path="/property/:id" element={<PropertyDetails />} />
+					<Route path="/about" element={<About />} />
+					<Route path="/contact" element={<Contact />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/signup" element={<Signup />} />
+					<Route path="/ourteam" element={<Ourteam />} />
+					<Route path="/post" element={<Post />} />
+					<Route path="/profile" element={<Profile />} />
+					<Route path="/business/:id" element={<Business />} />
+					<Route path="/checkout-result" element={<CheckOutResult />} />
+					<Route path="/edit-post/:id" element={<EditPost />} />
+					<Route path="/compare" element={<CompareProperty />} />
+				</Routes>
+
+				<Footer />
+			</SearchFilterPostProvider>
 		</>
 	);
 };

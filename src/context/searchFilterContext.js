@@ -23,6 +23,7 @@ export const SearchFilterPostProvider = ({ children }) => {
 	const [selectedNumOfRoom, setSelectedNumOfRoom] = useState(null);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
+	const [comparePropertyItem, setComparePropertyItem] = useState([]);
 	const clearFilter = () => {
 		setSelectedDistrict("");
 		setSelectedCity("");
@@ -78,6 +79,8 @@ export const SearchFilterPostProvider = ({ children }) => {
 					setCurrentPage,
 					totalPage,
 					setTotalPage,
+					comparePropertyItem,
+					setComparePropertyItem,
 				}}
 			>
 				{children}

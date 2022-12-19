@@ -1,41 +1,92 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Spin, message } from "antd";
 import Back from "../../Components/data/Back/Back";
-import img from "../../assets/images//Business/phong-khach-dep.jpg";
-import { HeartOutlined } from "@ant-design/icons";
 import Introduce from "../Business/Introduce/Introduce";
 import RealEstateInfomation from "./RealEstateInfomation/RealEstateInfomation";
 import "./Business.css";
-import NewForRent from "./NewForRent/NewForRent";
-import Review from "./Review/Review";
+import { PostInfoApi } from "../../api/navbar/NavBarOption";
+import { noImage } from "../../models/images";
+import { Grid } from "@mui/material";
 
 const Business = () => {
+	const { id } = useParams();
+
+	const PostInfoService = PostInfoApi();
+	const [userInfo, setUserInfo] = useState(null);
+	const [isSpin, setIsSpin] = useState(false);
+
+	useEffect(() => {
+		setIsSpin(true);
+		PostInfoService.getPersonalInfo(localStorage.getItem("token"))
+			.then((value) => {
+				const data = value.data;
+				if (data.success) {
+					console.log(data.user);
+					setUserInfo(data.user);
+					message.success("thành công");
+				} else {
+					message.error("có lỗi xảy ra khi lấy thông tin người dùng");
+				}
+				setIsSpin(false);
+			})
+			.catch(() => {
+				setIsSpin(false);
+				message.error("có lỗi xảy ra khi lấy thông tin người dùng");
+			});
+	}, [id]);
 	return (
 		<>
-			<section className="blog-out mb">
-				<Back
-					// name="Hãy liên hệ với chúng tôi"
-					// title="Cần được tư vấn?"
-					cover={img}
-				/>
+			<Spin spinning={isSpin} tip="Chờ xíu nhé...">
+				{userInfo && (
+					<>
+						<section className="blog-out mb">
+							<Back
+								// name="Hãy liên hệ với chúng tôi"
+								// title="Cần được tư vấn?"
+								cover={userInfo.cover}
+							/>
 
-				<div className="business">
-					<div className="action">
-						<div className="introduce">
-							<h1>Nhà trọ sinh viên</h1>
-						</div>
-						<div className="action_heart">
-							<div>
-								<p> Theo dõi</p>
-								<HeartOutlined />
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-			<Introduce />
-			<RealEstateInfomation />
-			<NewForRent />
-			<Review />
+							<Grid
+								container
+								style={{
+									padding: "30px 60px",
+									alignItems: "end",
+									backgroundColor: "#1f394d",
+									borderTop: "10px solid #fff",
+									borderBottom: "10px solid #fff",
+								}}
+							>
+								<Grid>
+									<img
+										src={userInfo?.avatar ? userInfo?.avatar : noImage}
+										style={{ width: 200, height: 200, borderRadius: "100%", border: "10px solid #fff" }}
+									/>
+								</Grid>
+								<Grid
+									item
+									xs={12}
+									md={8}
+									style={{ padding: "0 20px", fontWeight: "bolder", fontSize: 40, color: "#fff" }}
+								>
+									{userInfo?.lastName}
+								</Grid>
+							</Grid>
+							{/* <div className="action_heart">
+										<div>
+											<p> Theo dõi</p>
+											<HeartOutlined />
+										</div>
+									</div> */}
+						</section>
+						<Introduce user={userInfo} />
+						<RealEstateInfomation post={userInfo?.properties} />
+						{/* <NewForRent /> */}
+
+						{/* <Review /> */}
+					</>
+				)}
+			</Spin>
 		</>
 	);
 };

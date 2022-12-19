@@ -52,6 +52,18 @@ export const FilterInfoOfPostApi = () => {
 			};
 			return axiosClientInstance.post(`/property/sendcontact?id=${id}`, dataRequest, config);
 		},
+		updateBDS: (dataRequest, id, token) => {
+			const config = {
+				headers: { Authorization: `Bearer ${token}` },
+			};
+			return axiosClientInstance.put(`/property?id=${id}`, dataRequest, config);
+		},
+		expirePost: (dataRequest, token) => {
+			const config = {
+				headers: { Authorization: `Bearer ${token}` },
+			};
+			return axiosClientInstance.post(`/property/getextendurl`, dataRequest, config);
+		},
 	};
 	return FilterInfoOfPost;
 };

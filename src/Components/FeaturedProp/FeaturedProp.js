@@ -9,11 +9,10 @@ import Pagination from "@mui/material/Pagination";
 import { noImage } from "../../models/images";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
-import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
-import BookmarkAddRoundedIcon from "@mui/icons-material/BookmarkAddRounded";
 import Checkbox from "@mui/material/Checkbox";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import { Button } from "@mui/material";
 export const FeaturedProp = () => {
 	const {
 		propertiesItem,
@@ -24,6 +23,8 @@ export const FeaturedProp = () => {
 		userListItem,
 		setUserListItem,
 		searchUserOrProperty,
+		comparePropertyItem,
+		setComparePropertyItem,
 	} = useContext(SearchFilterPostContext);
 	const moneyFormat = (money) => {
 		// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
@@ -32,10 +33,24 @@ export const FeaturedProp = () => {
 			.format(money)
 			.slice(0, -1);
 	};
-	const handleAddCompare = (checked, id) => {
-		if (checked) {
-			localStorage.setItem("propertyId", [id]);
+	const handleAddCompare = (id) => {
+		const local = localStorage.getItem("property");
+		if (local !== null) {
+			const dataLocal = JSON.parse(localStorage.getItem("property"));
+			console.log(dataLocal, "cẻver");
+			if (dataLocal.length < 3) {
+				const findId = dataLocal.find((item) => item == id._id);
+				if (!findId) {
+					dataLocal.push(id);
+					localStorage.setItem("property", JSON.stringify(dataLocal));
+					setComparePropertyItem(dataLocal);
+				}
+			}
+		} else {
+			localStorage.setItem("property", JSON.stringify([id]));
+			setComparePropertyItem([id]);
 		}
+		console.log(localStorage, "local");
 	};
 
 	return (
@@ -78,7 +93,7 @@ export const FeaturedProp = () => {
 										<div class="absolute w-12 h-12 bottom-44 right-3">
 											<img
 												class="rounded-full shadow-sm"
-												src={property.img.length > 0 ? property.img[0] : noImage}
+												src={property?.owner?.avatar ? property.owner.avatar : noImage}
 												alt="Owner"
 											/>
 										</div>
@@ -90,7 +105,7 @@ export const FeaturedProp = () => {
 											</h2>
 											<h2 className="text-gray-400 text-xs font-medium">
 												Địa chỉ:
-												{property.address}, {property.city}
+												{property.district} - {property.city}
 											</h2>
 										</div>
 
@@ -124,13 +139,13 @@ export const FeaturedProp = () => {
 												icon={<FavoriteBorder />}
 												checkedIcon={<Favorite color="secondary" />}
 											/>
-											<Checkbox
-												onChange={(e) => {
-													handleAddCompare(e.target.checked, property._id);
+											<Button
+												onClick={(e) => {
+													handleAddCompare(property);
 												}}
-												icon={<BookmarkAddOutlinedIcon />}
-												checkedIcon={<BookmarkAddRoundedIcon />}
-											/>
+											>
+												So Sánh
+											</Button>
 										</div>
 									</div>
 								</div>

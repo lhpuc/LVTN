@@ -1,8 +1,9 @@
-import { Divider, Input, Select, Space, InputNumber, DatePicker } from "antd";
+import { Divider, Input, Select, Space, InputNumber, DatePicker, message, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { Modal, Upload } from "antd";
 
 import React, { useState, useRef, useContext, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import AuthContext from "../../context/AuthProvider";
 import { css } from "@emotion/css";
 import { styled } from "@mui/material/styles";
@@ -31,10 +32,13 @@ const Item = styled(Paper)(({ theme }) => ({
 	padding: theme.spacing(2),
 	textAlign: "left",
 	color: theme.palette.text.secondary,
-	margin: 10,
+	margin: 20,
+	boxShadow: "0px 0px 20px 0px #94cdfc",
 }));
 
 const EditPost = () => {
+	const { id } = useParams();
+	console.log(id, "id");
 	const FilterInfoOfPostService = FilterInfoOfPostApi();
 
 	const { auth } = useContext(AuthContext);
@@ -42,13 +46,13 @@ const EditPost = () => {
 	const classes = {
 		root: css({
 			padding: 30,
-			backgroundColor: "#ccc",
+			backgroundColor: "#fff",
 		}),
 		title: css({
 			fontSize: 25,
 			fontWeight: "bold",
 			paddingBottom: 10,
-			borderBottom: "1px solid #ccc",
+			borderBottom: "1px solid #fff",
 		}),
 		subtitle: css({
 			fontSize: 18,
@@ -133,8 +137,60 @@ const EditPost = () => {
 	const kindOfUnit = ["VND", "Thương lượng"];
 
 	const [codeOfPosition, setCodeOfPosition] = useState({ city: "", district: "", ward: "" });
-	useEffect(() => {
-		FilterInfoOfPostService.getOptionFilter()
+
+	const [propertyInital, setPropertyInital] = useState(null);
+
+	const [isSpinUpdate, setIsSpinUpdate] = useState(false);
+
+	const handleGetInitalBDS = async () => {
+		FilterInfoOfPostService.getPostInfoById(id)
+			.then((value) => {
+				console.log(value, "property");
+				const data = value.data;
+				if (data.success) {
+					setPropertyInital(data.property);
+				} else {
+					setPropertyInital(null);
+				}
+			})
+			.catch(() => {
+				setPropertyInital(null);
+			});
+	};
+	const handleExpirePost = () => {
+		if (
+			startDateOfPost !== "" &&
+			startDateOfPost !== null &&
+			startDateOfPost !== undefined &&
+			endDateOfPost !== "" &&
+			endDateOfPost !== null &&
+			endDateOfPost !== undefined
+		) {
+			const dataRequest = {
+				startDate: startDateOfPost,
+				expireDate: endDateOfPost,
+				amount: totalPrice,
+				propertyId: id,
+			};
+			FilterInfoOfPostService.expirePost(dataRequest, localStorage.getItem("token"))
+				.then((value) => {
+					console.log(value, "expire");
+					const data = value.data;
+					if (data.success) {
+						window.location = data.link;
+					} else {
+						message.error("Có lỗi xảy ra.");
+					}
+				})
+				.catch(() => {
+					message.error("Có lỗi xảy ra.");
+				});
+		} else {
+			message.error("ngày bắt đầu và kết thúc không được trống.");
+		}
+	};
+	const handleInital = async () => {
+		await FilterInfoOfPostService.getOptionFilter()
 			.then((value) => {
 				console.log(value, "value");
 				const cityData = [];
@@ -148,7 +204,7 @@ const EditPost = () => {
 				setKindOfCity([]);
 			});
 
-		FilterInfoOfPostService.getAllPropertiesType()
+		await FilterInfoOfPostService.getAllPropertiesType()
 			.then((value) => {
 				console.log(value, "loại");
 				if (value.data.success) {
@@ -160,20 +216,94 @@ const EditPost = () => {
 			.catch(() => {
 				setKindOfBDS([]);
 			});
+		await handleGetInitalBDS();
+	};
+	useEffect(() => {
+		handleInital();
 	}, []);
+
+	const handleSetInital = () => {
+		setKindOfPostValueSelected(propertyInital.bussinessType == 1 ? "Cho thuê" : "Bán");
+		setTotalBDS(propertyInital.totalRoom);
+		setRemainBDS(propertyInital.remainRoom);
+		setKindOfBDSValueSelected(propertyInital.propertyType);
+
+		setTimeout(() => {
+			setKindOfCityValueSelected(propertyInital.city);
+		}, [1000]);
+		setTimeout(() => {
+			setKindOfDistrictValueSelected(propertyInital.district);
+		}, [3000]);
+
+		setTimeout(() => {
+			setKindOfWardValueSelected(propertyInital.ward);
+		}, [4000]);
+
+		setTitleOfPost(propertyInital.title);
+		setDesOfPost(propertyInital.desc);
+		setAreaOfBDS(propertyInital.area);
+		setPriceOfBDS(propertyInital.price);
+		setFullAddress(propertyInital.address);
+		setPaperOfBDS(propertyInital.license);
+		setNumberOfRoom(propertyInital.nOfBedroom);
+		setNumberOfBath(propertyInital.nOfBathRoom);
+		setNumberOfFloor(propertyInital.nOfFloor);
+
+		setNameContact(propertyInital.contactName);
+		setPhoneContact(propertyInital.contactPhone);
+		setAddressContact(propertyInital.contactAddress);
+		setEmailContact(propertyInital.contactEmail);
+		setCodeOfPosition({
+			city: propertyInital.cityCode,
+			district: propertyInital.districtCode,
+			ward: propertyInital.wardCode,
+		});
+
+		if (propertyInital.isNegotiate) {
+			setPriceOfBDS(0);
+			setKindOfUnitSelected("Thương lượng");
+		}
+
+		setLinkMapAddress(propertyInital.mapAddress);
+
+		const imgList = [];
+		propertyInital.img.forEach((item, index) => {
+			imgList.push({
+				uid: `-${index}`,
+				name: `image${index}.png`,
+				status: "done",
+				url: item,
+			});
+		});
+
+		setImageUpload(propertyInital.img);
+
+		setFileList(imgList);
+
+		setStartDateOfPost(moment(propertyInital.startDateWaiting, "YYYY-MM-DD"));
+		setEndDateOfPost(moment(propertyInital.expireDateWaiting, "YYYY-MM-DD"));
+	};
+	useEffect(() => {
+		if (propertyInital) {
+			handleSetInital();
+		}
+	}, [propertyInital]);
 
 	useEffect(() => {
 		setKindOfDistrictValueSelected("");
 		if (kindOfCityValueSelected !== "") {
 			const cityDataSearch = positionData.find((value) => value.name === kindOfCityValueSelected);
 			const nameOfDistricts = [];
+			console.log(cityDataSearch, "vedvwe");
 			if (cityDataSearch) {
 				setCodeOfPosition({ ...codeOfPosition, ["city"]: cityDataSearch.code });
 				cityDataSearch.districts.forEach((value) => {
 					nameOfDistricts.push(value.name);
 				});
 			}
-			setKindOfDistrict(nameOfDistricts);
+			setTimeout(() => {
+				setKindOfDistrict(nameOfDistricts);
+			}, [1000]);
 		} else {
 			setKindOfDistrict([]);
 		}
@@ -195,7 +325,9 @@ const EditPost = () => {
 						nameOfWards.push(value.name);
 					});
 				}
-				setKindOfWard(nameOfWards);
+				setTimeout(() => {
+					setKindOfWard(nameOfWards);
+				}, [1000]);
 			} else {
 				setKindOfDistrict([]);
 			}
@@ -307,9 +439,10 @@ const EditPost = () => {
 			</div>
 		</div>
 	);
-	const dateFormat = "DD/MM/YYYY hh:ss:mm";
+	const dateFormat = "DD/MM/YYYY";
 
 	const handlePostBDS = () => {
+		setIsSpinUpdate(true);
 		const dataRequest = {
 			totalRoom: totalBDS,
 			remainRoom: remainBDS,
@@ -337,115 +470,123 @@ const EditPost = () => {
 			contactPhone: phoneContact,
 			contactAddress: addressContact,
 			contactEmail: emailContact,
-			startDate: null,
-			expireDate: null,
-			startDateWaiting: new Date(startDateOfPost),
-			expireDateWaiting: new Date(endDateOfPost),
-			amount: totalPrice,
+
 			mapAddress: linkMapAddress,
 		};
 		console.log(dataRequest, "data request");
-		FilterInfoOfPostService.addPostBDS(dataRequest, localStorage.getItem("token"))
+		FilterInfoOfPostService.updateBDS(dataRequest, id, localStorage.getItem("token"))
 			.then((value) => {
 				console.log(value, "value return");
+				setIsSpinUpdate(false);
 
 				const data = value.data;
 				if (data.success) {
-					console.log(data);
-					window.location = `${data.link}`;
+					console.log(data, "update");
+					message.success("Cập nhật thành công.");
+					window.location = "/profile";
 				} else {
-					setOpenAlert(true);
-					setMessageAlert("Có lỗi xảy ra.");
-					setTypeAlert("error");
+					message.error("Cập nhật không thành công.");
 				}
 			})
 			.catch(() => {
-				setOpenAlert(true);
-				setMessageAlert("Có lỗi xảy ra.");
-				setTypeAlert("error");
+				setIsSpinUpdate(false);
+				message.error("Có lỗi xảy ra.");
 			});
 	};
 
+	useEffect(() => {
+		const AmountDate =
+			Math.abs(
+				moment(startDateOfPost, "DD/MM/YYYY HH:mm:ss").diff(
+					moment(endDateOfPost, "DD/MM/YYYY HH:mm:ss"),
+					"days",
+				),
+			) + 1;
+
+		setTotalPrice(2000 * AmountDate);
+	}, [startDateOfPost, endDateOfPost]);
+
 	return (
 		<>
-			<Grid container className={classes.root} spacing={3}>
-				<Grid item md={8} xs={12}>
-					<Item>
-						<h1 className={classes.title}> Thông tin cơ bản </h1>
-						<div className={classes.selectedBox}>
-							<Autocomplete
-								size="small"
-								disablePortal
-								id="kindOfPost"
-								options={kindOfPost}
-								value={kindOfPostValueSelected}
-								onChange={(e, value) => {
-									setKindOfPostValueSelected(value);
-								}}
-								className={classes.selected}
-								renderInput={(params) => <TextField {...params} label="Loại tin" />}
-							/>
-							<Autocomplete
-								size="small"
-								disablePortal
-								id="kindOfBDS"
-								options={kindOfBDS}
-								value={kindOfBDSValueSelected}
-								onChange={(e, value) => {
-									setKindOfBDSValueSelected(value);
-								}}
-								className={classes.selected}
-								renderInput={(params) => <TextField {...params} label="Loại Bất Động Sản" />}
-							/>
-							<Grid item xs={12} style={{ display: "flex", justifyContent: "space-between" }}>
-								<Grid item xs={6} style={{ paddingRight: 5 }}>
-									<Autocomplete
-										size="small"
-										disablePortal
-										id="city"
-										options={kindOfCity}
-										value={kindOfCityValueSelected}
-										onChange={(e, value) => {
-											setKindOfCityValueSelected(value);
-										}}
-										isOptionEqualToValue={(option, value) => option === value}
-										className={classes.selected}
-										renderInput={(params) => <TextField {...params} label="Tỉnh/ Thành Phố" />}
-									/>
+			<Spin spinning={isSpinUpdate} tip="Đang cập nhập chờ xíu nhé...">
+				<Grid container className={classes.root} spacing={3}>
+					<Grid item md={8} xs={12} style={{ borderRadius: 10 }}>
+						<Item>
+							<h1 className={classes.title}> Thông tin cơ bản </h1>
+							<div className={classes.selectedBox}>
+								<Autocomplete
+									size="small"
+									disablePortal
+									id="kindOfPost"
+									options={kindOfPost}
+									value={kindOfPostValueSelected}
+									onChange={(e, value) => {
+										setKindOfPostValueSelected(value);
+									}}
+									className={classes.selected}
+									renderInput={(params) => <TextField {...params} label="Loại tin" />}
+								/>
+								<Autocomplete
+									size="small"
+									disablePortal
+									id="kindOfBDS"
+									options={kindOfBDS}
+									value={kindOfBDSValueSelected}
+									onChange={(e, value) => {
+										setKindOfBDSValueSelected(value);
+									}}
+									className={classes.selected}
+									renderInput={(params) => <TextField {...params} label="Loại Bất Động Sản" />}
+								/>
+								<Grid item xs={12} style={{ display: "flex", justifyContent: "space-between" }}>
+									<Grid item xs={6} style={{ paddingRight: 5 }}>
+										<Autocomplete
+											size="small"
+											disablePortal
+											id="city"
+											options={kindOfCity}
+											value={kindOfCityValueSelected}
+											onChange={(e, value) => {
+												setKindOfCityValueSelected(value);
+											}}
+											isOptionEqualToValue={(option, value) => option === value}
+											className={classes.selected}
+											renderInput={(params) => <TextField {...params} label="Tỉnh/ Thành Phố" />}
+										/>
+									</Grid>
+									<Grid item xs={6} style={{ paddingLeft: 5 }}>
+										<Autocomplete
+											size="small"
+											disablePortal
+											id="kindOfDistrict"
+											options={kindOfDistrict}
+											value={kindOfDistrictValueSelected}
+											onChange={(e, value) => {
+												setKindOfDistrictValueSelected(value);
+											}}
+											isOptionEqualToValue={(option, value) => option === value}
+											className={classes.selected}
+											renderInput={(params) => <TextField {...params} label="Quận/ Huyện" />}
+										/>
+									</Grid>
 								</Grid>
-								<Grid item xs={6} style={{ paddingLeft: 5 }}>
-									<Autocomplete
-										size="small"
-										disablePortal
-										id="kindOfDistrict"
-										options={kindOfDistrict}
-										value={kindOfDistrictValueSelected}
-										onChange={(e, value) => {
-											setKindOfDistrictValueSelected(value);
-										}}
-										isOptionEqualToValue={(option, value) => option === value}
-										className={classes.selected}
-										renderInput={(params) => <TextField {...params} label="Quận/ Huyện" />}
-									/>
-								</Grid>
-							</Grid>
-							<Grid item xs={12} style={{ display: "flex", justifyContent: "space-between" }}>
-								<Grid item xs={6} style={{ paddingRight: 5 }}>
-									<Autocomplete
-										size="small"
-										disablePortal
-										id="kindOfWard"
-										options={kindOfWard}
-										value={kindOfWardValueSelected}
-										onChange={(e, value) => {
-											setKindOfWardValueSelected(value);
-										}}
-										isOptionEqualToValue={(option, value) => option === value}
-										className={classes.selected}
-										renderInput={(params) => <TextField {...params} label="Phường/ Xã" />}
-									/>
-								</Grid>
-								{/* <Grid item xs={6} style={{ paddingLeft: 5 }}>
+								<Grid item xs={12} style={{ display: "flex", justifyContent: "space-between" }}>
+									<Grid item xs={6} style={{ paddingRight: 5 }}>
+										<Autocomplete
+											size="small"
+											disablePortal
+											id="kindOfWard"
+											options={kindOfWard}
+											value={kindOfWardValueSelected}
+											onChange={(e, value) => {
+												setKindOfWardValueSelected(value);
+											}}
+											isOptionEqualToValue={(option, value) => option === value}
+											className={classes.selected}
+											renderInput={(params) => <TextField {...params} label="Phường/ Xã" />}
+										/>
+									</Grid>
+									{/* <Grid item xs={6} style={{ paddingLeft: 5 }}>
 								<Autocomplete
 									size="small"
 									disablePortal
@@ -456,222 +597,223 @@ const EditPost = () => {
 									renderInput={(params) => <TextField {...params} label="Đường/ Phố" />}
 								/>
 							</Grid> */}
-							</Grid>
+								</Grid>
 
-							<TextField
-								size="small"
-								className={classes.textField}
-								style={{ width: "100%" }}
-								id="standard-basic"
-								label="Địa chỉ đầy đủ"
-								value={fullAddress}
-								onChange={(e) => {
-									setFullAddress(e.target.value);
-								}}
-								variant="outlined"
-							/>
-							<TextField
-								size="small"
-								className={classes.textField}
-								style={{ width: "100%" }}
-								id="standard-basic"
-								label="Link bản đồ"
-								value={linkMapAddress}
-								onChange={(e) => {
-									setLinkMapAddress(e.target.value);
-								}}
-								variant="outlined"
-							/>
-						</div>
-					</Item>
-					<Item>
-						<h1 className={classes.title}> Thông tin bài viết </h1>
-						<div className={classes.selectedBox}>
-							<TextField
-								size="small"
-								className={classes.textField}
-								style={{ width: "100%", paddingBottom: 20 }}
-								id="standard-basic"
-								label="Tiêu đề"
-								variant="outlined"
-								value={titleOfPost}
-								onChange={(e) => {
-									setTitleOfPost(e.target.value);
-								}}
-							/>
-							<TextField
-								multiline
-								size="small"
-								className={classes.textField}
-								style={{ width: "100%" }}
-								id="standard-basic"
-								label="Mô tả"
-								variant="outlined"
-								rows={8}
-								maxRows={12}
-								value={desOfPost}
-								onChange={(e) => {
-									setDesOfPost(e.target.value);
-								}}
-							/>
-						</div>
-					</Item>
-					<Item>
-						<h1 className={classes.title}> Thông tin bất động sản </h1>
-						<div className={classes.selectedBox}>
-							<TextField
-								type="number"
-								size="small"
-								className={classes.textField}
-								style={{ width: "100%", paddingBottom: 20 }}
-								id="standard-basic"
-								label="Diện tích"
-								fullWidth
-								variant="outlined"
-								InputProps={{
-									endAdornment: (
-										<InputAdornment position="end">
-											m<sup>2</sup>
-										</InputAdornment>
-									),
-								}}
-								value={areaOfBDS}
-								onChange={(e) => {
-									setAreaOfBDS(Number(e.target.value));
-								}}
-							/>
-							<TextField
-								type="number"
-								size="small"
-								className={classes.textField}
-								style={{ width: "100%", paddingBottom: 20 }}
-								id="standard-basic"
-								label="Mức giá"
-								fullWidth
-								variant="outlined"
-								value={priceOfBDS}
-								onChange={(e) => {
-									setPriceOfBDS(Number(e.target.value));
-								}}
-								disabled={kindOfUnitSelected == "Thương lượng"}
-							/>
-							<Autocomplete
-								size="small"
-								disablePortal
-								id="kindOfProject"
-								options={kindOfUnit}
-								value={kindOfUnitSelected}
-								className={classes.selected}
-								renderInput={(params) => <TextField {...params} label="Đơn vị" />}
-								onChange={(e, value) => {
-									setKindOfUnitSelected(value);
-								}}
-							/>
-							<p> Giấy tờ pháp lý</p>
-							<Select
-								mode="multiple"
-								allowClear
-								style={{
-									width: "100%",
-								}}
-								onChange={(e) => {
-									setPaperOfBDS(e);
-								}}
-								placeholder="Giấy tờ pháp lý"
-								dropdownRender={(menu) => (
-									<>
-										{menu}
-										<Divider
-											style={{
-												margin: "8px 0",
-											}}
-										/>
-										<Space
-											style={{
-												padding: "0 8px 4px",
-											}}
-										>
-											<Input
-												placeholder="Please enter item"
-												ref={inputRef}
-												value={name}
-												onChange={onNameChange}
+								<TextField
+									size="small"
+									className={classes.textField}
+									style={{ width: "100%" }}
+									id="standard-basic"
+									label="Địa chỉ đầy đủ"
+									value={fullAddress}
+									onChange={(e) => {
+										setFullAddress(e.target.value);
+									}}
+									variant="outlined"
+								/>
+								<TextField
+									size="small"
+									className={classes.textField}
+									style={{ width: "100%", marginTop: 20 }}
+									id="standard-basic"
+									label="Link bản đồ"
+									value={linkMapAddress}
+									onChange={(e) => {
+										setLinkMapAddress(e.target.value);
+									}}
+									variant="outlined"
+								/>
+							</div>
+						</Item>
+						<Item>
+							<h1 className={classes.title}> Thông tin bài viết </h1>
+							<div className={classes.selectedBox}>
+								<TextField
+									size="small"
+									className={classes.textField}
+									style={{ width: "100%", paddingBottom: 20 }}
+									id="standard-basic"
+									label="Tiêu đề"
+									variant="outlined"
+									value={titleOfPost}
+									onChange={(e) => {
+										setTitleOfPost(e.target.value);
+									}}
+								/>
+								<TextField
+									multiline
+									size="small"
+									className={classes.textField}
+									style={{ width: "100%" }}
+									id="standard-basic"
+									label="Mô tả"
+									variant="outlined"
+									rows={8}
+									maxRows={12}
+									value={desOfPost}
+									onChange={(e) => {
+										setDesOfPost(e.target.value);
+									}}
+								/>
+							</div>
+						</Item>
+						<Item>
+							<h1 className={classes.title}> Thông tin bất động sản </h1>
+							<div className={classes.selectedBox}>
+								<TextField
+									type="number"
+									size="small"
+									className={classes.textField}
+									style={{ width: "100%", paddingBottom: 20 }}
+									id="standard-basic"
+									label="Diện tích"
+									fullWidth
+									variant="outlined"
+									InputProps={{
+										endAdornment: (
+											<InputAdornment position="end">
+												m<sup>2</sup>
+											</InputAdornment>
+										),
+									}}
+									value={areaOfBDS}
+									onChange={(e) => {
+										setAreaOfBDS(Number(e.target.value));
+									}}
+								/>
+								<TextField
+									type="number"
+									size="small"
+									className={classes.textField}
+									style={{ width: "100%", paddingBottom: 20 }}
+									id="standard-basic"
+									label="Mức giá"
+									fullWidth
+									variant="outlined"
+									value={priceOfBDS}
+									onChange={(e) => {
+										setPriceOfBDS(Number(e.target.value));
+									}}
+									disabled={kindOfUnitSelected == "Thương lượng"}
+								/>
+								<Autocomplete
+									size="small"
+									disablePortal
+									id="kindOfProject"
+									options={kindOfUnit}
+									value={kindOfUnitSelected}
+									className={classes.selected}
+									renderInput={(params) => <TextField {...params} label="Đơn vị" />}
+									onChange={(e, value) => {
+										setKindOfUnitSelected(value);
+									}}
+								/>
+								<p> Giấy tờ pháp lý</p>
+								<Select
+									mode="multiple"
+									allowClear
+									style={{
+										width: "100%",
+									}}
+									onChange={(e) => {
+										setPaperOfBDS(e);
+									}}
+									value={paperOfBDS}
+									placeholder="Giấy tờ pháp lý"
+									dropdownRender={(menu) => (
+										<>
+											{menu}
+											<Divider
+												style={{
+													margin: "8px 0",
+												}}
 											/>
-											<Button type="text" icon={<PlusOutlined />} onClick={addItem}>
-												Add item
-											</Button>
-										</Space>
-									</>
-								)}
-								options={items.map((item) => ({
-									label: item,
-									value: item,
-								}))}
-							/>
-							<div style={{ paddingTop: 10 }}>
-								<span>Số phòng ngủ: </span>
-								<InputNumber
-									min={0}
-									value={numberOfRoom}
-									onChange={(e) => {
-										setNumberOfRoom(Number(e));
-									}}
+											<Space
+												style={{
+													padding: "0 8px 4px",
+												}}
+											>
+												<Input
+													placeholder="Please enter item"
+													ref={inputRef}
+													value={name}
+													onChange={onNameChange}
+												/>
+												<Button type="text" icon={<PlusOutlined />} onClick={addItem}>
+													Add item
+												</Button>
+											</Space>
+										</>
+									)}
+									options={items.map((item) => ({
+										label: item,
+										value: item,
+									}))}
 								/>
+								<div style={{ paddingTop: 10 }}>
+									<span>Số phòng ngủ: </span>
+									<InputNumber
+										min={0}
+										value={numberOfRoom}
+										onChange={(e) => {
+											setNumberOfRoom(Number(e));
+										}}
+									/>
+								</div>
+								<div style={{ paddingTop: 10 }}>
+									<span>Số phòng tắm, vệ sinh: </span>
+									<InputNumber
+										min={0}
+										value={numberOfBath}
+										onChange={(e) => {
+											setNumberOfBath(Number(e));
+										}}
+									/>
+								</div>
+								<div style={{ paddingTop: 10 }}>
+									<span>Số tầng: </span>
+									<InputNumber
+										min={0}
+										value={numberOfFloor}
+										onChange={(e) => {
+											setNumberOfFloor(Number(e));
+										}}
+									/>
+								</div>
+								<div style={{ paddingTop: 20 }}>
+									<TextField
+										type="number"
+										size="small"
+										className={classes.textField}
+										style={{ width: "100%", paddingBottom: 20 }}
+										id="standard-basic"
+										label="Số lượng tổng"
+										fullWidth
+										variant="outlined"
+										required
+										value={totalBDS}
+										onChange={(e) => {
+											setTotalBDS(Number(e.target.value));
+										}}
+									/>
+									<TextField
+										type="number"
+										size="small"
+										className={classes.textField}
+										style={{ width: "100%", paddingBottom: 20 }}
+										id="standard-basic"
+										label="còn lại"
+										fullWidth
+										variant="outlined"
+										required
+										value={remainBDS}
+										onChange={(e) => {
+											setRemainBDS(Number(e.target.value));
+										}}
+									/>
+								</div>
 							</div>
-							<div style={{ paddingTop: 10 }}>
-								<span>Số phòng tắm, vệ sinh: </span>
-								<InputNumber
-									min={0}
-									value={numberOfBath}
-									onChange={(e) => {
-										setNumberOfBath(Number(e));
-									}}
-								/>
-							</div>
-							<div style={{ paddingTop: 10 }}>
-								<span>Số tầng: </span>
-								<InputNumber
-									min={0}
-									value={numberOfFloor}
-									onChange={(e) => {
-										setNumberOfFloor(Number(e));
-									}}
-								/>
-							</div>
-							<div style={{ paddingTop: 20 }}>
-								<TextField
-									type="number"
-									size="small"
-									className={classes.textField}
-									style={{ width: "100%", paddingBottom: 20 }}
-									id="standard-basic"
-									label="Số lượng tổng"
-									fullWidth
-									variant="outlined"
-									required
-									value={totalBDS}
-									onChange={(e) => {
-										setTotalBDS(Number(e.target.value));
-									}}
-								/>
-								<TextField
-									type="number"
-									size="small"
-									className={classes.textField}
-									style={{ width: "100%", paddingBottom: 20 }}
-									id="standard-basic"
-									label="còn lại"
-									fullWidth
-									variant="outlined"
-									required
-									value={remainBDS}
-									onChange={(e) => {
-										setRemainBDS(Number(e.target.value));
-									}}
-								/>
-							</div>
-						</div>
-						{/* <p>Thông tin thêm</p>
+							{/* <p>Thông tin thêm</p>
 					<Autocomplete
 						size="small"
 						disablePortal
@@ -716,107 +858,119 @@ const EditPost = () => {
 							endAdornment: <InputAdornment position="end">m</InputAdornment>,
 						}}
 					/> */}
-					</Item>
-					<Item>
-						<h1 className={classes.title}> Hình ảnh và Video </h1>
-						<Upload
-							accept=".png, .jpg, .jpeg"
-							customRequest={uploadImage}
-							listType="picture-card"
-							fileList={fileList}
-							onPreview={handlePreview}
-							onChange={handleChange}
-						>
-							{fileList.length >= 8 ? null : uploadButton}
-						</Upload>
-						<Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
-							<img
-								alt="example"
-								style={{
-									width: "100%",
-								}}
-								src={previewImage}
-							/>
-						</Modal>
-					</Item>
-					<Item>
-						<h1 className={classes.title}> Thông tin liên hệ</h1>
-						<div className={classes.selectedBox}>
-							<TextField
-								size="small"
-								className={classes.textField}
-								style={{ width: "100%", paddingBottom: 20 }}
-								id="standard-basic"
-								label="Tên liên hệ"
-								fullWidth
-								variant="outlined"
-								value={nameContact}
-								onChange={(e) => {
-									setNameContact(e.target.value);
-								}}
-							/>
-							<TextField
-								type="number"
-								size="small"
-								className={classes.textField}
-								style={{ width: "100%", paddingBottom: 20 }}
-								id="standard-basic"
-								label="Số điện thoại"
-								fullWidth
-								variant="outlined"
-								required
-								value={phoneContact}
-								onChange={(e) => {
-									setPhoneContact(e.target.value);
-								}}
-							/>
-							<TextField
-								size="small"
-								className={classes.textField}
-								style={{ width: "100%", paddingBottom: 20 }}
-								id="standard-basic"
-								label="Địa chỉ liên hệ"
-								fullWidth
-								variant="outlined"
-								value={addressContact}
-								onChange={(e) => {
-									setAddressContact(e.target.value);
-								}}
-							/>
-							<TextField
-								size="small"
-								className={classes.textField}
-								style={{ width: "100%", paddingBottom: 20 }}
-								id="standard-basic"
-								label="Email"
-								fullWidth
-								variant="outlined"
-								value={emailContact}
-								onChange={(e) => {
-									setEmailContact(e.target.value);
-								}}
-							/>
+						</Item>
+						<Item>
+							<h1 className={classes.title}> Hình ảnh và Video </h1>
+							<Upload
+								accept=".png, .jpg, .jpeg"
+								customRequest={uploadImage}
+								listType="picture-card"
+								fileList={fileList}
+								onPreview={handlePreview}
+								onChange={handleChange}
+							>
+								{fileList.length >= 8 ? null : uploadButton}
+							</Upload>
+							<Modal open={previewOpen} title={previewTitle} footer={null} onCancel={handleCancel}>
+								<img
+									alt="example"
+									style={{
+										width: "100%",
+									}}
+									src={previewImage}
+								/>
+							</Modal>
+						</Item>
+						<Item>
+							<h1 className={classes.title}> Thông tin liên hệ</h1>
+							<div className={classes.selectedBox}>
+								<TextField
+									size="small"
+									className={classes.textField}
+									style={{ width: "100%", paddingBottom: 20 }}
+									id="standard-basic"
+									label="Tên liên hệ"
+									fullWidth
+									variant="outlined"
+									value={nameContact}
+									onChange={(e) => {
+										setNameContact(e.target.value);
+									}}
+								/>
+								<TextField
+									type="number"
+									size="small"
+									className={classes.textField}
+									style={{ width: "100%", paddingBottom: 20 }}
+									id="standard-basic"
+									label="Số điện thoại"
+									fullWidth
+									variant="outlined"
+									required
+									value={phoneContact}
+									onChange={(e) => {
+										setPhoneContact(e.target.value);
+									}}
+								/>
+								<TextField
+									size="small"
+									className={classes.textField}
+									style={{ width: "100%", paddingBottom: 20 }}
+									id="standard-basic"
+									label="Địa chỉ liên hệ"
+									fullWidth
+									variant="outlined"
+									value={addressContact}
+									onChange={(e) => {
+										setAddressContact(e.target.value);
+									}}
+								/>
+								<TextField
+									size="small"
+									className={classes.textField}
+									style={{ width: "100%", paddingBottom: 20 }}
+									id="standard-basic"
+									label="Email"
+									fullWidth
+									variant="outlined"
+									value={emailContact}
+									onChange={(e) => {
+										setEmailContact(e.target.value);
+									}}
+								/>
+							</div>
+						</Item>
+						<Item style={{ textAlign: "center" }}>
+							<h1 className={classes.title}> Bạn có chắc những thay đổi? </h1>
 							<Button
 								onClick={() => {
-									console.log("Cdsvdsv");
-									setTitleDialog("Thông báo");
-									setContentDialog("Xác nhận thanh toán");
-									setOpenSubmit(true);
+									handleSetInital();
+								}}
+								color="primary"
+								variant="outlined"
+								style={{ padding: "10px 20px", margin: 15 }}
+							>
+								Hủy
+							</Button>
+							<Button
+								onClick={() => {
+									handlePostBDS();
 								}}
 								color="secondary"
 								variant="outlined"
+								style={{ padding: "10px 20px", margin: 15 }}
 							>
 								Cập nhật
 							</Button>
-						</div>
-					</Item>
-				</Grid>
-				<Grid item md={4} xs={12}>
-					<Item>
-						<h1 className={classes.title}> Thanh toán </h1>
+						</Item>
+					</Grid>
 
-						<div>
-							{/* <div style={{ padding: "10px 0" }}>
+					<Grid item md={4} xs={12}>
+						<Item>
+							<h1 className={classes.title}> Thanh toán </h1>
+
+							<div>
+								{/* <div style={{ padding: "10px 0" }}>
 								<Autocomplete
 									size="small"
 									disablePortal
@@ -827,64 +981,50 @@ const EditPost = () => {
 									renderInput={(params) => <TextField {...params} label="Thêm vào" />}
 								/>
 							</div> */}
-							<h2 className={classes.subtitle}> Chọn thời hạn tin: </h2>
-							<div style={{ padding: "10px 0" }}>
-								<RangePicker
-									placeholder={["Bắt đầu", "Kết thúc"]}
-									onChange={(e) => {
-										setStartDateOfPost(e[0].format("DD:MM:YYYY"));
-										setEndDateOfPost(e[1].format("DD:MM:YYYY"));
-
-										const AmountDate =
-											Math.abs(
-												moment(e[0], "DD/MM/YYYY HH:mm:ss").diff(moment(e[1], "DD/MM/YYYY HH:mm:ss"), "days"),
-											) + 1;
-
-										setTotalPrice(2000 * AmountDate);
-									}}
-									showTime
-									required
-									style={{ width: "100%" }}
-									format={dateFormat}
-								/>
+								<h2 className={classes.subtitle}> Chọn thời hạn tin: </h2>
+								<div style={{ padding: "10px 0" }}>
+									<RangePicker
+										placeholder={["Bắt đầu", "Kết thúc"]}
+										value={[startDateOfPost, endDateOfPost]}
+										onChange={(e) => {
+											console.log(moment().diff(moment(e[0]), "days"), "ewgvrebr");
+											setStartDateOfPost(moment(e[0]));
+											setEndDateOfPost(moment(e[1]));
+										}}
+										required
+										style={{ width: "100%" }}
+										format={dateFormat}
+									/>
+								</div>
+								<p className={classes.total}>
+									<span style={{ color: "#329fcf" }}>Tổng tiền:</span> <span>{totalPrice}</span> <b>VND</b>
+								</p>
 							</div>
-							<p className={classes.total}>
-								<span style={{ color: "#329fcf" }}>Tổng tiền:</span> <span>{totalPrice}</span> <b>VND</b>
-							</p>
-						</div>
-						<div>
-							<AlertDialog
-								isOpen={openAlert}
-								onClose={() => {
-									setOpenAlert(false);
-								}}
-								closable="false"
-								type={typeAlert}
-								message={messageAlert}
-							/>
-						</div>
-						<div style={{ textAlign: "right" }}>
-							<Button
-								onClick={() => {
-									console.log("Cdsvdsv");
-									setTitleDialog("Thông báo");
-									setContentDialog("Xác nhận thanh toán");
-									setOpenSubmit(true);
-								}}
-								color="secondary"
-								variant="outlined"
-							>
-								Gia hạn
-							</Button>
-						</div>
-					</Item>
+
+							<div style={{ textAlign: "right" }}>
+								<Button
+									onClick={() => {
+										console.log("Cdsvdsv");
+										setTitleDialog("Thông báo");
+										setContentDialog("Xác nhận gia hạn.");
+										setOpenSubmit(true);
+									}}
+									color="secondary"
+									variant="outlined"
+								>
+									Gia hạn
+								</Button>
+							</div>
+						</Item>
+					</Grid>
 				</Grid>
-			</Grid>
+			</Spin>
+
 			<DialogCustome
 				open={openSubmit}
 				handleSubmit={() => {
 					setOpenSubmit(false);
-					handlePostBDS();
+					handleExpirePost();
 				}}
 				handleClose={() => {
 					setOpenSubmit(false);

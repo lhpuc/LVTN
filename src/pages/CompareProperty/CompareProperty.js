@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Slider from "react-slick";
 import { Typography, Spin } from "antd";
-import ReactImageUploading from "react-images-uploading";
+import { SearchFilterPostContext } from "../../context/searchFilterContext";
 
 import { noImage } from "../../models/images";
 import { TextField, Grid, Button, autocompleteClasses } from "@mui/material";
@@ -10,6 +10,7 @@ import { FilterInfoOfPostApi } from "../../api/home/InfoOfFilter";
 const { Title } = Typography;
 
 const CompareProperty = () => {
+	const { comparePropertyItem, setPropertyCompareItem } = useContext(SearchFilterPostContext);
 	const FilterInfoOfPostService = FilterInfoOfPostApi();
 	const [isSpin, SetIsSpin] = useState(false);
 
@@ -35,25 +36,25 @@ const CompareProperty = () => {
 
 	useEffect(() => {
 		SetIsSpin(true);
-		// const propertiesId = localStorage.getItem("propertyId");
-		const propertiesId = [
-			"639675fcba0e7f725316a591",
-			"639675fcba0e7f725316a591",
-			"639675fcba0e7f725316a591",
-		];
+		const propertiesCompare = comparePropertyItem.map((item) => item._id);
 
-		const dataRequest = {
-			idList: propertiesId,
-		};
+		if (propertiesCompare.length > 0) {
+			const dataRequest = {
+				idList: propertiesCompare,
+			};
 
-		FilterInfoOfPostService.geArrayOfProperties(dataRequest).then((value) => {
-			const data = value.data;
-			if (data.success) {
-				setArrProperty(data.propertyList);
-			}
+			FilterInfoOfPostService.geArrayOfProperties(dataRequest).then((value) => {
+				const data = value.data;
+				if (data.success) {
+					setArrProperty(data.propertyList);
+				}
+				SetIsSpin(false);
+			});
+		} else {
+			setArrProperty([]);
 			SetIsSpin(false);
-		});
-	}, []);
+		}
+	}, [comparePropertyItem]);
 	return (
 		<>
 			<Spin spinning={isSpin} tip="Đợi xíu nhé...">

@@ -80,11 +80,11 @@ const Banner = () => {
 		}
 	}, [selectMinArea, selectMaxArea]);
 
-	const handleFilterProperty = (keyword, page, isFilter) => {
+	const handleFilterProperty = (page, isFilter) => {
 		setCurrentPage(page);
 		setTotalPage(0);
 		const dataRequest = {
-			name: keyword,
+			name: searchStringFilter,
 			page: page,
 			limit: 30,
 		};
@@ -174,15 +174,14 @@ const Banner = () => {
 				console.log("không lấy được data property", e);
 			});
 	};
-	const onSearch = (value) => {
+	const onSearch = () => {
 		clearFilter();
-		setSearchStringFilter(value);
 		setIsApplyFilter(false);
-		handleFilterProperty(searchStringFilter, 1, false);
+		handleFilterProperty(1, false);
 	};
 
 	useEffect(() => {
-		handleFilterProperty(searchStringFilter, currentPage, isApplyFilter);
+		handleFilterProperty(currentPage, isApplyFilter);
 	}, [currentPage]);
 
 	useEffect(() => {
@@ -312,6 +311,7 @@ const Banner = () => {
 										enterButton="Tìm kiếm"
 										size="large"
 										fullWidth
+										onChange={(e) => setSearchStringFilter(e.target.value)}
 										onSearch={onSearch}
 									/>
 								</div>
@@ -519,7 +519,7 @@ const Banner = () => {
 											variant="contained"
 											onClick={() => {
 												setIsApplyFilter(true);
-												handleFilterProperty(searchStringFilter, 1, true);
+												handleFilterProperty(1, true);
 											}}
 										>
 											Áp dụng
@@ -531,7 +531,7 @@ const Banner = () => {
 											variant="contained"
 											onClick={() => {
 												clearFilter();
-												handleFilterProperty(searchStringFilter, 1, false);
+												handleFilterProperty(1, false);
 												setIsApplyFilter(false);
 											}}
 										>

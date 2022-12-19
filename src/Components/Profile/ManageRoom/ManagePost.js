@@ -6,6 +6,7 @@ import { PostInfoApi } from "../../../api/navbar/NavBarOption";
 import { FilterInfoOfPostApi } from "../../../api/home/InfoOfFilter";
 import DialogCustome from "../../DialogCustome/DialogCustome";
 import AlertDialog from "../../Dialog/AleartDialog";
+import { NavLink } from "react-router-dom";
 
 const { Title } = Typography;
 
@@ -36,7 +37,7 @@ const ManageRoom = () => {
 	const [isDeleteSuccess, setIsDeleteSuccess] = useState(false);
 
 	const editRoom = (data) => {
-		window.location = `/edit-post?id=${data}`;
+		window.location = `/edit-post/${data}`;
 	};
 	const deleteRoom = (id) => {
 		setOpenSubmit(true);
@@ -137,9 +138,14 @@ const ManageRoom = () => {
 						setIsOpenDialog(false);
 					}}
 				/>
-				<Button className="btn-add-room" type="default">
-					<PlusCircleOutlined /> Thêm phòng
-				</Button>
+				<NavLink
+					to="/post"
+					className="btn-add-room"
+					type="default"
+					style={{ padding: 10, backgroundColor: "#264f3d" }}
+				>
+					<PlusCircleOutlined /> Thêm
+				</NavLink>
 				<div className="content-section manage-room">
 					<Table
 						columns={roomColumns(editRoom, deleteRoom)}

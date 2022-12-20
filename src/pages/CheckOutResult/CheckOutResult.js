@@ -68,7 +68,7 @@ const CheckOutResult = () => {
 							<Grid item xs={5}>
 								<CheckCircleOutlineIcon color="success" sx={{ fontSize: "100px" }} />
 								<p style={{ fontSize: 40, fontFamily: "SPM title bold", margin: 0, color: "#318d48" }}>
-									Đăng Tin Thành Công
+									Giao dịch thành công
 								</p>
 
 								<Button href={`/property/${propertyId}`} variant="outlined">

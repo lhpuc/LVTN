@@ -22,7 +22,7 @@ const Navbar = () => {
 	const PostInfoService = PostInfoApi();
 	const navListRef = useRef();
 	const { isLogin, setIsLogin } = useContext(AuthContext);
-	const { user, setUser } = useContext(SearchFilterPostContext);
+	const { user, setUser, favouriteUser, setFavouriteUser } = useContext(SearchFilterPostContext);
 	const [navItems, setNavItems] = useState([]);
 	const [selectedNavItem, setSelectedNavItem] = useState(0);
 	const [showCloseBtn, setShowCloseBtn] = useState(false);
@@ -36,6 +36,13 @@ const Navbar = () => {
 	const [shapeStyleMobile, setShapeStyleMobile] = useState({
 		top: 16,
 	});
+	useEffect(() => {
+		if (user) {
+			const favourite = user.favourite.map((item) => item._id);
+			console.log(favourite, "ewfvewv init");
+			setFavouriteUser([...favourite]);
+		}
+	}, [user]);
 
 	useEffect(() => {
 		if (isLogin) {

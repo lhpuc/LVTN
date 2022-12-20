@@ -30,10 +30,11 @@ export const FeaturedProp = () => {
 		setComparePropertyItem,
 		user,
 		setUser,
+		favouriteUser,
+		setFavouriteUser,
 	} = useContext(SearchFilterPostContext);
 
 	const [searchUser, setSearchUser] = useState(false);
-	const [favouriteUser, setFavouriteUser] = useState([]);
 	const [isSpin, setIsSpin] = useState(false);
 	const moneyFormat = (money) => {
 		// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
@@ -42,14 +43,6 @@ export const FeaturedProp = () => {
 			.format(money)
 			.slice(0, -1);
 	};
-
-	useEffect(() => {
-		if (user) {
-			const favourite = user.favourite.map((item) => item._id);
-			console.log(favourite, "ewfvewv init");
-			setFavouriteUser([...favourite]);
-		}
-	}, [user]);
 
 	const PostInfoService = PostInfoApi();
 	const handleAddFavourite = async (id, checked) => {

@@ -1,7 +1,15 @@
 import { EyeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Tag, Space } from "antd";
 import { noImage } from "../../../models/images";
+import ClearIcon from "@mui/icons-material/Clear";
 
+const moneyFormat = (money) => {
+	// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+	return Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" })
+		.format(money)
+		.slice(0, -1);
+};
 export const getSidebarItem = (label, key, icon, children, type) => {
 	return {
 		key,
@@ -17,60 +25,56 @@ export const postColumns = (deleteAction) => [
 		title: "Ảnh",
 		dataIndex: "img",
 		key: "img",
-		width: 200,
-		render: (src) => <img src={src} className="table-col-cell-img" />,
+
+		render: (src) => <img src={src.length > 0 ? src[0] : noImage} className="table-col-cell-img" />,
 	},
 	{
-		title: "Mã",
-		dataIndex: "id",
-		key: "id",
-		width: 60,
+		title: "Tiêu đề",
+		dataIndex: "title",
+		key: "title",
+	},
+	{
+		title: "Còn trống",
+		dataIndex: "remainRoom",
+		key: "remainRoom",
+	},
+	{
+		title: "Số lượng",
+		dataIndex: "totalRoom",
+		key: "totalRoom",
 	},
 	{
 		title: "Giá",
 		dataIndex: "price",
 		key: "price",
-		width: 180,
-		render: (price) => <>{price} VND</>,
+		render: (price, properties) => {
+			return <>{properties.isNegotiate ? <>Thương lượng</> : <>{moneyFormat(price)} VND</>}</>;
+		},
 	},
-	{
-		title: "Tên",
-		dataIndex: "name",
-		key: "name",
-	},
-	{
-		title: "Trạng thái",
-		dataIndex: "status",
-		key: "status",
-		width: 150,
-		render: (_, { status }) => (
-			<Tag color={status === "Cần bán" ? "green" : "blue"} key={status}>
-				{status}
-			</Tag>
-		),
-	},
+
 	{
 		title: "Xem",
-		dataIndex: "id",
+		dataIndex: "_id",
 		width: 50,
-		key: "id",
+		key: "_id",
 		render: (id) => (
 			<Space>
-				<a href="#" className="table-col-cell-icon">
+				<a href={`/property/${id}`} className="table-col-cell-icon">
 					<EyeOutlined />
 				</a>
 			</Space>
 		),
 	},
+
 	{
-		title: "Xóa",
-		dataIndex: "id",
-		key: "action",
-		width: 50,
+		title: "Bỏ lưu",
+		dataIndex: "_id",
+		key: "delete",
+		width: 100,
 		render: (id, record) => (
 			<Space size="middle">
 				<a onClick={() => deleteAction(id)} className="table-col-cell-icon error">
-					<DeleteOutlined />
+					<ClearIcon />
 				</a>
 			</Space>
 		),
@@ -105,7 +109,7 @@ export const roomColumns = (editAction, deleteAction) => [
 		dataIndex: "price",
 		key: "price",
 		render: (price, properties) => {
-			return <>{properties.isNegotiate ? <>Thương lượng</> : <>{price} VND</>}</>;
+			return <>{properties.isNegotiate ? <>Thương lượng</> : <>{moneyFormat(price)} VND</>}</>;
 		},
 	},
 

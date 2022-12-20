@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Slider from "react-slick";
-import { Button, Form, Input } from "antd";
+import { Button, Form, Input, message } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBath, faBed, faSignal, faWarehouse } from "@fortawesome/free-solid-svg-icons";
 
 import "./Home.css";
+import Favorite from "@mui/icons-material/Favorite";
+import Checkbox from "@mui/material/Checkbox";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { FilterInfoOfPostApi } from "../../api/home/InfoOfFilter";
@@ -13,6 +15,10 @@ import { Grid } from "@mui/material";
 import CarouselProperties from "../../Components/CarouselProperties/CarouselProperties";
 import DialogCustome from "../../Components/DialogCustome/DialogCustome";
 import AlertDialog from "../../Components/Dialog/AleartDialog";
+import { SearchFilterPostContext } from "../../context/searchFilterContext";
+import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
+import { PostInfoApi } from "../../api/navbar/NavBarOption";
+import { Button as ButtonUi } from "@mui/material";
 
 const layout = {
 	labelCol: {
@@ -32,6 +38,9 @@ const validateMessages = {
 
 const PropertyDetails = () => {
 	const FilterInfoOfPostService = FilterInfoOfPostApi();
+	const PostInfoService = PostInfoApi();
+	const { favouriteUser, setFavouriteUser, user, setUser, setComparePropertyItem } =
+		useContext(SearchFilterPostContext);
 	const onFinish = (values) => {
 		console.log(values);
 	};
@@ -50,6 +59,54 @@ const PropertyDetails = () => {
 	const [isMesssageDialog, setIsMessageDialog] = useState("");
 	const [isClosableDialog, setIsClosableDialog] = useState(true);
 
+	const handleAddCompare = (id) => {
+		const local = localStorage.getItem("property");
+		if (local !== null) {
+			const dataLocal = JSON.parse(localStorage.getItem("property"));
+			console.log(dataLocal, "cẻver");
+			if (dataLocal.length < 3) {
+				const findId = dataLocal.find((item) => item == id._id);
+				if (!findId) {
+					dataLocal.push(id);
+					localStorage.setItem("property", JSON.stringify(dataLocal));
+					setComparePropertyItem(dataLocal);
+				}
+			} else {
+				message.error("Chỉ được tối đa 3 mục so sánh");
+			}
+		} else {
+			localStorage.setItem("property", JSON.stringify([id]));
+			setComparePropertyItem([id]);
+		}
+		console.log(localStorage, "local");
+	};
+	const handleAddFavourite = async (id, checked) => {
+		let arrFavourite = favouriteUser;
+		if (checked) {
+			const favouriteDup = arrFavourite.find((item) => item == id._id);
+			if (favouriteDup === undefined) {
+				arrFavourite.push(id._id);
+				setFavouriteUser([...arrFavourite]);
+			}
+		} else {
+			const favouriteDe = favouriteUser.filter((item) => item != id._id);
+			arrFavourite = favouriteDe.map((item) => item);
+			setFavouriteUser(arrFavourite);
+		}
+
+		const dataRequest = {
+			favourite: arrFavourite,
+		};
+		console.log(dataRequest, "ewvewvewv");
+
+		await PostInfoService.updateUserInfo(dataRequest, localStorage.getItem("token"))
+			.then((value) => {
+				message.success("Đã cập nhật.");
+			})
+			.catch(() => {
+				message.error("có lỗi");
+			});
+	};
 	useEffect(() => {
 		FilterInfoOfPostService.getPostInfoById(id)
 			.then((value) => {
@@ -167,26 +224,63 @@ const PropertyDetails = () => {
 										</div>
 									)}
 								</div>
+								<div
+									style={{
+										display: "flex",
+										width: "100%",
+										alignItems: "center",
+										justifyContent: "space-between",
+									}}
+								>
+									<div className="flex gap-x-6 text-violet-700">
+										<div className="flex1 flex-col items-center justify-center text-lg font-medium">
+											<FontAwesomeIcon icon={faBed} />
+											<p className="pt-1 text-xs">{property.nOfBedroom} Phòng ngủ</p>
+										</div>
 
-								<div className="flex gap-x-6 text-violet-700 mb-6">
-									<div className="flex1 flex-col items-center justify-center text-lg font-medium">
-										<FontAwesomeIcon icon={faBed} />
-										<p className="pt-1 text-xs">{property.nOfBedroom} Phòng ngủ</p>
+										<div className="flex1 flex-col items-center justify-center text-lg font-medium">
+											<FontAwesomeIcon icon={faBath} />
+											<p className="pt-1 text-xs">{property.nOfBathRoom} phòng tắm</p>
+										</div>
+
+										<div className="flex1 flex-col items-center justify-center text-lg font-medium">
+											<FontAwesomeIcon icon={faSignal} />
+											<p className="pt-1 text-xs">{property.nOfFloor} tầng </p>
+										</div>
 									</div>
+									<div
+										style={{
+											display: "flex",
+											width: "100%",
+											alignItems: "center",
+											justifyContent: "flex-end",
+										}}
+									>
+										<div style={{ width: "20%" }}>
+											{user && (
+												<Checkbox
+													checked={
+														favouriteUser.find((item) => item === property._id) !== undefined ? true : false
+													}
+													onChange={(e) => {
+														console.log(e, e.target.checked, "favorite");
+														handleAddFavourite(property, e.target.checked);
+													}}
+													icon={<FavoriteBorder />}
+													checkedIcon={<Favorite color="secondary" />}
+												/>
+											)}
+										</div>
 
-									<div className="flex1 flex-col items-center justify-center text-lg font-medium">
-										<FontAwesomeIcon icon={faBath} />
-										<p className="pt-1 text-xs">{property.nOfBathRoom} phòng tắm</p>
-									</div>
-
-									{/* <div className="flex1 flex-col items-center justify-center text-lg font-medium">
-									<FontAwesomeIcon icon={faWarehouse} />
-									<p className="pt-1 text-xs">{property.numbacony} ban công</p>
-								</div> */}
-
-									<div className="flex1 flex-col items-center justify-center text-lg font-medium">
-										<FontAwesomeIcon icon={faSignal} />
-										<p className="pt-1 text-xs">{property.nOfFloor} tầng </p>
+										<ButtonUi
+											style={{ width: "50%" }}
+											onClick={(e) => {
+												handleAddCompare(property);
+											}}
+											variant="outlined"
+										>
+											So Sánh
+										</ButtonUi>
 									</div>
 								</div>
 
@@ -214,7 +308,7 @@ const PropertyDetails = () => {
 								{/* <p> Số lượng ban công: {property.numbacony}</p> */}
 								<p> Số lượng tầng: {property.nOfFloor} </p>
 								<p>
-									Diện tích nhà: {property.area}{" "}
+									Diện tích nhà: {property.area}
 									<strong>
 										m<sup>2</sup>
 									</strong>
@@ -241,7 +335,7 @@ const PropertyDetails = () => {
 										<h3>
 											<strong>Giấy tờ:</strong>
 										</h3>
-										<p> {property.license.join(", ")}</p>{" "}
+										<p> {property.license.join(", ")}</p>
 									</>
 								)}
 
@@ -263,12 +357,16 @@ const PropertyDetails = () => {
 							>
 								<div className="flex items-center gap-x-4 mb-8">
 									<Link
-										to="/"
+										to={`/business/${contactUser?._id}`}
 										className="text-violet-700 text-sm"
 										style={{ display: "flex", alignItems: "center" }}
 									>
 										<div className="w-20 h-20 p-1 border border-gray-300 rounded-full">
-											<img src={contactUser?.avatar !== "" ? contactUser?.avatar : noImage} alt="" />
+											<img
+												style={{ borderRadius: "100%" }}
+												src={contactUser?.avatar !== "" ? contactUser?.avatar : noImage}
+												alt=""
+											/>
 										</div>
 										<div style={{ padding: "0 15px" }}>
 											<div className="font-bold text-lg">{contactUser?.lastName}</div>

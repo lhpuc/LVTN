@@ -67,6 +67,12 @@ export const FilterInfoOfPostApi = () => {
 			};
 			return axiosClientInstance.post(`/property/getextendurl`, dataRequest, config);
 		},
+		updateFavourite: (id, token) => {
+			const config = {
+				headers: { Authorization: `Bearer ${token}` },
+			};
+			return axiosClientInstance.post(`/user/favor?id=${id}`, {}, config);
+		},
 	};
 	return FilterInfoOfPost;
 };

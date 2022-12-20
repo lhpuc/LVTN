@@ -1,19 +1,54 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Slider from "react-slick";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBath, faBed, faSignal, faWarehouse } from "@fortawesome/free-solid-svg-icons";
 import { HeartOutlined } from "@ant-design/icons";
+import { message } from "antd";
 import "../FeaturedProp/FeaturedProp.css";
 import { noImage } from "../../models/images";
 import FavoriteBorder from "@mui/icons-material/FavoriteBorder";
 import Favorite from "@mui/icons-material/Favorite";
-import BookmarkAddOutlinedIcon from "@mui/icons-material/BookmarkAddOutlined";
-import BookmarkAddRoundedIcon from "@mui/icons-material/BookmarkAddRounded";
+import { Button } from "@mui/material";
+
 import Checkbox from "@mui/material/Checkbox";
+import { SearchFilterPostContext } from "../../context/searchFilterContext";
+import { PostInfoApi } from "../../api/navbar/NavBarOption";
 
 const CarouselProperties = ({ data }) => {
+	const PostInfoService = PostInfoApi();
 	const [propertyItem, setPropertyItem] = useState(null);
+
+	const { favouriteUser, setFavouriteUser, user, setUser, setComparePropertyItem } =
+		useContext(SearchFilterPostContext);
+
+	const handleAddFavourite = async (id, checked) => {
+		let arrFavourite = favouriteUser;
+		if (checked) {
+			const favouriteDup = arrFavourite.find((item) => item == id._id);
+			if (favouriteDup === undefined) {
+				arrFavourite.push(id._id);
+				setFavouriteUser([...arrFavourite]);
+			}
+		} else {
+			const favouriteDe = favouriteUser.filter((item) => item != id._id);
+			arrFavourite = favouriteDe.map((item) => item);
+			setFavouriteUser(arrFavourite);
+		}
+
+		const dataRequest = {
+			favourite: arrFavourite,
+		};
+		console.log(dataRequest, "ewvewvewv");
+
+		await PostInfoService.updateUserInfo(dataRequest, localStorage.getItem("token"))
+			.then((value) => {
+				message.success("Đã cập nhật.");
+			})
+			.catch(() => {
+				message.error("có lỗi");
+			});
+	};
 
 	const moneyFormat = (money) => {
 		// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
@@ -35,7 +70,27 @@ const CarouselProperties = ({ data }) => {
 		autoplay: true,
 		autoplaySpeed: 5000,
 	};
-	const handleAddCompare = () => {};
+	const handleAddCompare = (id) => {
+		const local = localStorage.getItem("property");
+		if (local !== null) {
+			const dataLocal = JSON.parse(localStorage.getItem("property"));
+			console.log(dataLocal, "cẻver");
+			if (dataLocal.length < 3) {
+				const findId = dataLocal.find((item) => item == id._id);
+				if (!findId) {
+					dataLocal.push(id);
+					localStorage.setItem("property", JSON.stringify(dataLocal));
+					setComparePropertyItem(dataLocal);
+				}
+			} else {
+				message.error("Chỉ được tối đa 3 mục so sánh");
+			}
+		} else {
+			localStorage.setItem("property", JSON.stringify([id]));
+			setComparePropertyItem([id]);
+		}
+		console.log(localStorage, "local");
+	};
 	return (
 		<>
 			<div style={{ width: "100%", padding: "30px 50px" }}>
@@ -46,7 +101,7 @@ const CarouselProperties = ({ data }) => {
 								<div
 									className="relative box-content h-fit "
 									style={{
-										width: "250px",
+										width: "270px",
 										backgroundColor: "#fff",
 										borderRadius: 10,
 										boxShadow: "3px 3px 3px #ccc",
@@ -105,20 +160,27 @@ const CarouselProperties = ({ data }) => {
 										</div>
 
 										<div className="text-light">
-											<Checkbox
-												onChange={(e) => {
-													console.log(e, e.target.checked, "favorite");
+											{user && (
+												<Checkbox
+													checked={
+														favouriteUser.find((item) => item === property._id) !== undefined ? true : false
+													}
+													onChange={(e) => {
+														console.log(e, e.target.checked, "favorite");
+														handleAddFavourite(property, e.target.checked);
+													}}
+													icon={<FavoriteBorder />}
+													checkedIcon={<Favorite color="secondary" />}
+												/>
+											)}
+
+											<Button
+												onClick={(e) => {
+													handleAddCompare(property);
 												}}
-												icon={<FavoriteBorder />}
-												checkedIcon={<Favorite color="secondary" />}
-											/>
-											<Checkbox
-												onChange={(e) => {
-													handleAddCompare(e.target.checked, property._id);
-												}}
-												icon={<BookmarkAddOutlinedIcon />}
-												checkedIcon={<BookmarkAddRoundedIcon />}
-											/>
+											>
+												So Sánh
+											</Button>
 										</div>
 									</div>
 								</div>

@@ -18,13 +18,16 @@ export const SearchFilterPostProvider = ({ children }) => {
 	const [selectMaxArea, setSelectedMaxArea] = useState(0);
 	const [propertiesItem, setPropertiesItem] = useState([]);
 	const [searchUserOrProperty, setSearchUserOrProperty] = useState("Tin đăng"); //false: property , true: user
-	const [userListItem, setUserListItem] = useState([1, 2, 3]);
+	const [userListItem, setUserListItem] = useState([]);
 	const [selectedKindOfBDS, setSelectedKindOfBDS] = useState("");
 	const [selectedNumOfRoom, setSelectedNumOfRoom] = useState(null);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const [comparePropertyItem, setComparePropertyItem] = useState([]);
 	const [user, setUser] = useState(null);
+	const [selectedKindOfPost, setSelectedKindOfPost] = useState("");
+	const [sortBy, setSortBy] = useState({ code: 1, name: "Phổ biến cao nhất" });
+	const [favouriteUser, setFavouriteUser] = useState([]);
 
 	const clearFilter = () => {
 		setSelectedDistrict("");
@@ -39,6 +42,7 @@ export const SearchFilterPostProvider = ({ children }) => {
 		setSelectedCityCode(null);
 		setSelectedDistrictCode(null);
 		setSelectedWardCode(null);
+		setSelectedKindOfPost("");
 	};
 	return (
 		<>
@@ -85,6 +89,12 @@ export const SearchFilterPostProvider = ({ children }) => {
 					setComparePropertyItem,
 					user,
 					setUser,
+					selectedKindOfPost,
+					setSelectedKindOfPost,
+					sortBy,
+					setSortBy,
+					favouriteUser,
+					setFavouriteUser,
 				}}
 			>
 				{children}

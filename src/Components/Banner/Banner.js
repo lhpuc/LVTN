@@ -49,6 +49,10 @@ const Banner = () => {
 		setCurrentPage,
 		totalPage,
 		setTotalPage,
+		selectedKindOfPost,
+		setSelectedKindOfPost,
+		sortBy,
+		setSortBy,
 	} = useContext(SearchFilterPostContext);
 
 	const [isApplyFilter, setIsApplyFilter] = useState(false);
@@ -60,6 +64,7 @@ const Banner = () => {
 	const [selectRangeAreaDefault, setSelectRangeAreaDefault] = useState([0, 200]);
 
 	const [searchTypeList, setSearchTypeList] = useState(["Cá nhân", "Tin đăng"]);
+	const [kindOfPost, setKindOfPost] = useState(["Cho thuê", "Bán"]);
 	const [numberOfRoomList, setNumberOfRoomList] = useState([1, 2, 3, 4, 5]);
 
 	const [kindOfBDS, setKindOfBDS] = useState([]);
@@ -93,12 +98,22 @@ const Banner = () => {
 			name: searchStringFilter,
 			page: page,
 			limit: 30,
+			popularSort: true,
 		};
 		if (isFilter) {
 			console.log("vdsv");
+			if (
+				selectedKindOfPost !== null &&
+				selectedKindOfPost !== undefined &&
+				selectedKindOfPost !== "" &&
+				selectedKindOfPost != "Tất cả"
+			) {
+				dataRequest.bussinessType = selectedKindOfPost == "Cho thuê" ? 1 : 2;
+			}
 			if (selectedKindOfBDS !== null && selectedKindOfBDS !== undefined && selectedKindOfBDS !== "") {
 				dataRequest.propertyType = selectedKindOfBDS;
 			}
+
 			if (
 				selectedNumOfRoom !== null &&
 				selectedNumOfRoom !== undefined &&
@@ -384,6 +399,23 @@ const Banner = () => {
 											<Select
 												style={{ width: "100%", fontSize: 8 }}
 												size="large"
+												value={selectedKindOfPost !== "" ? selectedKindOfPost : null}
+												showSearch
+												placeholder="Loại tin"
+												optionFilterProp="children"
+												onChange={(value) => {
+													setSelectedKindOfPost(value);
+												}}
+												filterOption={(input, option) => option.value.includes(input.toString().toLowerCase())}
+											>
+												{kindOfPost && kindOfPost.map((value) => <Option value={value}>{value}</Option>)}
+											</Select>
+										</div>
+
+										<div className="box">
+											<Select
+												style={{ width: "100%", fontSize: 8 }}
+												size="large"
 												value={selectedKindOfBDS !== "" ? selectedKindOfBDS : null}
 												showSearch
 												placeholder="Loại Nhà"
@@ -478,7 +510,6 @@ const Banner = () => {
 									>
 										<p style={{ padding: 0, margin: 0 }}>Mức giá:</p>
 										<div>
-											<span style={{ color: "#ccc" }}>Min -</span>
 											<InputNumber
 												value={selectMinPrice}
 												onChange={(e) => {
@@ -508,7 +539,6 @@ const Banner = () => {
 													setSelectRangePriceDefault([selectRangePriceDefault[0], selectMaxPrice]);
 												}}
 											/>
-											<span style={{ color: "#ccc" }}>- Max</span>
 										</div>
 									</div>
 
@@ -524,7 +554,6 @@ const Banner = () => {
 									>
 										<p style={{ padding: 0, margin: 0 }}>Diện tích:</p>
 										<div>
-											<span style={{ color: "#ccc" }}>Min -</span>
 											<InputNumber
 												value={selectMinArea}
 												onChange={(e) => {
@@ -554,7 +583,6 @@ const Banner = () => {
 													setSelectRangeAreaDefault([selectRangeAreaDefault[0], selectMaxArea]);
 												}}
 											/>
-											<span style={{ color: "#ccc" }}>- Max</span>
 										</div>
 									</div>
 									<div

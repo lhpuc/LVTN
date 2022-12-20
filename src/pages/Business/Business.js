@@ -18,7 +18,7 @@ const Business = () => {
 
 	useEffect(() => {
 		setIsSpin(true);
-		PostInfoService.getPersonalInfo(localStorage.getItem("token"))
+		PostInfoService.getUserInfo(id)
 			.then((value) => {
 				const data = value.data;
 				if (data.success) {
@@ -32,7 +32,7 @@ const Business = () => {
 			})
 			.catch(() => {
 				setIsSpin(false);
-				message.error("có lỗi xảy ra khi lấy thông tin người dùng");
+				message.error("có lỗi xảy ra khi lấy thông tin");
 			});
 	}, [id]);
 	return (

@@ -18,12 +18,14 @@ export const SearchFilterPostProvider = ({ children }) => {
 	const [selectMaxArea, setSelectedMaxArea] = useState(0);
 	const [propertiesItem, setPropertiesItem] = useState([]);
 	const [searchUserOrProperty, setSearchUserOrProperty] = useState("Tin đăng"); //false: property , true: user
-	const [userListItem, setUserListItem] = useState([]);
+	const [userListItem, setUserListItem] = useState([1, 2, 3]);
 	const [selectedKindOfBDS, setSelectedKindOfBDS] = useState("");
 	const [selectedNumOfRoom, setSelectedNumOfRoom] = useState(null);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const [comparePropertyItem, setComparePropertyItem] = useState([]);
+	const [user, setUser] = useState(null);
+
 	const clearFilter = () => {
 		setSelectedDistrict("");
 		setSelectedCity("");
@@ -81,6 +83,8 @@ export const SearchFilterPostProvider = ({ children }) => {
 					setTotalPage,
 					comparePropertyItem,
 					setComparePropertyItem,
+					user,
+					setUser,
 				}}
 			>
 				{children}

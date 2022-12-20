@@ -96,11 +96,7 @@ const PropertyDetails = () => {
 			const dataRequest = {
 				message: mesContact,
 			};
-			FilterInfoOfPostService.sendMailToUser(
-				dataRequest,
-				contactUser._id,
-				localStorage.getItem("token"),
-			)
+			FilterInfoOfPostService.sendMailToUser(dataRequest, property._id, localStorage.getItem("token"))
 				.then((value) => {
 					const data = value.data;
 					if (data.success) {

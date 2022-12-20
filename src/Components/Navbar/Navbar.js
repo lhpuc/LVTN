@@ -14,15 +14,19 @@ import { useEffect, useRef, useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import AuthContext from "../../context/AuthProvider";
 import { PostInfoApi } from "../../api/navbar/NavBarOption";
+import { SearchFilterPostContext } from "../../context/searchFilterContext";
+import { Avatar } from "antd";
+import { noImage } from "../../models/images";
 
 const Navbar = () => {
 	const PostInfoService = PostInfoApi();
 	const navListRef = useRef();
 	const { isLogin, setIsLogin } = useContext(AuthContext);
+	const { user, setUser } = useContext(SearchFilterPostContext);
 	const [navItems, setNavItems] = useState([]);
 	const [selectedNavItem, setSelectedNavItem] = useState(0);
 	const [showCloseBtn, setShowCloseBtn] = useState(false);
-	const [user, setUser] = useState(null);
+
 	const [shapeStyle, setShapeStyle] = useState({
 		width: 0,
 		left: 0,
@@ -126,33 +130,8 @@ const Navbar = () => {
 		}));
 	}, []);
 
-	//
-	// useEffect(() => {
-	// 	setPropertyList([
-	// 		{
-	// 			propertyId: 0,
-	// 			name: "Property A",
-	// 		},
-	// 		{
-	// 			propertyId: 1,
-	// 			name: "Property B",
-	// 		},
-	// 		{
-	// 			propertyId: 2,
-	// 			name: "Property C",
-	// 		},
-	// 	]);
-	// }, []);
-
-	// useEffect(() => {
-	//   setUser({
-	//     id: 'abc',
-	//     username: 'Do Do',
-	//   })
-	// }, [])
-
 	return (
-		<nav className="nav" id="nav">
+		<nav className="nav" id="nav" style={{ height: 80 }}>
 			<NavLink className="logo" to="/">
 				<HomeOutlined />
 			</NavLink>
@@ -173,7 +152,7 @@ const Navbar = () => {
 			<div className="shape-box" style={shapeStyle}>
 				<div className="shape"></div>
 			</div>
-			<div ref={navListRef} className="nav-list">
+			<div ref={navListRef} className="nav-list" style={{ alignItems: "center", margin: "10px 0" }}>
 				<div className="shape-mobile" style={shapeStyleMobile}></div>
 				<div className="nav-group">
 					<div className="nav-item">
@@ -225,8 +204,18 @@ const Navbar = () => {
 							</NavLink>
 						</div>
 						<div className="nav-item">
-							<NavLink onClick={(e) => handleClickNavItem(e, 5)} className="nav-link" to="/profile">
-								<UserAddOutlined className="nav-icon" />
+							<NavLink
+								style={{ width: "100%" }}
+								onClick={(e) => handleClickNavItem(e, 5)}
+								className="nav-link"
+								to="/profile"
+								exact
+							>
+								<Avatar
+									className="nav-icon"
+									src={user.avatar ? user.avatar : noImage}
+									style={{ width: 20, height: 20 }}
+								/>
 								{/* <span className="nav-text">Trang cá nhân</span> */}
 								<span className="nav-text">{user.lastName}</span>
 							</NavLink>

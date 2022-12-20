@@ -13,6 +13,9 @@ export const FilterInfoOfPostApi = () => {
 		searchPropertiesWithFilter: (dataRequest) => {
 			return axiosClientInstance.post(`/${propertyKey}/${findKey}`, dataRequest);
 		},
+		searchUser: (dataRequest) => {
+			return axiosClientInstance.post(`/user/search`, dataRequest);
+		},
 		getAllProperties: () => {
 			return axiosClientInstance.get(`/${propertyKey}`);
 		},

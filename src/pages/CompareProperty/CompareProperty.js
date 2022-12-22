@@ -7,6 +7,8 @@ import { noImage } from "../../models/images";
 import { TextField, Grid, Button, autocompleteClasses } from "@mui/material";
 import axios from "axios";
 import { FilterInfoOfPostApi } from "../../api/home/InfoOfFilter";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import { useNavigate } from "react-router-dom";
 const { Title } = Typography;
 
 const CompareProperty = () => {
@@ -55,6 +57,7 @@ const CompareProperty = () => {
 			SetIsSpin(false);
 		}
 	}, [comparePropertyItem]);
+	const navigate = useNavigate();
 	return (
 		<>
 			<Spin spinning={isSpin} tip="Đợi xíu nhé...">
@@ -151,7 +154,7 @@ const CompareProperty = () => {
 						</Grid>
 						<Grid container spacing={5} style={{ padding: "20px 0px", borderBottom: "1px solid #ccc" }}>
 							<Grid item xs={2} style={{ fontWeight: "bold", color: "#0f0f0f" }}>
-								vị trí
+								Vị trí
 							</Grid>
 							{arrProperty.map((item) => (
 								<Grid item xs={3}>
@@ -166,6 +169,38 @@ const CompareProperty = () => {
 							{arrProperty.map((item) => (
 								<Grid item xs={3}>
 									{item.address}
+								</Grid>
+							))}
+						</Grid>
+						<Grid container spacing={5} style={{ padding: "20px 0px", borderBottom: "1px solid #ccc" }}>
+							<Grid item xs={2} style={{ fontWeight: "bold", color: "#0f0f0f" }}>
+								Giấy tờ pháp lý
+							</Grid>
+							{arrProperty.map((item) => (
+								<Grid item xs={3}>
+									{item.license.join(", ")}
+								</Grid>
+							))}
+						</Grid>
+						<Grid container spacing={5} style={{ padding: "20px 0px", borderBottom: "1px solid #ccc" }}>
+							<Grid item xs={2} style={{ fontWeight: "bold", color: "#0f0f0f" }}>
+								Mô tả
+							</Grid>
+							{arrProperty.map((item) => (
+								<Grid item xs={3}>
+									<span style={{ fontSize: 12 }}>{item.desc}</span>
+								</Grid>
+							))}
+						</Grid>
+						<Grid container spacing={5} style={{ padding: "20px 0px", borderBottom: "1px solid #ccc" }}>
+							<Grid item xs={2} style={{ fontWeight: "bold", color: "#0f0f0f" }}>
+								Xem chi tiết
+							</Grid>
+							{arrProperty.map((item) => (
+								<Grid item xs={3}>
+									<Button onClick={() => navigate(`/property/${item._id}`)}>
+										<VisibilityOutlinedIcon />
+									</Button>
 								</Grid>
 							))}
 						</Grid>

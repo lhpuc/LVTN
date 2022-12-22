@@ -13,7 +13,9 @@ const Introduce = ({ user }) => {
 					lg={{ span: 7, offset: 1 }}
 					style={{ border: "10px solid #fff", color: "#fff", backgroundColor: "#1f394d" }}
 				>
-					<div style={{ textAlign: "center", fontWeight: "bolder", fontSize: 30 }}>Liên hệ</div>
+					<div style={{ textAlign: "center", fontWeight: "bolder", fontSize: 30, paddingBottom: 20 }}>
+						Liên hệ
+					</div>
 
 					<div>
 						<div className="icon_infomation">
@@ -25,13 +27,12 @@ const Introduce = ({ user }) => {
 							<MailOutlined />
 							<p>{user?.email}</p>
 						</div>
-						<div className="icon_infomation">
-							<HeatMapOutlined />
-							<p>{user?.address}</p>
-						</div>
-						<div className="icon_infomation">
-							<iframe src={user?.mapAddress} />
-						</div>
+						{user?.address !== "" && (
+							<div className="icon_infomation">
+								<HeatMapOutlined />
+								<p>{user?.address}</p>
+							</div>
+						)}
 					</div>
 				</Col>
 				<Col

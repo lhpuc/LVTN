@@ -2,6 +2,7 @@ import { EyeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Tag, Space } from "antd";
 import { noImage } from "../../../models/images";
 import ClearIcon from "@mui/icons-material/Clear";
+import moment from "moment";
 
 const moneyFormat = (money) => {
 	// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
@@ -103,6 +104,20 @@ export const roomColumns = (editAction, deleteAction) => [
 		title: "Số lượng",
 		dataIndex: "totalRoom",
 		key: "totalRoom",
+	},
+	{
+		title: "Trạng thái",
+		dataIndex: "expireWaitingDate",
+		key: "expireWaitingDate",
+		render: (endDate, properties) => {
+			const dateStart = moment(properties.startDate).diff(moment(), "days");
+			const dateEnd = moment(properties.expireDate).diff(moment(), "days");
+
+			if (dateStart <= 0 && dateEnd >= 0) return <Tag color="green">Hoạt động</Tag>;
+			else if (dateStart >= 0) return <Tag color="blue">Đang đợi</Tag>;
+			else if (dateEnd <= 0) return <Tag color="red">Hết hạn</Tag>;
+			else return <Tag color="red">Hết hạn</Tag>;
+		},
 	},
 	{
 		title: "Giá",

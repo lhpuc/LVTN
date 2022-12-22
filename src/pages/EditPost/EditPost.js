@@ -142,6 +142,14 @@ const EditPost = () => {
 
 	const [isSpinUpdate, setIsSpinUpdate] = useState(false);
 
+	const moneyFormat = (money) => {
+		// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+		return Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" })
+			.format(money)
+			.slice(0, -1);
+	};
+
 	const handleGetInitalBDS = async () => {
 		FilterInfoOfPostService.getPostInfoById(id)
 			.then((value) => {
@@ -280,8 +288,8 @@ const EditPost = () => {
 
 		setFileList(imgList);
 
-		setStartDateOfPost(moment(propertyInital.startDateWaiting, "YYYY-MM-DD"));
-		setEndDateOfPost(moment(propertyInital.expireDateWaiting, "YYYY-MM-DD"));
+		setStartDateOfPost(moment(propertyInital.startDate, "YYYY-MM-DD"));
+		setEndDateOfPost(moment(propertyInital.expireDate, "YYYY-MM-DD"));
 	};
 	useEffect(() => {
 		if (propertyInital) {
@@ -495,16 +503,29 @@ const EditPost = () => {
 	};
 
 	useEffect(() => {
-		const AmountDate =
-			Math.abs(
-				moment(startDateOfPost, "DD/MM/YYYY HH:mm:ss").diff(
-					moment(endDateOfPost, "DD/MM/YYYY HH:mm:ss"),
-					"days",
-				),
-			) + 1;
+		if (propertyInital) {
+			const dateStart = moment(startDateOfPost).diff(moment(propertyInital.expireDate), "days");
+			const dateEnd = moment(endDateOfPost).diff(moment(propertyInital.expireDate), "days");
+			let AmountDate = 0;
+			if (dateStart <= 0 && dateEnd >= 0) {
+				console.log("evsphuc");
+				AmountDate =
+					Math.abs(moment(propertyInital.expireDate).diff(moment(endDateOfPost), "days")) + 1;
+			} else if (dateStart >= 0 && dateEnd >= 0) {
+				AmountDate =
+					Math.abs(
+						moment(startDateOfPost, "DD/MM/YYYY HH:mm:ss").diff(
+							moment(endDateOfPost, "DD/MM/YYYY HH:mm:ss"),
+							"days",
+						),
+					) + 1;
+			}
 
-		setTotalPrice(2000 * AmountDate);
-	}, [startDateOfPost, endDateOfPost]);
+			console.log(dateStart, dateEnd, "ewvwrv");
+
+			setTotalPrice(2000 * AmountDate);
+		}
+	}, [startDateOfPost, endDateOfPost, propertyInital]);
 
 	return (
 		<>
@@ -608,18 +629,6 @@ const EditPost = () => {
 									value={fullAddress}
 									onChange={(e) => {
 										setFullAddress(e.target.value);
-									}}
-									variant="outlined"
-								/>
-								<TextField
-									size="small"
-									className={classes.textField}
-									style={{ width: "100%", marginTop: 20 }}
-									id="standard-basic"
-									label="Link bản đồ"
-									value={linkMapAddress}
-									onChange={(e) => {
-										setLinkMapAddress(e.target.value);
 									}}
 									variant="outlined"
 								/>
@@ -997,7 +1006,8 @@ const EditPost = () => {
 									/>
 								</div>
 								<p className={classes.total}>
-									<span style={{ color: "#329fcf" }}>Tổng tiền:</span> <span>{totalPrice}</span> <b>VND</b>
+									<span style={{ color: "#329fcf" }}>Tổng tiền:</span> <span>{moneyFormat(totalPrice)}</span>{" "}
+									<b>VND</b>
 								</p>
 							</div>
 

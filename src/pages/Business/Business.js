@@ -44,7 +44,7 @@ const Business = () => {
 							<Back
 								// name="Hãy liên hệ với chúng tôi"
 								// title="Cần được tư vấn?"
-								cover={userInfo.cover}
+								cover={userInfo.cover ? userInfo.cover : noImage}
 							/>
 
 							<Grid

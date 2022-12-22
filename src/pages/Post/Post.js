@@ -16,6 +16,7 @@ import moment from "moment";
 import { FilterInfoOfPostApi } from "../../api/home/InfoOfFilter";
 import AlertDialog from "../../Components/Dialog/AleartDialog";
 import DialogCustome from "../../Components/DialogCustome/DialogCustome";
+import { SearchFilterPostContext } from "../../context/searchFilterContext";
 
 import axios from "axios";
 
@@ -71,6 +72,7 @@ const Post = () => {
 			marginBottom: 10,
 		}),
 	};
+	const { user } = useContext(SearchFilterPostContext);
 	const [kindOfPostValueSelected, setKindOfPostValueSelected] = useState("");
 	const [kindOfBDSValueSelected, setKindOfBDSValueSelected] = useState("");
 	const [kindOfCityValueSelected, setKindOfCityValueSelected] = useState("");
@@ -132,6 +134,14 @@ const Post = () => {
 
 	const kindOfUnit = ["VND", "Thương lượng"];
 
+	useEffect(() => {
+		if (user) {
+			setNameContact(user.lastName);
+			setPhoneContact(user.phone);
+			setAddressContact(user.address);
+			setEmailContact(user.email);
+		}
+	}, [user]);
 	const [codeOfPosition, setCodeOfPosition] = useState({ city: "", district: "", ward: "" });
 	useEffect(() => {
 		FilterInfoOfPostService.getOptionFilter()
@@ -307,6 +317,13 @@ const Post = () => {
 			</div>
 		</div>
 	);
+	const moneyFormat = (money) => {
+		// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+		return Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" })
+			.format(money)
+			.slice(0, -1);
+	};
 	const dateFormat = "DD/MM/YYYY hh:ss:mm";
 
 	const handlePostBDS = () => {
@@ -470,7 +487,7 @@ const Post = () => {
 								}}
 								variant="outlined"
 							/>
-							<TextField
+							{/* <TextField
 								size="small"
 								className={classes.textField}
 								style={{ width: "100%" }}
@@ -481,7 +498,7 @@ const Post = () => {
 									setLinkMapAddress(e.target.value);
 								}}
 								variant="outlined"
-							/>
+							/> */}
 						</div>
 					</Item>
 					<Item>
@@ -831,14 +848,14 @@ const Post = () => {
 
 										setTotalPrice(2000 * AmountDate);
 									}}
-									showTime
 									required
 									style={{ width: "100%" }}
 									format={dateFormat}
 								/>
 							</div>
 							<p className={classes.total}>
-								<span style={{ color: "#329fcf" }}>Tổng tiền:</span> <span>{totalPrice}</span> <b>VND</b>
+								<span style={{ color: "#329fcf" }}>Tổng tiền:</span> <span>{moneyFormat(totalPrice)}</span>
+								<b>VND</b>
 							</p>
 						</div>
 						<div>

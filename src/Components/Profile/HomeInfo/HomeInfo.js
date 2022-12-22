@@ -7,6 +7,8 @@ import { TextField, Grid, Button } from "@mui/material";
 import axios from "axios";
 import AlertDialog from "../../Dialog/AleartDialog";
 import DialogCustome from "../../DialogCustome/DialogCustome";
+import { useNavigate } from "react-router-dom";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 const { Title } = Typography;
 
 const HomeInfo = () => {
@@ -192,6 +194,8 @@ const HomeInfo = () => {
 			});
 	}, []);
 
+	const navigate = useNavigate();
+
 	return (
 		<div className="container-section user-info">
 			<Spin spinning={isSpin} tip="Đợi xíu nhé...">
@@ -284,7 +288,7 @@ const HomeInfo = () => {
 							}}
 						>
 							<span style={{ width: "20%" }}>Bản đồ: </span>
-							<TextField
+							{/* <TextField
 								size="small"
 								style={{ width: "65%", margin: "15px 0" }}
 								id="standard-basic"
@@ -293,7 +297,7 @@ const HomeInfo = () => {
 									setUserInfo({ ...userInfo, ["mapAddress"]: e.target.value });
 								}}
 								variant="outlined"
-							/>
+							/> */}
 						</Grid>
 						<Grid
 							style={{
@@ -315,6 +319,17 @@ const HomeInfo = () => {
 								}}
 								variant="outlined"
 							/>
+						</Grid>
+						<Grid>
+							<Button
+								variant="outlined"
+								onClick={() => {
+									navigate(`/business/${userInfo?._id}`, { replace: true });
+								}}
+							>
+								<VisibilityOutlinedIcon />
+								<span style={{ paddingLeft: 10 }}>Đến trang cá nhân</span>
+							</Button>
 						</Grid>
 					</Grid>
 

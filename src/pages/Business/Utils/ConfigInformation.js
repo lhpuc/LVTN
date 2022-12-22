@@ -23,6 +23,14 @@ const configSlider = {
 	slidesToScroll: 1,
 };
 
+const moneyFormat = (money) => {
+	// return (money).toFixed(0).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+
+	return Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" })
+		.format(money)
+		.slice(0, -1);
+};
+
 export const postColumns = (watchAction) => [
 	{
 		title: "Ảnh",
@@ -52,7 +60,9 @@ export const postColumns = (watchAction) => [
 		dataIndex: "price",
 		key: "price",
 		width: 180,
-		render: (price) => <>{price} VND</>,
+		render: (price, properties) => {
+			return <>{properties.isNegotiate ? <>Thương lượng</> : <>{moneyFormat(price)} VND</>}</>;
+		},
 	},
 	{
 		title: "Diện tích",
@@ -61,7 +71,7 @@ export const postColumns = (watchAction) => [
 		key: "area",
 		render: (area) => (
 			<>
-				{area} m <sup>2</sup>
+				{area} m<sup>2</sup>
 			</>
 		),
 	},
@@ -140,7 +150,9 @@ export const roomColumns = (editAction, deleteAction) => [
 		dataIndex: "price",
 		key: "price",
 		width: 180,
-		render: (price) => <>{price} VND</>,
+		render: (price, properties) => {
+			return <>{properties.isNegotiate ? <>Thương lượng</> : <>{moneyFormat(price)} VND</>}</>;
+		},
 	},
 	{
 		title: "Còn trống",

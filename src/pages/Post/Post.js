@@ -324,7 +324,7 @@ const Post = () => {
 			.format(money)
 			.slice(0, -1);
 	};
-	const dateFormat = "DD/MM/YYYY hh:ss:mm";
+	const dateFormat = "DD/MM/YYYY";
 
 	const handlePostBDS = () => {
 		const dataRequest = {
@@ -840,11 +840,21 @@ const Post = () => {
 										console.log(e);
 										setStartDateOfPost(moment(e[0]));
 										setEndDateOfPost(moment(e[1]));
-
-										const AmountDate =
-											Math.abs(
-												moment(e[0], "DD/MM/YYYY HH:mm:ss").diff(moment(e[1], "DD/MM/YYYY HH:mm:ss"), "days"),
-											) + 1;
+										let AmountDate = 0;
+										if (moment(e[0]).diff(moment(), "days") <= 0) {
+											AmountDate =
+												Math.abs(
+													moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(
+														moment(e[1], "DD/MM/YYYY HH:mm:ss"),
+														"days",
+													),
+												) + 1;
+										} else {
+											AmountDate =
+												Math.abs(
+													moment(e[0], "DD/MM/YYYY HH:mm:ss").diff(moment(e[1], "DD/MM/YYYY HH:mm:ss"), "days"),
+												) + 1;
+										}
 
 										setTotalPrice(2000 * AmountDate);
 									}}

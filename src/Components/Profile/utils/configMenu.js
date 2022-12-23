@@ -113,7 +113,7 @@ export const roomColumns = (editAction, deleteAction) => [
 			const dateStart = moment(properties.startDate).diff(moment(), "days");
 			const dateEnd = moment(properties.expireDate).diff(moment(), "days");
 
-			if (dateStart <= 0 && dateEnd >= 0) return <Tag color="green">Hoạt động</Tag>;
+			if (dateStart <= 0 && dateEnd > 0) return <Tag color="green">Hoạt động</Tag>;
 			else if (dateStart >= 0) return <Tag color="blue">Đang đợi</Tag>;
 			else if (dateEnd <= 0) return <Tag color="red">Hết hạn</Tag>;
 			else return <Tag color="red">Hết hạn</Tag>;

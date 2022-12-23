@@ -288,8 +288,12 @@ const EditPost = () => {
 
 		setFileList(imgList);
 
-		setStartDateOfPost(moment(propertyInital.startDate, "YYYY-MM-DD"));
-		setEndDateOfPost(moment(propertyInital.expireDate, "YYYY-MM-DD"));
+		setStartDateOfPost(
+			propertyInital.startDate ? moment(propertyInital.startDate, "YYYY-MM-DD") : moment(),
+		);
+		setEndDateOfPost(
+			propertyInital.expireDate ? moment(propertyInital.expireDate, "YYYY-MM-DD") : "",
+		);
 	};
 	useEffect(() => {
 		if (propertyInital) {
@@ -504,14 +508,27 @@ const EditPost = () => {
 
 	useEffect(() => {
 		if (propertyInital) {
-			const dateStart = moment(startDateOfPost).diff(moment(propertyInital.expireDate), "days");
-			const dateEnd = moment(endDateOfPost).diff(moment(propertyInital.expireDate), "days");
 			let AmountDate = 0;
-			if (dateStart <= 0 && dateEnd >= 0) {
-				console.log("evsphuc");
-				AmountDate =
-					Math.abs(moment(propertyInital.expireDate).diff(moment(endDateOfPost), "days")) + 1;
-			} else if (dateStart >= 0 && dateEnd >= 0) {
+			if (propertyInital.expireDate) {
+				const dateStart = moment(startDateOfPost).diff(moment(propertyInital.expireDate), "days");
+				const dateEnd = moment(endDateOfPost).diff(moment(propertyInital.expireDate), "days");
+
+				if (dateStart <= 0 && dateEnd >= 0) {
+					console.log("evsphuc");
+					AmountDate =
+						Math.abs(moment(propertyInital.expireDate).diff(moment(endDateOfPost), "days")) + 1;
+				} else if (dateStart >= 0 && dateEnd >= 0) {
+					AmountDate =
+						Math.abs(
+							moment(startDateOfPost, "DD/MM/YYYY HH:mm:ss").diff(
+								moment(endDateOfPost, "DD/MM/YYYY HH:mm:ss"),
+								"days",
+							),
+						) + 1;
+				}
+
+				console.log(dateStart, dateEnd, "ewvwrv");
+			} else {
 				AmountDate =
 					Math.abs(
 						moment(startDateOfPost, "DD/MM/YYYY HH:mm:ss").diff(
@@ -520,9 +537,6 @@ const EditPost = () => {
 						),
 					) + 1;
 			}
-
-			console.log(dateStart, dateEnd, "ewvwrv");
-
 			setTotalPrice(2000 * AmountDate);
 		}
 	}, [startDateOfPost, endDateOfPost, propertyInital]);
@@ -1006,8 +1020,8 @@ const EditPost = () => {
 									/>
 								</div>
 								<p className={classes.total}>
-									<span style={{ color: "#329fcf" }}>Tổng tiền:</span> <span>{moneyFormat(totalPrice)}</span>{" "}
-									<b>VND</b>
+									<span style={{ color: "#329fcf" }}>Tổng tiền:</span>{" "}
+									<span>{totalPrice ? moneyFormat(totalPrice) : 0}</span> <b>VND</b>
 								</p>
 							</div>
 

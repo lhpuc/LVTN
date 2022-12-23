@@ -93,7 +93,7 @@ export const postColumns = (watchAction) => [
 		),
 	},
 	{
-		title: "Phòng trống",
+		title: "Còn trống",
 		dataIndex: "remainRoom",
 		key: "empty",
 		width: 250,

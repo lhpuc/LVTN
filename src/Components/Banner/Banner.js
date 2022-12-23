@@ -140,8 +140,10 @@ const Banner = () => {
 				selectMinPrice !== null &&
 				selectMinPrice !== undefined &&
 				selectMinPrice !== "" &&
+				selectMinPrice !== 0 &&
 				selectMaxPrice !== 0
 			) {
+				console.log(selectMinPrice, "min");
 				dataRequest.lowPrice = selectMinPrice;
 			}
 
@@ -152,12 +154,16 @@ const Banner = () => {
 				selectMaxPrice !== 0
 			) {
 				dataRequest.highPrice = selectMaxPrice;
+				if (selectMinPrice === 0) {
+					dataRequest.lowPrice = 1;
+				}
 			}
 
 			if (
 				selectMinArea !== null &&
 				selectMinArea !== undefined &&
 				selectMinArea !== "" &&
+				selectMinArea !== 0 &&
 				selectMaxArea !== 0
 			) {
 				dataRequest.areaLow = selectMinArea;
@@ -170,6 +176,9 @@ const Banner = () => {
 				selectMaxArea !== 0
 			) {
 				dataRequest.areaHigh = selectMaxArea;
+				if (selectMinArea !== 0) {
+					dataRequest.areaLow = 1;
+				}
 			}
 		}
 		console.log(dataRequest, "datarequest");

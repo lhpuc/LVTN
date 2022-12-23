@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Typography, Table, Button, Spin } from "antd";
 import { postColumns } from "../utils/configMenu";
@@ -6,11 +6,12 @@ import { PostInfoApi } from "../../../api/navbar/NavBarOption";
 import { FilterInfoOfPostApi } from "../../../api/home/InfoOfFilter";
 import DialogCustome from "../../DialogCustome/DialogCustome";
 import AlertDialog from "../../Dialog/AleartDialog";
-import { NavLink } from "react-router-dom";
+import { SearchFilterPostContext } from "../../../context/searchFilterContext";
 
 const { Title } = Typography;
 
 const ManageRoom = () => {
+	const { user, setUser } = useContext(SearchFilterPostContext);
 	const [useInfoInital, setuseInfoInital] = useState({});
 	const PostInfoService = PostInfoApi();
 	const FilterInfoOfPostService = FilterInfoOfPostApi();
@@ -47,6 +48,23 @@ const ManageRoom = () => {
 		setIsDeleteProperty(true);
 	};
 
+	useEffect(() => {
+		if (isDeleteSuccess) {
+			PostInfoService.getPersonalInfo(localStorage.getItem("token"))
+				.then((value) => {
+					const data = value.data;
+					if (data.success) {
+						setUser(data.user);
+					} else {
+						console.log("có lỗi xảy ra khi lấy thông tin người dùng");
+					}
+				})
+				.catch(() => {
+					console.log("có lỗi xảy ra khi lấy thông tin người dùng");
+				});
+		}
+	});
+
 	const handleDeleteProperty = () => {
 		if (deleteId !== "" && deleteId !== null && deleteId !== undefined) {
 			FilterInfoOfPostService.updateFavourite(deleteId, localStorage.getItem("token"))
@@ -55,7 +73,7 @@ const ManageRoom = () => {
 					const data = json.data;
 					if (data.success) {
 						setIsOpenDialog(true);
-						setIsMessageDialog("Xóa tin đăng thành công.");
+						setIsMessageDialog("Bỏ lưu thành công.");
 						setIsClosableDialog(true);
 						setIsTypeDialog("success");
 						setIsDeleteProperty(false);
@@ -63,14 +81,14 @@ const ManageRoom = () => {
 						setIsDeleteSuccess(true);
 					} else {
 						setIsOpenDialog(true);
-						setIsMessageDialog("Xóa tin đăng không thành công.");
+						setIsMessageDialog("Bỏ lưu không thành công.");
 						setIsClosableDialog(true);
 						setIsTypeDialog("error");
 					}
 				})
 				.catch(() => {
 					setIsOpenDialog(true);
-					setIsMessageDialog("Xóa tin đăng không thành công.");
+					setIsMessageDialog("Bỏ lưu không thành công.");
 					setIsClosableDialog(true);
 					setIsTypeDialog("error");
 				});
@@ -128,7 +146,7 @@ const ManageRoom = () => {
 	return (
 		<div className="container-section manage-room">
 			<Spin spinning={isSpin} tip="Đợi xíu nhé...">
-				<Title className="title-section">Quản lý phòng ở</Title>
+				<Title className="title-section">Các tin đã lưu</Title>
 				<AlertDialog
 					isOpen={isOpenDialog}
 					type={isTypeDialog}

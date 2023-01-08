@@ -116,7 +116,10 @@ const PropertyDetails = () => {
 			.then((value) => {
 				const data = value.data;
 				if (data.success) {
+					message.success("Đánh giá thành công.");
 					handleGetPropertyById();
+					setRatingValue(0);
+					setCommentPost("");
 				} else {
 					message.error("Không thể gửi đánh giá");
 				}
@@ -255,6 +258,9 @@ const PropertyDetails = () => {
 											<div className="bg-violet-500 rounded-full text-white px-3 inline-block">
 												{property.city}
 											</div>
+										</div>
+										<div className="mb-4 lg:mb-0 flex gap-x-2 text-sm">
+											<Rate disabled allowHalf value={property.rating} />
 										</div>
 									</div>
 									<div style={{ maxHeight: 500, marginBottom: 50, backgroundColor: "#211f50", padding: 20 }}>

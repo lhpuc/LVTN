@@ -28,6 +28,8 @@ export const SearchFilterPostProvider = ({ children }) => {
 	const [selectedKindOfPost, setSelectedKindOfPost] = useState("");
 	const [sortBy, setSortBy] = useState({ code: 1, name: "Phổ biến cao nhất" });
 	const [favouriteUser, setFavouriteUser] = useState([]);
+	const [selectedSort, setSelectedSort] = useState({ name: "Đánh giá cao", code: 1 });
+	const [isSpinProperty, setIsSpinProperty] = useState(false);
 
 	const clearFilter = () => {
 		setSelectedDistrict("");
@@ -95,6 +97,10 @@ export const SearchFilterPostProvider = ({ children }) => {
 					setSortBy,
 					favouriteUser,
 					setFavouriteUser,
+					setSelectedSort,
+					selectedSort,
+					isSpinProperty,
+					setIsSpinProperty,
 				}}
 			>
 				{children}

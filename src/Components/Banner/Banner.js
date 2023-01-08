@@ -51,8 +51,10 @@ const Banner = () => {
 		setTotalPage,
 		selectedKindOfPost,
 		setSelectedKindOfPost,
-		sortBy,
-		setSortBy,
+
+		selectedSort,
+		setSelectedSort,
+		setIsSpinProperty,
 	} = useContext(SearchFilterPostContext);
 
 	const [isApplyFilter, setIsApplyFilter] = useState(false);
@@ -94,12 +96,14 @@ const Banner = () => {
 		setIsSpin(true);
 		setCurrentPage(page);
 		setTotalPage(0);
+
 		const dataRequest = {
 			name: searchStringFilter,
 			page: page,
 			limit: 16,
-			popularSort: true,
+			sort: selectedSort.code,
 		};
+
 		if (isFilter) {
 			console.log("vdsv");
 			if (
@@ -230,11 +234,20 @@ const Banner = () => {
 				});
 		}
 	};
+
 	const onSearch = () => {
 		clearFilter();
 		setIsApplyFilter(false);
 		handleFilterProperty(1, false);
 	};
+
+	useEffect(() => {
+		setIsSpinProperty(isSpin);
+	}, [isSpin]);
+
+	useEffect(() => {
+		handleFilterProperty(1, isApplyFilter);
+	}, [selectedSort]);
 
 	useEffect(() => {
 		handleFilterProperty(currentPage, isApplyFilter);

@@ -8,6 +8,7 @@ import "./Business.css";
 import { PostInfoApi } from "../../api/navbar/NavBarOption";
 import { noImage } from "../../models/images";
 import { Grid } from "@mui/material";
+import Review from "./Review/Review";
 
 const Business = () => {
 	const { id } = useParams();

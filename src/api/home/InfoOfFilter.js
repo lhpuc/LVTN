@@ -79,6 +79,7 @@ export const FilterInfoOfPostApi = () => {
 			};
 			return axiosClientInstance.post(`/property/rate`, data, config);
 		},
+
 	};
 	return FilterInfoOfPost;
 };

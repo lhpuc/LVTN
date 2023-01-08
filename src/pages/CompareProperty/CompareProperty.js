@@ -33,7 +33,7 @@ const CompareProperty = () => {
 			.format(money)
 			.slice(0, -1);
 	};
-	
+	const [arrCompare, setArrCompare] = useState([]);
 	const [arrProperty, setArrProperty] = useState([]);
 
 	useEffect(() => {
@@ -58,8 +58,6 @@ const CompareProperty = () => {
 		}
 	}, [comparePropertyItem]);
 	const navigate = useNavigate();
-
-	
 	return (
 		<>
 			<Spin spinning={isSpin} tip="Đợi xíu nhé...">

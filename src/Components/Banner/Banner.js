@@ -97,7 +97,7 @@ const Banner = () => {
 		const dataRequest = {
 			name: searchStringFilter,
 			page: page,
-			limit: 16,
+			limit: 30,
 			popularSort: true,
 		};
 		if (isFilter) {

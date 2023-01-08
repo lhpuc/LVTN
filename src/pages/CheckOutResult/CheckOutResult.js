@@ -71,7 +71,12 @@ const CheckOutResult = () => {
 									Giao dịch thành công
 								</p>
 
-								<Button href={`/property/${propertyId}`} variant="outlined">
+								<Button
+									onClick={() => {
+										window.location = `/property/${propertyId}`;
+									}}
+									variant="outlined"
+								>
 									Hoàn thành giao dịch
 								</Button>
 							</Grid>

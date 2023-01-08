@@ -73,13 +73,13 @@ export const FilterInfoOfPostApi = () => {
 			};
 			return axiosClientInstance.post(`/user/favor?id=${id}`, {}, config);
 		},
+
 		sendRating: (data, token) => {
 			const config = {
 				headers: { Authorization: `Bearer ${token}` },
 			};
 			return axiosClientInstance.post(`/property/rate`, data, config);
 		},
-
 	};
 	return FilterInfoOfPost;
 };

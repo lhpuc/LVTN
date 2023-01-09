@@ -408,7 +408,11 @@ const EditPost = () => {
 		newFileList.forEach((item) => {
 			if (item.status === "done") {
 				console.log(item, "thí item");
-				imageToUpload.push(item.url);
+				if (item.response != undefined) {
+					imageToUpload.push(item.response.data.result.Location);
+				} else {
+					imageToUpload.push(item.url);
+				}
 			}
 		});
 		setImageUpload(imageToUpload);

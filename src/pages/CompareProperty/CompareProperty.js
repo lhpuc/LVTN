@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import Slider from "react-slick";
-import { Typography, Spin } from "antd";
+import { Typography, Spin, Rate } from "antd";
 import { SearchFilterPostContext } from "../../context/searchFilterContext";
 
 import { noImage } from "../../models/images";
@@ -109,6 +109,16 @@ const CompareProperty = () => {
 							{arrProperty.map((item) => (
 								<Grid item xs={3} style={{ fontWeight: "bold", color: "red" }}>
 									{item.isNegotiate ? "Thương lượng" : <>{moneyFormat(item.price)} VND</>}
+								</Grid>
+							))}
+						</Grid>
+						<Grid container spacing={5} style={{ padding: "20px 0px", borderBottom: "1px solid #ccc" }}>
+							<Grid item xs={2} style={{ fontWeight: "bold", color: "#0f0f0f" }}>
+								Đánh giá
+							</Grid>
+							{arrProperty.map((item) => (
+								<Grid item xs={3}>
+									<Rate disabled allowHalf value={item.rating} />
 								</Grid>
 							))}
 						</Grid>

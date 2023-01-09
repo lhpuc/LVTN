@@ -1,5 +1,5 @@
 import { EyeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Tag, Space } from "antd";
+import { Tag, Space, Rate } from "antd";
 import { noImage } from "../../../models/images";
 import Slider from "react-slick";
 
@@ -56,6 +56,12 @@ export const postColumns = (watchAction) => [
 		},
 	},
 	{
+		title: "Tên",
+		dataIndex: "title",
+		key: "name",
+		width: 300,
+	},
+	{
 		title: "Giá",
 		dataIndex: "price",
 		key: "price",
@@ -65,9 +71,22 @@ export const postColumns = (watchAction) => [
 		},
 	},
 	{
+		title: "Đánh giá",
+		dataIndex: "rating",
+		key: "rating",
+		width: 200,
+		render: (rate, properties) => {
+			return (
+				<>
+					<Rate disabled allowHalf value={rate} />
+				</>
+			);
+		},
+	},
+	{
 		title: "Diện tích",
 		dataIndex: "area",
-		width: 150,
+		width: 120,
 		key: "area",
 		render: (area) => (
 			<>
@@ -77,15 +96,10 @@ export const postColumns = (watchAction) => [
 	},
 
 	{
-		title: "Tên",
-		dataIndex: "title",
-		key: "name",
-	},
-	{
 		title: "Loại tin",
 		dataIndex: "bussinessType",
 		key: "status",
-		width: 150,
+		width: 80,
 		render: (bussinessType) => (
 			<Tag color={bussinessType === 2 ? "green" : "blue"} key={bussinessType}>
 				{bussinessType === 2 ? "Bán" : "Cho thuê"}
@@ -96,7 +110,7 @@ export const postColumns = (watchAction) => [
 		title: "Còn trống",
 		dataIndex: "remainRoom",
 		key: "empty",
-		width: 250,
+		width: 150,
 		render: (remainRoom, properties) => (
 			<>
 				<>
@@ -138,6 +152,19 @@ export const roomColumns = (editAction, deleteAction) => [
 		title: "Tên",
 		dataIndex: "name",
 		key: "name",
+	},
+	{
+		title: "Đánh giá",
+		dataIndex: "rating",
+		key: "rating",
+		width: 200,
+		render: (rate, properties) => {
+			return (
+				<>
+					<Rate disabled allowHalf value={rate} />
+				</>
+			);
+		},
 	},
 	{
 		title: "Số lượng",

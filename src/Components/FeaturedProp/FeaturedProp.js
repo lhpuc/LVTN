@@ -128,21 +128,23 @@ export const FeaturedProp = () => {
 	];
 	return (
 		<>
-			<div style={{ margin: "0px auto 20px auto" }}>
-				<Autocomplete
-					disablePortal
-					id="combo-box-demo"
-					options={arrSort}
-					getOptionLabel={(option) => option.name}
-					sx={{ width: 300 }}
-					renderInput={(params) => <TextField {...params} label="Sắp xếp" />}
-					value={selectedSort}
-					onChange={(e, value) => {
-						setSelectedSort(value);
-					}}
-				/>
-			</div>
 			<Spin spinning={isSpinProperty} tip="Chờ xíu nhé...">
+				<div style={{ width: "100%" }}>
+					<Autocomplete
+						style={{ margin: "0px auto 20px auto" }}
+						disablePortal
+						id="combo-box-demo"
+						options={arrSort}
+						getOptionLabel={(option) => option.name}
+						sx={{ width: 300 }}
+						renderInput={(params) => <TextField {...params} label="Sắp xếp" />}
+						value={selectedSort}
+						onChange={(e, value) => {
+							setSelectedSort(value);
+						}}
+					/>
+				</div>
+
 				<div className="property-list justify-evenly flex1 flex-row">
 					{!searchUser ? (
 						<>

@@ -1,5 +1,5 @@
 import { EyeOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Tag, Space } from "antd";
+import { Tag, Space, Rate } from "antd";
 import { noImage } from "../../../models/images";
 import ClearIcon from "@mui/icons-material/Clear";
 import moment from "moment";
@@ -34,16 +34,7 @@ export const postColumns = (deleteAction) => [
 		dataIndex: "title",
 		key: "title",
 	},
-	{
-		title: "Còn trống",
-		dataIndex: "remainRoom",
-		key: "remainRoom",
-	},
-	{
-		title: "Số lượng",
-		dataIndex: "totalRoom",
-		key: "totalRoom",
-	},
+
 	{
 		title: "Giá",
 		dataIndex: "price",
@@ -52,7 +43,32 @@ export const postColumns = (deleteAction) => [
 			return <>{properties.isNegotiate ? <>Thương lượng</> : <>{moneyFormat(price)} VND</>}</>;
 		},
 	},
-
+	{
+		title: "Đánh giá",
+		dataIndex: "rating",
+		key: "rating",
+		width: 200,
+		render: (rate, properties) => {
+			return (
+				<>
+					<Rate disabled allowHalf value={rate} />
+				</>
+			);
+		},
+	},
+	{
+		title: "Còn trống",
+		dataIndex: "remainRoom",
+		key: "remainRoom",
+		width: 50,
+		render: (endDate, properties) => {
+			return (
+				<>
+					{properties.remainRoom} / {properties.totalRoom}
+				</>
+			);
+		},
+	},
 	{
 		title: "Xem",
 		dataIndex: "_id",
@@ -96,14 +112,30 @@ export const roomColumns = (editAction, deleteAction) => [
 		key: "title",
 	},
 	{
+		title: "Đánh giá",
+		dataIndex: "rating",
+		key: "rating",
+		width: 180,
+		render: (rate, properties) => {
+			return (
+				<>
+					<Rate style={{ fontSize: 12 }} disabled allowHalf value={rate} />
+				</>
+			);
+		},
+	},
+	{
 		title: "Còn trống",
 		dataIndex: "remainRoom",
 		key: "remainRoom",
-	},
-	{
-		title: "Số lượng",
-		dataIndex: "totalRoom",
-		key: "totalRoom",
+		width: 50,
+		render: (endDate, properties) => {
+			return (
+				<>
+					{properties.remainRoom} / {properties.totalRoom}
+				</>
+			);
+		},
 	},
 	{
 		title: "Trạng thái",
@@ -123,6 +155,7 @@ export const roomColumns = (editAction, deleteAction) => [
 		title: "Giá",
 		dataIndex: "price",
 		key: "price",
+		width: 180,
 		render: (price, properties) => {
 			return <>{properties.isNegotiate ? <>Thương lượng</> : <>{moneyFormat(price)} VND</>}</>;
 		},

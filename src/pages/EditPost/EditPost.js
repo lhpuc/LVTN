@@ -407,7 +407,8 @@ const EditPost = () => {
 		const imageToUpload = [];
 		newFileList.forEach((item) => {
 			if (item.status === "done") {
-				imageToUpload.push(item.response.data.result.Location);
+				console.log(item, "thí item");
+				imageToUpload.push(item.url);
 			}
 		});
 		setImageUpload(imageToUpload);
